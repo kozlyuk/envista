@@ -25,6 +25,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'landing.apps.LandingConfig',
+    'product.apps.ProductConfig',
 ]
 
 MIDDLEWARE = [
@@ -94,3 +97,30 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# SUMMERNOTE settings
+SUMMERNOTE_THEME = 'bs4'
+
+SUMMERNOTE_CONFIG = {
+    'iframe': True,
+    'summernote': {
+        # As an example, using Summernote Air-mode
+        'airMode': False,
+        'width': '100%',
+        'height': '480',
+        'toolbar': [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+             ['font', ['strikethrough', 'superscript', 'subscript']],
+             ['fontsize', ['fontsize']],
+             ['color', ['color']],
+             ['para', ['ul', 'ol', 'paragraph']],
+             ['height', ['height']],
+        ],
+        'lazy': True,
+
+
+    },
+    'css': (STATIC_URL + 'components/summernote/main.css',),
+    'disable_attachment': True,
+}

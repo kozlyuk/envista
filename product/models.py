@@ -102,25 +102,25 @@ class PriceRecord(models.Model):
         return str(self.regular_price) + ' ' + settings.DEFAULT_CURRENCY
 
 
-class DiopterRange(models.Model):
+class DiopterPower(models.Model):
     """ Model contains product Diopter Range values """
     value = models.CharField(_('Value'), max_length=4)
 
     class Meta:
-        verbose_name = _('Diopter Range')
-        verbose_name_plural = _('Diopter Ranges')
+        verbose_name = _('Diopter Power')
+        verbose_name_plural = _('Diopter Powers')
 
     def __str__(self):
         return self.value
 
 
-class IOL(models.Model):
-    """ Model contains product IOL values """
+class  Cylinder(models.Model):
+    """ Model contains product Cylinder values """
     value = models.CharField(_('Value'), max_length=4)
 
     class Meta:
-        verbose_name = _('IOL Power value')
-        verbose_name_plural = _('IOL Power values')
+        verbose_name = _('Cylinder')
+        verbose_name_plural = _('Cylinders')
 
     def __str__(self):
         return self.value
