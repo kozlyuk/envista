@@ -1,36 +1,14 @@
+// import Table from "rc-table";
 import React from "react";
-import Table from 'rc-table';
+
+import { Table } from "../table/table";
 
 const data = [
-  { name: 'Jack', age: 28, address: 'some where', key: '1' },
-  { name: 'Rose', age: 36, address: 'some where', key: '2' },
-];
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    width: 100,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-    width: 100,
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-    width: 200,
-  },
-  {
-    title: 'Operations',
-    dataIndex: '',
-    key: 'operations',
-    render: () => <a href="#">Delete</a>,
-  },
+  { rowName: "6", counters: [1, 1, 1, 1, 1, 1, 1] },
+  { rowName: "6,5", counters: [1, 1, 1, 1, 1, 1, 1] },
+  { rowName: "7", counters: [1, 1, 1, 1, 1, 1, 1] },
+  { rowName: "7,5", counters: [1, 1, 1, 1, 1, 1, 1] },
+  { rowName: "8", counters: [1, 1, 1, 1, 1, 1, 1] },
 ];
 
 class Content extends React.Component {
@@ -40,13 +18,13 @@ class Content extends React.Component {
         <div className="w-container">
           <div className="w-row">
             <div className="column w-col w-col-6">
-            <img
-              src="https://uploads-ssl.webflow.com/5e01df57cdae92c47396eee8/5e01e2369802edbf02b8f0e0_csm_enVista-Toric_920x632_7b811276fa.png"
-              alt="product"
-              className="image-3"
-            />
-            {/* Form start */}
-            <div className="form-block w-form">
+              <img
+                src="https://uploads-ssl.webflow.com/5e01df57cdae92c47396eee8/5e01e2369802edbf02b8f0e0_csm_enVista-Toric_920x632_7b811276fa.png"
+                alt="product"
+                className="image-3"
+              />
+              {/* Form start */}
+              <div className="form-block w-form">
                 <form
                   action=""
                   id="email-form"
@@ -84,23 +62,23 @@ class Content extends React.Component {
                     maxLength={256}
                     name="field-3"
                     data-name="Field 3"
-                    placeholder={'100'}
+                    placeholder={"100"}
                     id="field-3"
                     required
                   />
                   {/* Block with pdf button */}
                   <div className="div-block">
-                  <input
-                    type="submit"
-                    defaultValue="Approve order"
-                    data-wait="Please wait..."
-                    className="submit-button w-button"
-                  />
-                  <a href="/" className="button w-button">
-                    View PDF
-                  </a>
+                    <input
+                      type="submit"
+                      defaultValue="Approve order"
+                      data-wait="Please wait..."
+                      className="submit-button w-button"
+                    />
+                    <a href="/" className="button w-button">
+                      View PDF
+                    </a>
                   </div>
-                {/* End block with pdf button */}
+                  {/* End block with pdf button */}
                 </form>
                 <div className="w-form-done">
                   <div>Thank you! Your submission has been received!</div>
@@ -121,7 +99,7 @@ class Content extends React.Component {
                 </strong>
               </h1>
               {/* End of header */}
-              <Table columns={columns} data={data} />
+              <Table array={data} />
             </div>
           </div>
         </div>
