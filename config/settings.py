@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'landing.apps.LandingConfig',
     'product.apps.ProductConfig',
+    'purchase.apps.PurchaseConfig',
 ]
 
 MIDDLEWARE = [
@@ -97,6 +98,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Units definitions
+DEFAULT_CURRENCY = 'грн'
+UNITS = 'шт'
 
 
 # SUMMERNOTE settings
