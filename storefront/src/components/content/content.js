@@ -2,16 +2,20 @@
 import React from "react";
 
 import { Table } from "../table/table";
+// //requests to db
+// let tableData = new Ajax();
+// const data = tableData.get("http://localhost:3004/data").then(response => {
 
-const data = [
-  { rowName: "6", counters: [1, 1, 1, 1, 1, 1, 1] },
-  { rowName: "6,5", counters: [1, 1, 1, 1, 1, 1, 1] },
-  { rowName: "7", counters: [1, 1, 1, 1, 1, 1, 1] },
-  { rowName: "7,5", counters: [1, 1, 1, 1, 1, 1, 1] },
-  { rowName: "8", counters: [1, 1, 1, 1, 1, 1, 1] },
-];
+//   return JSON.parse(response);
+// });
 
 class Content extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      array: props.array,
+    };
+  }
   render() {
     return (
       <div className="section mt-2">
@@ -99,7 +103,7 @@ class Content extends React.Component {
                 </strong>
               </h1>
               {/* End of header */}
-              <Table array={data} />
+              <Table />
             </div>
           </div>
         </div>
