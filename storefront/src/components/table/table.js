@@ -1,6 +1,6 @@
 import React from "react";
 
-export class Table extends React.Component {
+export class Table extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
