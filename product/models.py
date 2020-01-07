@@ -4,8 +4,8 @@ import datetime
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-#from django.utils.timezone import now
-from django_userforeignkey.models.fields import UserForeignKey
+
+from accounts.models import User
 
 
 class Product(models.Model):
@@ -13,12 +13,13 @@ class Product(models.Model):
     title = models.CharField(_('Product title'), max_length=255)
     short_description = models.TextField(_('Product description'), blank=True)
     long_description = models.TextField(_('Product description'), blank=True)
-    product_image = models.ImageField(_('Product image'), upload_to=image_directory_path)
+    product_image = models.ImageField(_('Product image'), upload_to='Product/image')
     brand_name = models.CharField(_('Brand name'), max_length=32, unique=True)
     brand_image = models.ImageField(_('Brand Image'), upload_to='brands/', blank=True, null=True)
 
     # Creator and Date information
-    created_by = UserForeignKey(auto_user_add=True, verbose_name=_('Created by'))
+    created_by = models.ForeignKey(User, verbose_name=_('Created by'),
+        blank=True, null=True, on_delete=models.CASCADE)
     date_created = models.DateField(_('Created'), auto_now_add=True)
     date_updated = models.DateField(_('Updated'), auto_now=True)
 
@@ -62,7 +63,8 @@ class ProductInstance(models.Model):
     cylinder = models.ForeignKey(Cylinder, on_delete=models.PROTECT)
     price = models.DecimalField(_('Product price'), max_digits=8, decimal_places=2, default=0)
     # Creator and Date information
-    created_by = UserForeignKey(auto_user_add=True, verbose_name=_('Created by'))
+    created_by = models.ForeignKey(User, verbose_name=_('Created by'),
+        blank=True, null=True, on_delete=models.CASCADE)
     date_created = models.DateField(_('Created'), auto_now_add=True)
     date_updated = models.DateField(_('Updated'), auto_now=True)
 
@@ -78,11 +80,10 @@ class ProductInstance(models.Model):
 
 
 class Stock(models.Model):
-    product_instance = models.ForeignKey(ProductInstance, verbose_name=_('Product'), on_delete=models.CASCADE)
+    product_instance = models.OneToOneField(ProductInstance, verbose_name=_('Product'), on_delete=models.CASCADE)
     quantity_in_hand = models.IntegerField(_('Quantity in hand'))
 
     class Meta:
-        unique_together = ('product', 'warehouse')
         verbose_name = _('Stock')
         verbose_name_plural = _('Stocks')
 
