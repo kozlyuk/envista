@@ -34,7 +34,9 @@ class Content extends React.Component {
 								className="image-3"
 							/>
 							<PurchaseList purchaseList={this.state.purchase} />
-							<Submit purchaseList={this.state.purchase} />
+							{this.state.purchase.length !== 0 && (
+								<Submit purchaseList={this.state.purchase} />
+							)}
 						</div>
 						<div className="w-col w-col-6">
 							{/* Header */}

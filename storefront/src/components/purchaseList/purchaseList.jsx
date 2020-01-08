@@ -36,7 +36,7 @@ export default class PurchaseList extends React.Component {
 	render() {
 		if (this.props.purchaseList.length !== 0) {
 			return (
-				<div className="text-center mb-4">
+				<div className="text-center mb-4 ml-4 mr-4">
 					<h4>Обрано:</h4>
 					<table className="table-bordered col mb-4">
 						<tbody className="rc-table-tbody">
@@ -79,7 +79,6 @@ export default class PurchaseList extends React.Component {
 										<span
 											className="rc-table-row-indent indent-level-0"
 											style={{ paddingLeft: 0 }}>
-											{console.log(item[1])}
 											{this.state.rows[item[1]]}
 										</span>
 									</td>

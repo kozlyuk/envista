@@ -23,7 +23,8 @@ export class Table extends React.PureComponent {
 	//send data to parent component
 	getData(counter, columnIdx, rowIdx) {
 		if (counter !== 0) {
-			this.props.getData((this.state.makePurchase = [columnIdx, rowIdx]));
+			// const id = rowIdx.toString() + columnIdx.toString();
+			this.props.getData((this.state.makePurchase = [columnIdx, rowIdx])); //maybe need to add id
 		}
 	}
 
