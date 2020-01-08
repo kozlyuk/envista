@@ -5,6 +5,7 @@ import React from "react";
 
 import { Table } from "../table/table";
 import Submit from "../submitTableData/submitTableData";
+import PurchaseList from "../purchaseList/purchaseList";
 
 class Content extends React.Component {
 	constructor(props) {
@@ -23,7 +24,7 @@ class Content extends React.Component {
 
 	render() {
 		return (
-			<div className="section mt-2">
+			<div className="section">
 				<div className="w-container">
 					<div className="w-row">
 						<div className="column w-col w-col-6">
@@ -32,6 +33,8 @@ class Content extends React.Component {
 								alt="product"
 								className="image-3"
 							/>
+							<PurchaseList purchaseList={this.state.purchase} />
+							<Submit purchaseList={this.state.purchase} />
 						</div>
 						<div className="w-col w-col-6">
 							{/* Header */}
@@ -42,7 +45,6 @@ class Content extends React.Component {
 							</h1>
 							{/* End of header */}
 							<Table getData={this.makePurchase} />
-							<Submit />
 						</div>
 					</div>
 				</div>

@@ -65,7 +65,9 @@ export class Table extends React.PureComponent {
 							<tr>
 								<th className="rc-table-row-cell-break-word" />
 								{this.state.columnsName.map((name, rowIdx) => (
-									<th className="rc-table-row-cell-break-word">{name}</th>
+									<th key={rowIdx} className="rc-table-row-cell-break-word">
+										{name}
+									</th>
 								))}
 							</tr>
 						</thead>
