@@ -98,7 +98,7 @@ export default class PurchaseList extends React.Component {
 		} else {
 			return (
 				<div className="text-center mb-4">
-					<h4>Оберіть товар клікнувши на комірку таблиці</h4>
+					<h4>Оберіть товар натиснувши на комірку таблиці</h4>
 				</div>
 			);
 		}

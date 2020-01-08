@@ -2196,6 +2196,13 @@ textarea.w-select {
   .w-nav-brand {
     padding-left: 10px
   }
+  .w-row {
+    display: flex;
+    /* Optional, if you want the DIVs 100% width: */
+    flex-direction: column;
+  }
+  .w-row > .mobile-first { order: 1; }
+  .w-row > .mobile-second { order: 2; }
 }
 
 @media screen and (max-width:479px) {
@@ -2561,3 +2568,18 @@ input[type='text'] {
     background-attachment: scroll;
   }
 }
+
+.main-container {
+  min-height: 100vh; /* will cover the 100% of viewport */
+  overflow: hidden;
+  display: block;
+  position: relative;
+  padding-bottom: 100px; /* height of your footer */
+ }
+
+.footer {
+  background-color: #159ca8;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+ }
