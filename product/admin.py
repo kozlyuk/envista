@@ -18,11 +18,6 @@ class ProductInstanceAdmin(admin.ModelAdmin):
         "date_created",
         "price",
     ]
-    readonly_fields = [
-        "date_updated",
-        "date_created",
-        "price",
-    ]
 
 
 class StockAdminForm(forms.ModelForm):
@@ -37,9 +32,6 @@ class StockAdmin(admin.ModelAdmin):
     list_display = [
         "quantity_in_hand",
     ]
-    readonly_fields = [
-        "quantity_in_hand",
-    ]
 
 
 class CylinderAdminForm(forms.ModelForm):
@@ -52,9 +44,6 @@ class CylinderAdminForm(forms.ModelForm):
 class CylinderAdmin(admin.ModelAdmin):
     form = CylinderAdminForm
     list_display = [
-        "value",
-    ]
-    readonly_fields = [
         "value",
     ]
 
@@ -78,16 +67,6 @@ class ProductAdmin(admin.ModelAdmin):
         "product_image",
         "title",
     ]
-    readonly_fields = [
-        "date_created",
-        "date_updated",
-        "brand_name",
-        "brand_image",
-        "short_description",
-        "long_description",
-        "product_image",
-        "title",
-    ]
 
 
 class DiopterPowerAdminForm(forms.ModelForm):
@@ -100,9 +79,6 @@ class DiopterPowerAdminForm(forms.ModelForm):
 class DiopterPowerAdmin(admin.ModelAdmin):
     form = DiopterPowerAdminForm
     list_display = [
-        "value",
-    ]
-    readonly_fields = [
         "value",
     ]
 
