@@ -1,6 +1,5 @@
 /** @format */
 
-// import Table from "rc-table";
 import React from "react";
 
 import { Table } from "../table/table";
@@ -31,7 +30,6 @@ class Content extends React.Component {
 			purchase: [...prevState.purchase, purchase]
 		}));
 		console.log(this.count(this.state.purchase));
-		// console.log(this.state.purchase);
 	};
 
 	render() {
