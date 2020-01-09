@@ -11,8 +11,8 @@ from accounts.models import User
 class Product(models.Model):
     """ Model contains Products """
     title = models.CharField(_('Product title'), max_length=255)
-    short_description = models.TextField(_('Product description'), blank=True)
-    long_description = models.TextField(_('Product description'), blank=True)
+    short_description = models.TextField(_('Short description'), blank=True)
+    long_description = models.TextField(_('Detail description'), blank=True)
     product_image = models.ImageField(_('Product image'), upload_to='Product/image')
     brand_name = models.CharField(_('Brand name'), max_length=32, unique=True)
     brand_image = models.ImageField(_('Brand Image'), upload_to='brands/', blank=True, null=True)
