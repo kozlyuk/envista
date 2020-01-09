@@ -17,11 +17,21 @@ class Content extends React.Component {
 		};
 	}
 
+	count(array) {
+		let counts = {};
+		array.map(x => {
+			counts[x] = (counts[x] || 0) + 1;
+		});
+		return counts;
+	}
+
 	//get data from child component and put it to state
 	makePurchase = purchase => {
 		this.setState(prevState => ({
 			purchase: [...prevState.purchase, purchase]
 		}));
+		console.log(this.count(this.state.purchase));
+		// console.log(this.state.purchase);
 	};
 
 	render() {
