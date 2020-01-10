@@ -11,11 +11,11 @@ from accounts.models import User
 class Product(models.Model):
     """ Model contains Products """
     title = models.CharField(_('Product title'), max_length=255)
-    short_description = models.TextField(_('Short description'), blank=True)
-    long_description = models.TextField(_('Detail description'), blank=True)
+    short_description = models.TextField(_('Short description'))
     product_image = models.ImageField(_('Product image'), upload_to='Product/image')
     brand_name = models.CharField(_('Brand name'), max_length=32, unique=True)
-    brand_image = models.ImageField(_('Brand Image'), upload_to='brands/', blank=True, null=True)
+    brand_image = models.ImageField(_('Brand Image'), upload_to='brands/')
+    footer = models.TextField(_('Site footer'), blank=True)
 
     # Creator and Date information
     created_by = models.ForeignKey(User, verbose_name=_('Created by'),

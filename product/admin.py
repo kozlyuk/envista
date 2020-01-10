@@ -63,7 +63,6 @@ class ProductAdmin(admin.ModelAdmin):
         "brand_name",
         "brand_image",
         "short_description",
-        "long_description",
         "product_image",
         "title",
     ]
