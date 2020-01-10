@@ -30,7 +30,7 @@ export class Table extends React.PureComponent {
 
 	//get data from backend => then mount component
 	componentDidMount() {
-		fetch("http://localhost:3004/data")
+		fetch(process.env.REACT_APP_TABLE_DATA)
 			.then(res => res.json())
 			.then(
 				result => {
