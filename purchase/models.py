@@ -115,7 +115,7 @@ class OrderInvoiceLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
     order= models.ForeignKey(Order, verbose_name=_('Order'), on_delete=models.PROTECT)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
-    quantity = models.PositiveSmallIntegerField(_('Amount'), default=1)
+    quantity = models.PositiveSmallIntegerField(_('Quantity'), default=0)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
 
     def value_total(self):

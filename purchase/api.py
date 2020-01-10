@@ -1,7 +1,10 @@
-from rest_framework import viewsets, permissions, views, status
+from django.utils.translation import gettext_lazy as _
+from rest_framework import permissions, views, status
+from rest_framework.response import Response
 
-from . import serializers
-from . import models
+# from . import serializers
+from product.models import ProductInstance
+from purchase.models import Order, OrderInvoiceLine
 
 
 class AddToBasket(views.APIView):
@@ -15,43 +18,29 @@ class AddToBasket(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, row, column):
-        # message = "Mobile number must contain 10 digits"
-        # if not re.match(r'^\d{10}$', mobile_number):
-        #     return Response(message, status=status.HTTP_404_NOT_FOUND)
-        # user, created = User.objects.get_or_create(mobile_number=mobile_number, defaults={'is_staff': False})
-        # serializer = UserSerializer(user)
-        # if created:
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # get the existing object of ProductInstance
+        # if object does not exist return HTTP_400_BAD_REQUEST
+        try:
+            product = ProductInstance.objects.get(diopter=row, cylinder=column)
+        except ProductInstance.DoesNotExist:
+            return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
 
+        # get the existing customer cart or create new one
+        if 'purchase_id' in self.request.session and \
+                Order.objects.filter(pk=self.request.session.get('purchase_id')).exists():
+            purchase = Purchase.objects.get(pk=self.request.session.get('purchase_id'))
+        else:
+            purchase = Purchase.objects.create(invoice_number='Cart')
+            self.request.session['purchase_id'] = purchase.id
 
-class PurchaseInvoiceLineViewSet(viewsets.ModelViewSet):
-    """ViewSet for the PurchaseInvoiceLine class"""
+        # get the existing OrderInvoiceLine or create new one
+        if product.quantity_in_hand and product.quantity_in_hand > 0:
+            invoice_line, created = InvoiceLine.objects.get_or_create(product=product,
+                                                                      purchase=purchase,
+                                                                      defaults={'unit_price': product.price})
+            if invoice_line.quantity + 1 <= product.quantity_in_hand:
+                invoice_line.quantity += 1
+            else:
+                Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
 
-    queryset = models.PurchaseInvoiceLine.objects.all()
-    serializer_class = serializers.PurchaseInvoiceLineSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class OrderInvoiceLineViewSet(viewsets.ModelViewSet):
-    """ViewSet for the OrderInvoiceLine class"""
-
-    queryset = models.OrderInvoiceLine.objects.all()
-    serializer_class = serializers.OrderInvoiceLineSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class OrderViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Order class"""
-
-    queryset = models.Order.objects.all()
-    serializer_class = serializers.OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class PurchaseViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Purchase class"""
-
-    queryset = models.Purchase.objects.all()
-    serializer_class = serializers.PurchaseSerializer
-    permission_classes = [permissions.IsAuthenticated]
+        return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
