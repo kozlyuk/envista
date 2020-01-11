@@ -12,7 +12,7 @@ export default class BasketItem extends React.Component {
 	}
 
 	componentDidMount() {
-		fetch("http://localhost:3004/basket")
+		fetch(process.env.REACT_APP_BASKET_DATA_URL)
 			.then(res => res.json())
 			.then(
 				result => {
