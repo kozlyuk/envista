@@ -39,8 +39,8 @@ class Purchase(models.Model):
 
 
 class Order(models.Model):
-    """ Model contains Sales, Baskets """
-    InBasket = 'IB'
+    """ Model contains Sales, Carts """
+    InCart = 'IC'
     NewOrder = 'NO'
     Cancelled = 'CN'
     Confirmed = 'CF'
@@ -48,7 +48,7 @@ class Order(models.Model):
     Received = 'RC'
     Returned = 'RT'
     STATUS_CHOICES = (
-        (InBasket, _('Products in  basket')),
+        (InCart, _('Products in cart')),
         (NewOrder, _('New order')),
         (Cancelled, _('Order canceled')),
         (Confirmed, _('Order confirmed')),
@@ -70,7 +70,7 @@ class Order(models.Model):
     invoice_number = models.CharField(_('Invoice number'), max_length=45)
     invoice_date = models.DateField(_('Invoice date'), default=datetime.date.today)
     comment = models.TextField(_('Comment'), blank=True)
-    status = models.CharField(_('Deal type'), max_length=2, choices=STATUS_CHOICES, default=InBasket)
+    status = models.CharField(_('Deal type'), max_length=2, choices=STATUS_CHOICES, default=InCart)
     pay_status = models.CharField('Статус оплати', max_length=2, choices=PAYMENT_STATUS_CHOICES, default=NotPaid)
     value = models.DecimalField(_('Value'), max_digits=8, decimal_places=2, default=0)
     invoice_file = models.FileField(_('Invoice'), upload_to=docs_directory_path, blank=True, null=True)
