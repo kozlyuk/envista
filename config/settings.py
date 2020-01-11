@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'product.apps.ProductConfig',
     'purchase.apps.PurchaseConfig',
+    'django_summernote',
 ]
 
 MIDDLEWARE = [
