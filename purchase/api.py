@@ -10,7 +10,7 @@ from purchase.models import Order, OrderInvoiceLine
 
 class GetStocks(views.APIView):
     """
-    This view sending JSON list of stocks of every product instances.
+    This view sending JSON list of stocks for product instances.
     Creating user cart or clear existing on loading.
     """
     permission_classes = (permissions.IsAuthenticated,)
@@ -21,9 +21,9 @@ class GetStocks(views.APIView):
                                                      status=Order.InCart,
                                                      defaults={'invoice_number': 'InCart'})
         if not created:
-            order.products.delete()
+            order.products.clear()
 
-        # Sending JSON list of stocks of every product instances.
+        # Sending JSON list of stocks for product instances.
         json_data = []
         json_data.append({"columns": Cylinder.objects.values_list('value', flat=True)})
         json_data.append({"rows": []})
