@@ -35,7 +35,7 @@ export default class BasketItem extends React.Component {
 		if (error) {
 			return <div>Помилка: {error.message}</div>;
 		} else if (!isLoaded) {
-			return <div>Загрузка...</div>;
+			return <div>Завантаження...</div>;
 		} else {
 			return (
 				<Table striped bordered hover className="mb-0">
