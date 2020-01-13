@@ -11,14 +11,14 @@ from purchase.models import Order, OrderInvoiceLine
 class AddToCart(views.APIView):
     """
     This view add to cart the instance of product.
-    If cart is not exist create new cart in sessions.
+    If cart is not exist create new cart one.
     If product added return status HTTP_201_CREATED
     If inbound parameters is wrong return status HTTP_400_BAD_REQUEST
     If product out of stock return status HTTP_409_CONFLICT
     """
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request, row, column):
+    def get(self, request, row: int, column: int):
         # get the existing object of ProductInstance
         # if object does not exist return HTTP_400_BAD_REQUEST
         try:
@@ -27,12 +27,9 @@ class AddToCart(views.APIView):
             return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
 
         # get the existing customer cart or create new one
-        if 'purchase_id' in self.request.session and \
-                Order.objects.filter(pk=self.request.session.get('purchase_id')).exists():
-            purchase = Purchase.objects.get(pk=self.request.session.get('purchase_id'))
-        else:
-            purchase = Purchase.objects.create(invoice_number='Cart')
-            self.request.session['purchase_id'] = purchase.id
+        order, created = Order.objects.get_or_create(customer=self.request.user,
+                                                     status=Order.InCart,
+                                                     defaults={'invoice_number': 'InCart'})
 
         # get the existing OrderInvoiceLine or create new one
         if product.quantity_in_hand and product.quantity_in_hand > 0:
