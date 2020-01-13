@@ -1,4 +1,16 @@
+/**
+ * Table component.
+ *
+ * @author    Andrey Perestyuk (Arrathilar)
+ * @email-primary a.perestyuk@itel.rv.ua
+ * @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
+ * @copyright 2020 ITEL-Service
+ */
+
+
 import React from "react";
+import ButtonBackground from "../buttonBackground/buttonBackground";
+
 
 export class Table extends React.PureComponent {
 	constructor(props) {
@@ -7,7 +19,7 @@ export class Table extends React.PureComponent {
 			rows: [],
 			columnsName: [],
 			error: null,
-			isLoaded: false
+			isLoaded: false,
 		};
 	}
 
@@ -16,8 +28,14 @@ export class Table extends React.PureComponent {
 		const newQty = counter > 0 ? counter - 1 : 0;
 		let newArray = [...this.state.rows];
 		newArray[rowIdx].counters[columnIdx] = newQty;
-		this.setState({ rows: newArray });
+		this.sendData(newQty); // TODO: !!!
+		this.setState({rows: newArray});
 		this.getData(counter, columnIdx, rowIdx);
+		console.log(this)
+	}
+
+	sendData(data) {
+		console.log(data); // TODO: !!!
 	}
 
 	//send data to parent component
@@ -28,7 +46,7 @@ export class Table extends React.PureComponent {
 		}
 	}
 
-	//get data from backend => then mount component
+//get data from backend => then mount component
 	componentDidMount() {
 		fetch(process.env.REACT_APP_TABLE_DATA)
 			.then(res => res.json())
@@ -50,7 +68,7 @@ export class Table extends React.PureComponent {
 	}
 
 	render() {
-		const { error, isLoaded } = this.state;
+		const {error, isLoaded} = this.state;
 		if (error) {
 			return <div>Помилка: {error.message}</div>;
 		} else if (!isLoaded) {
@@ -60,50 +78,55 @@ export class Table extends React.PureComponent {
 				<div className="row">
 					<table className="table-bordered col mb-4">
 						<colgroup>
-							<col style={{ width: 50, minWidth: 50 }} />
+							<col style={{width: 50, minWidth: 50}}/>
 						</colgroup>
 						<thead className="rc-table-thead text-center">
-							<tr>
-								<th className="rc-table-row-cell-break-word" />
-								{this.state.columnsName.map((name, rowIdx) => (
-									<th key={rowIdx} className="rc-table-row-cell-break-word">
-										{name}
-									</th>
-								))}
-							</tr>
+						<tr>
+							<th className="rc-table-row-cell-break-word"/>
+							{this.state.columnsName.map((name, rowIdx) => (
+								<th key={rowIdx} className="rc-table-row-cell-break-word">
+									{name}
+								</th>
+							))}
+						</tr>
 						</thead>
 						<tbody className="rc-table-tbody">
-							{this.state.rows.map((item, rowIdx) => (
-								<tr
-									key={rowIdx}
-									className="rc-table-row rc-table-row-level-0"
-									data-row-key={1}>
-									<td className="rc-table-row-cell-break-word text-center">
+						{this.state.rows.map((item, rowIdx) => (
+							<tr
+								key={rowIdx}
+								className="rc-table-row rc-table-row-level-0"
+								data-row-key={1}>
+								<td className="rc-table-row-cell-break-word text-center">
 										<span
 											className="rc-table-row-indent indent-level-0"
-											style={{ paddingLeft: 0 }}>
+											style={{paddingLeft: 0}}>
 											{item.rowName}
 										</span>
-									</td>
-									{item.counters.map((counter, columnIdx) => (
-										<td
-											key={columnIdx}
-											className="rc-table-row-cell-break-word">
+								</td>
+								{item.counters.map((counter, columnIdx) => (
+									<td
+										key={columnIdx}
+										className="rc-table-row-cell-break-word">
 											<span
 												className="rc-table-row-indent indent-level-0"
-												style={{ paddingLeft: 0 }}
+												style={{paddingLeft: 0}}
 											/>
-											<button
-												className="btn btn-sm btn-light btn-block"
-												onClick={() =>
-													this.decreaseQty(counter, columnIdx, rowIdx)
-												}>
-												{counter}
-											</button>
-										</td>
-									))}
-								</tr>
-							))}
+										<div>
+											<ButtonBackground>
+												<button
+													style={{backgroundColor: "transparent"}}
+													className="btn btn-sm btn-light btn-block"
+													onClick={() =>
+														this.decreaseQty(counter, columnIdx, rowIdx)
+													}>
+													{counter}
+												</button>
+											</ButtonBackground>
+										</div>
+									</td>
+								))}
+							</tr>
+						))}
 						</tbody>
 					</table>
 				</div>
