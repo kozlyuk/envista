@@ -105,7 +105,7 @@ class Order(models.Model):
 
 class PurchaseInvoiceLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
-    purchase = models.ForeignKey(Purchase, verbose_name=_('Purchase'), on_delete=models.PROTECT)
+    purchase = models.ForeignKey(Purchase, verbose_name=_('Purchase'), on_delete=models.CASCADE)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(_('Amount'), default=1)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
@@ -113,7 +113,7 @@ class PurchaseInvoiceLine(models.Model):
 
 class OrderInvoiceLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
-    order= models.ForeignKey(Order, verbose_name=_('Order'), on_delete=models.PROTECT)
+    order= models.ForeignKey(Order, verbose_name=_('Order'), on_delete=models.CASCADE)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(_('Quantity'), default=0)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)

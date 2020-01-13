@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 
-from . import serializers
-from . import models
+from product import serializers
+from product import models
 
 
 class ProductInstanceViewSet(viewsets.ModelViewSet):

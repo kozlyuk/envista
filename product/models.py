@@ -10,10 +10,10 @@ from accounts.models import User
 
 class Product(models.Model):
     """ Model contains Products """
-    title = models.CharField(_('Product title'), max_length=255)
+    title = models.CharField(_('Product title'), max_length=255, unique=True)
     short_description = models.TextField(_('Short description'))
     product_image = models.ImageField(_('Product image'), upload_to='Product/image')
-    brand_name = models.CharField(_('Brand name'), max_length=32, unique=True)
+    brand_name = models.CharField(_('Brand name'), max_length=32)
     brand_image = models.ImageField(_('Brand Image'), upload_to='brands/')
     footer = models.TextField(_('Site footer'), blank=True)
 
@@ -73,7 +73,7 @@ class ProductInstance(models.Model):
         verbose_name_plural = _('Product Instances')
 
     def __str__(self):
-        return self.serial_number
+        return self.product.title + str(self.cylinder) + str(self.diopter)
 
     def get_price(self):
         return str(self.price) + ' ' + settings.DEFAULT_CURRENCY
@@ -88,4 +88,4 @@ class Stock(models.Model):
         verbose_name_plural = _('Stocks')
 
     def __str__(self):
-        return self.quantity_in_hand
+        return self.product_instance.diopter.value + ' - ' + self.product_instance.cylinder.value

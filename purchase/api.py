@@ -4,8 +4,34 @@ from rest_framework.response import Response
 
 from purchase import serializers
 from purchase import models
-from product.models import ProductInstance
+from product.models import ProductInstance, Cylinder, DiopterPower, Stock
 from purchase.models import Order, OrderInvoiceLine
+
+
+class GetStocks(views.APIView):
+    """
+    This view sending JSON list of stocks of every product instances.
+    Creating user cart or clear existing on loading.
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        # Creating user cart or clear existing on loading.
+        order, created = Order.objects.get_or_create(customer=self.request.user,
+                                                     status=Order.InCart,
+                                                     defaults={'invoice_number': 'InCart'})
+        if not created:
+            order.products.delete()
+
+        # Sending JSON list of stocks of every product instances.
+        json_data = []
+        json_data.append({"columns": Cylinder.objects.values_list('value', flat=True)})
+        json_data.append({"rows": []})
+        for row in DiopterPower.objects.values_list('value', flat=True):
+            quantity_list = Stock.objects.filter(product_instance__diopter__value=row).values_list('quantity_in_hand', flat=True)
+            json_data[1]["rows"].append({"row": row, "quantity": quantity_list})
+
+        return Response(json_data, status=status.HTTP_200_OK)
 
 
 class AddToCart(views.APIView):
@@ -20,26 +46,28 @@ class AddToCart(views.APIView):
 
     def get(self, request, row: int, column: int):
         # get the existing object of ProductInstance
-        # if object does not exist return HTTP_400_BAD_REQUEST
         try:
             product = ProductInstance.objects.get(diopter=row, cylinder=column)
         except ProductInstance.DoesNotExist:
             return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
 
-        # get the existing customer cart or create new one
-        order, created = Order.objects.get_or_create(customer=self.request.user,
-                                                     status=Order.InCart,
-                                                     defaults={'invoice_number': 'InCart'})
+        # get the existing customer cart
+        try:
+            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
+        except Order.DoesNotExist:
+            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        except Order.MultipleObjectsReturned:
+            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
 
         # get the existing OrderInvoiceLine or create new one
         if product.quantity_in_hand and product.quantity_in_hand > 0:
-            invoice_line, created = InvoiceLine.objects.get_or_create(product=product,
-                                                                      purchase=purchase,
-                                                                      defaults={'unit_price': product.price})
+            invoice_line, created = OrderInvoiceLine.objects.get_or_create(product=product,
+                                                                           order=order,
+                                                                           defaults={'unit_price': product.price})
             if invoice_line.quantity + 1 <= product.quantity_in_hand:
                 invoice_line.quantity += 1
             else:
-                Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+                return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
 
         return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
 

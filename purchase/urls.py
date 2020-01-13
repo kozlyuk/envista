@@ -11,6 +11,7 @@ router.register("Purchase", api.PurchaseViewSet)
 
 urlpatterns = (
     path("api/v1/", include(router.urls)),
+    path("api/v1/get_stocks/", api.GetStocks.as_view()),
     path("api/v1/add_to_cart/<int:row>/<int:column>/", api.AddToCart.as_view()),
 
 )
