@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'corsheaders',
     'landing.apps.LandingConfig',
     'accounts.apps.AccountsConfig',
     'product.apps.ProductConfig',
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -67,6 +69,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    ]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
