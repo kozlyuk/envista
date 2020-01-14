@@ -15,12 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_auth.views import LoginView, LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('product/', include('product.urls')),
     path('purchase/', include('purchase.urls')),
 
-    path('api-auth/', include('rest_framework.urls')),
+    path('rest-auth/', include('rest_auth.urls')),
+    # path('api-auth/', include('rest_framework.urls')),
     path('summernote/', include('django_summernote.urls')),
 ]
+
+if settings.DEBUG:
+    # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
