@@ -37,9 +37,9 @@ class GetStocks(views.APIView):
 class AddToCart(views.APIView):
     """
     This view add to cart the instance of product.
-    If cart is not exist create new cart one.
     If product added return status HTTP_201_CREATED
-    If inbound parameters is wrong return status HTTP_400_BAD_REQUEST
+    If inbound parameters is wrong return status HTTP_404_NOT_FOUND
+    If exists problems with cart return status HTTP_400_BAD_REQUEST
     If product out of stock return status HTTP_409_CONFLICT
     """
     permission_classes = (permissions.IsAuthenticated,)
@@ -49,7 +49,7 @@ class AddToCart(views.APIView):
         try:
             product = ProductInstance.objects.get(diopter=row, cylinder=column)
         except ProductInstance.DoesNotExist:
-            return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
+            return Response(_('Product does not exist'), status=status.HTTP_404_NOT_FOUND)
 
         # get the existing customer cart
         try:
@@ -62,33 +62,24 @@ class AddToCart(views.APIView):
         # get the existing OrderLine or create new one
         if product.quantity_in_hand and product.quantity_in_hand > 0:
             invoice_line, created = OrderLine.objects.get_or_create(product=product,
-                                                                           order=order,
-                                                                           defaults={'unit_price': product.price})
+                                                                    order=order,
+                                                                    defaults={'unit_price': product.price})
             if invoice_line.quantity + 1 <= product.quantity_in_hand:
                 invoice_line.quantity += 1
-            else:
-                return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
-
-        return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
+                return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
+        return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
 
 
 class DelFromCart(views.APIView):
     """
-    This view dell the  of product.
-    If cart is not exist create new cart one.
-    If product added return status HTTP_201_CREATED
-    If inbound parameters is wrong return status HTTP_400_BAD_REQUEST
-    If product out of stock return status HTTP_409_CONFLICT
+    This view delete the product from cart.
+    If product deleted return status HTTP_200_OK
+    If product not found in cart return status HTTP_404_NOT_FOUND
+    If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, row: int, column: int):
-        # get the existing object of ProductInstance
-        try:
-            product = ProductInstance.objects.get(diopter=row, cylinder=column)
-        except ProductInstance.DoesNotExist:
-            return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
-
         # get the existing customer cart
         try:
             order = Order.objects.get(customer=self.request.user, status=Order.InCart)
@@ -97,17 +88,92 @@ class DelFromCart(views.APIView):
         except Order.MultipleObjectsReturned:
             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
 
-        # get the existing OrderLine or create new one
-        if product.quantity_in_hand and product.quantity_in_hand > 0:
-            invoice_line, created = OrderLine.objects.get_or_create(product=product,
-                                                                           order=order,
-                                                                           defaults={'unit_price': product.price})
-            if invoice_line.quantity + 1 <= product.quantity_in_hand:
-                invoice_line.quantity += 1
-            else:
-                return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+        # get the existing OrderLine or returm exception
+        try:
+            invoice_line = order.products.get(cylinder=row, diopter=column).clear()         # TODO Try if it works (maybe delete())
+            # invoice_line = OrderLine.objects.get(order=order,
+            #                                      product__cylinder=row,
+            #                                      product__diopter=column).delete()
+            return Response(_('Product deleted'), status=status.HTTP_200_OK)
+        except Order.DoesNotExist:
+            return Response(_('Product is out of stock'), status=status.HTTP_404_NOT_FOUND)
 
-        return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
+
+# class UpdateQuantity(views.APIView):
+#     """
+#     This view dell the  of product.
+#     If cart is not exist create new cart one.
+#     If product added return status HTTP_201_CREATED
+#     If inbound parameters is wrong return status HTTP_400_BAD_REQUEST
+#     If product out of stock return status HTTP_409_CONFLICT
+#     """
+#     permission_classes = (permissions.IsAuthenticated,)
+
+#     def get(self, request, row: int, column: int):
+#         # get the existing object of ProductInstance
+#         try:
+#             product = ProductInstance.objects.get(diopter=row, cylinder=column)
+#         except ProductInstance.DoesNotExist:
+#             return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
+
+#         # get the existing customer cart
+#         try:
+#             order = Order.objects.get(customer=self.request.user, status=Order.InCart)
+#         except Order.DoesNotExist:
+#             return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
+#         except Order.MultipleObjectsReturned:
+#             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
+
+#         # get the existing OrderLine or create new one
+#         if product.quantity_in_hand and product.quantity_in_hand > 0:
+#             invoice_line, created = OrderLine.objects.get_or_create(product=product,
+#                                                                            order=order,
+#                                                                            defaults={'unit_price': product.price})
+#             if invoice_line.quantity + 1 <= product.quantity_in_hand:
+#                 invoice_line.quantity += 1
+#             else:
+#                 return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+
+#         return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
+
+
+# class ConfirmOrder(views.APIView):
+#     """
+#     This view dell the product from cart.
+#     If cart is not exist create new cart one.
+#     If product added return status HTTP_201_CREATED
+#     If inbound parameters is wrong return status HTTP_400_BAD_REQUEST
+#     If product out of stock return status HTTP_409_CONFLICT
+#     """
+#     permission_classes = (permissions.IsAuthenticated,)
+
+#     def get(self, request, row: int, column: int):
+#         # get the existing object of ProductInstance
+#         try:
+#             product = ProductInstance.objects.get(diopter=row, cylinder=column)
+#         except ProductInstance.DoesNotExist:
+#             return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
+
+#         # get the existing customer cart
+#         try:
+#             order = Order.objects.get(customer=self.request.user, status=Order.InCart)
+#         except Order.DoesNotExist:
+#             return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
+#         except Order.MultipleObjectsReturned:
+#             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
+
+#         # get the existing OrderLine or create new one
+#         if product.quantity_in_hand and product.quantity_in_hand > 0:
+#             invoice_line, created = OrderLine.objects.get_or_create(product=product,
+#                                                                            order=order,
+#                                                                            defaults={'unit_price': product.price})
+#             if invoice_line.quantity + 1 <= product.quantity_in_hand:
+#                 invoice_line.quantity += 1
+#             else:
+#                 return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+
+#         return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
+
 
 class PurchaseLineViewSet(viewsets.ModelViewSet):
     """ViewSet for the PurchaseLine class"""

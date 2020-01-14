@@ -2,14 +2,15 @@ from product.models import ProductInstance, DiopterPower, Cylinder, Stock, Produ
 import random
 from datetime import date
 
-product = Product.objects.create(title='ИНТРАОКУЛЯРНАЯ ЛИНЗА ENVISTA',
-                                 short_description='ИНТРАОКУЛЯРНАЯ ЛИНЗА ENVISTA',
+product = Product.objects.create(title='ІНТРАОКУЛЯРНА ЛІНЗА ENVISTA',
+                                 short_description='ІНТРАОКУЛЯРНАЯ ЛІНЗА ENVISTA',
                                  product_image='product/enVista_920x632.png',
                                  brand_name='Bausch&Lomb',
                                  brand_image='brand/BL_logo.png',
                                  date_created=date.today(),
                                  date_updated=date.today(),
                                  created_by_id=1,
+                                 footer="© 2020 ООО «Оптдіея». Усі права захищені."
                                 )
 
 for value in range(125, 576, 75):
