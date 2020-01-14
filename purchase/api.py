@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from purchase import serializers
 from purchase import models
 from product.models import ProductInstance, Cylinder, DiopterPower, Stock
-from purchase.models import Order, OrderInvoiceLine
+from purchase.models import Order, OrderLine
 
 
 class GetStocks(views.APIView):
@@ -59,9 +59,9 @@ class AddToCart(views.APIView):
         except Order.MultipleObjectsReturned:
             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
 
-        # get the existing OrderInvoiceLine or create new one
+        # get the existing OrderLine or create new one
         if product.quantity_in_hand and product.quantity_in_hand > 0:
-            invoice_line, created = OrderInvoiceLine.objects.get_or_create(product=product,
+            invoice_line, created = OrderLine.objects.get_or_create(product=product,
                                                                            order=order,
                                                                            defaults={'unit_price': product.price})
             if invoice_line.quantity + 1 <= product.quantity_in_hand:
@@ -72,19 +72,56 @@ class AddToCart(views.APIView):
         return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
 
 
-class PurchaseInvoiceLineViewSet(viewsets.ModelViewSet):
-    """ViewSet for the PurchaseInvoiceLine class"""
+class DelFromCart(views.APIView):
+    """
+    This view dell the  of product.
+    If cart is not exist create new cart one.
+    If product added return status HTTP_201_CREATED
+    If inbound parameters is wrong return status HTTP_400_BAD_REQUEST
+    If product out of stock return status HTTP_409_CONFLICT
+    """
+    permission_classes = (permissions.IsAuthenticated,)
 
-    queryset = models.PurchaseInvoiceLine.objects.all()
-    serializer_class = serializers.PurchaseInvoiceLineSerializer
+    def get(self, request, row: int, column: int):
+        # get the existing object of ProductInstance
+        try:
+            product = ProductInstance.objects.get(diopter=row, cylinder=column)
+        except ProductInstance.DoesNotExist:
+            return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
+
+        # get the existing customer cart
+        try:
+            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
+        except Order.DoesNotExist:
+            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        except Order.MultipleObjectsReturned:
+            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
+
+        # get the existing OrderLine or create new one
+        if product.quantity_in_hand and product.quantity_in_hand > 0:
+            invoice_line, created = OrderLine.objects.get_or_create(product=product,
+                                                                           order=order,
+                                                                           defaults={'unit_price': product.price})
+            if invoice_line.quantity + 1 <= product.quantity_in_hand:
+                invoice_line.quantity += 1
+            else:
+                return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+
+        return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
+
+class PurchaseLineViewSet(viewsets.ModelViewSet):
+    """ViewSet for the PurchaseLine class"""
+
+    queryset = models.PurchaseLine.objects.all()
+    serializer_class = serializers.PurchaseLineSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-class OrderInvoiceLineViewSet(viewsets.ModelViewSet):
-    """ViewSet for the OrderInvoiceLine class"""
+class OrderLineViewSet(viewsets.ModelViewSet):
+    """ViewSet for the OrderLine class"""
 
-    queryset = models.OrderInvoiceLine.objects.all()
-    serializer_class = serializers.OrderInvoiceLineSerializer
+    queryset = models.OrderLine.objects.all()
+    serializer_class = serializers.OrderLineSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 

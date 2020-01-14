@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='PurchaseInvoiceLine',
+            name='PurchaseLine',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.PositiveSmallIntegerField(default=1, verbose_name='Amount')),
@@ -70,10 +70,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='purchase',
             name='products',
-            field=models.ManyToManyField(blank=True, related_name='purchases', through='purchase.PurchaseInvoiceLine', to='product.ProductInstance', verbose_name='Goods'),
+            field=models.ManyToManyField(blank=True, related_name='purchases', through='purchase.PurchaseLine', to='product.ProductInstance', verbose_name='Goods'),
         ),
         migrations.CreateModel(
-            name='OrderInvoiceLine',
+            name='OrderLine',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.PositiveSmallIntegerField(default=1, verbose_name='Amount')),
@@ -85,6 +85,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='order',
             name='products',
-            field=models.ManyToManyField(blank=True, related_name='orders', through='purchase.OrderInvoiceLine', to='product.ProductInstance', verbose_name='Goods'),
+            field=models.ManyToManyField(blank=True, related_name='orders', through='purchase.OrderLine', to='product.ProductInstance', verbose_name='Goods'),
         ),
     ]

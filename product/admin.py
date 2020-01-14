@@ -52,7 +52,7 @@ class ProductAdminForm(forms.ModelForm):
 
     class Meta:
         model = models.Product
-        fields = "__all__"
+        exclude = ['created_by']
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -62,11 +62,14 @@ class ProductAdmin(admin.ModelAdmin):
         "date_updated",
         "brand_name",
         "brand_image",
-        "short_description",
         "product_image",
         "title",
     ]
 
+    def save_model(self, request, obj, form, change):
+        if not obj.id:
+            obj.created_by = request.user
+        obj.save()
 
 class DiopterPowerAdminForm(forms.ModelForm):
 

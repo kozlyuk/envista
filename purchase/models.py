@@ -17,7 +17,7 @@ def docs_directory_path(filename):
 
 class Purchase(models.Model):
     """ Abstract Model contains Purchases """
-    products = models.ManyToManyField(ProductInstance, through='PurchaseInvoiceLine', related_name='purchases',
+    products = models.ManyToManyField(ProductInstance, through='PurchaseLine', related_name='purchases',
                                       verbose_name=_('Goods'), blank=True)
     customer = models.ForeignKey(User, verbose_name=_('Customer'), blank=True, null=True, on_delete=models.PROTECT)
     invoice_number = models.CharField(_('Invoice number'), max_length=45)
@@ -64,7 +64,7 @@ class Order(models.Model):
         (AdvancePaid, 'Оплачений аванс'),
         (PaidUp, 'Оплачений')
         )
-    products = models.ManyToManyField(ProductInstance, through='OrderInvoiceLine', related_name='orders',
+    products = models.ManyToManyField(ProductInstance, through='OrderLine', related_name='orders',
                                       verbose_name=_('Goods'), blank=True)
     customer = models.ForeignKey(User, verbose_name=_('Customer'), blank=True, null=True, on_delete=models.PROTECT)
     invoice_number = models.CharField(_('Invoice number'), max_length=45)
@@ -103,7 +103,7 @@ class Order(models.Model):
     invoice_number_generate.short_description = _('Generated invoice number')
 
 
-class PurchaseInvoiceLine(models.Model):
+class PurchaseLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
     purchase = models.ForeignKey(Purchase, verbose_name=_('Purchase'), on_delete=models.CASCADE)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
@@ -111,7 +111,7 @@ class PurchaseInvoiceLine(models.Model):
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
 
 
-class OrderInvoiceLine(models.Model):
+class OrderLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
     order= models.ForeignKey(Order, verbose_name=_('Order'), on_delete=models.CASCADE)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)

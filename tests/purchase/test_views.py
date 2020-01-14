@@ -8,22 +8,22 @@ from django.test import Client
 pytestmark = [pytest.mark.django_db]
 
 
-def tests_PurchaseInvoiceLine_list_view():
-    instance1 = test_helpers.create_purchase_PurchaseInvoiceLine()
-    instance2 = test_helpers.create_purchase_PurchaseInvoiceLine()
+def tests_PurchaseLine_list_view():
+    instance1 = test_helpers.create_purchase_PurchaseLine()
+    instance2 = test_helpers.create_purchase_PurchaseLine()
     client = Client()
-    url = reverse("purchase_PurchaseInvoiceLine_list")
+    url = reverse("purchase_PurchaseLine_list")
     response = client.get(url)
     assert response.status_code == 200
     assert str(instance1) in response.content.decode("utf-8")
     assert str(instance2) in response.content.decode("utf-8")
 
 
-def tests_PurchaseInvoiceLine_create_view():
+def tests_PurchaseLine_create_view():
     product = test_helpers.create_ProductInstance()
     purchase = test_helpers.create_Purchase()
     client = Client()
-    url = reverse("purchase_PurchaseInvoiceLine_create")
+    url = reverse("purchase_PurchaseLine_create")
     data = {
         "quantity": 1,
         "unit_price": 1.0,
@@ -34,21 +34,21 @@ def tests_PurchaseInvoiceLine_create_view():
     assert response.status_code == 302
 
 
-def tests_PurchaseInvoiceLine_detail_view():
+def tests_PurchaseLine_detail_view():
     client = Client()
-    instance = test_helpers.create_purchase_PurchaseInvoiceLine()
-    url = reverse("purchase_PurchaseInvoiceLine_detail", args=[instance.pk, ])
+    instance = test_helpers.create_purchase_PurchaseLine()
+    url = reverse("purchase_PurchaseLine_detail", args=[instance.pk, ])
     response = client.get(url)
     assert response.status_code == 200
     assert str(instance) in response.content.decode("utf-8")
 
 
-def tests_PurchaseInvoiceLine_update_view():
+def tests_PurchaseLine_update_view():
     product = test_helpers.create_ProductInstance()
     purchase = test_helpers.create_Purchase()
     client = Client()
-    instance = test_helpers.create_purchase_PurchaseInvoiceLine()
-    url = reverse("purchase_PurchaseInvoiceLine_update", args=[instance.pk, ])
+    instance = test_helpers.create_purchase_PurchaseLine()
+    url = reverse("purchase_PurchaseLine_update", args=[instance.pk, ])
     data = {
         "quantity": 1,
         "unit_price": 1.0,
@@ -59,22 +59,22 @@ def tests_PurchaseInvoiceLine_update_view():
     assert response.status_code == 302
 
 
-def tests_OrderInvoiceLine_list_view():
-    instance1 = test_helpers.create_purchase_OrderInvoiceLine()
-    instance2 = test_helpers.create_purchase_OrderInvoiceLine()
+def tests_OrderLine_list_view():
+    instance1 = test_helpers.create_purchase_OrderLine()
+    instance2 = test_helpers.create_purchase_OrderLine()
     client = Client()
-    url = reverse("purchase_OrderInvoiceLine_list")
+    url = reverse("purchase_OrderLine_list")
     response = client.get(url)
     assert response.status_code == 200
     assert str(instance1) in response.content.decode("utf-8")
     assert str(instance2) in response.content.decode("utf-8")
 
 
-def tests_OrderInvoiceLine_create_view():
+def tests_OrderLine_create_view():
     product = test_helpers.create_ProductInstance()
     order = test_helpers.create_Order()
     client = Client()
-    url = reverse("purchase_OrderInvoiceLine_create")
+    url = reverse("purchase_OrderLine_create")
     data = {
         "unit_price": 1.0,
         "quantity": 1,
@@ -85,21 +85,21 @@ def tests_OrderInvoiceLine_create_view():
     assert response.status_code == 302
 
 
-def tests_OrderInvoiceLine_detail_view():
+def tests_OrderLine_detail_view():
     client = Client()
-    instance = test_helpers.create_purchase_OrderInvoiceLine()
-    url = reverse("purchase_OrderInvoiceLine_detail", args=[instance.pk, ])
+    instance = test_helpers.create_purchase_OrderLine()
+    url = reverse("purchase_OrderLine_detail", args=[instance.pk, ])
     response = client.get(url)
     assert response.status_code == 200
     assert str(instance) in response.content.decode("utf-8")
 
 
-def tests_OrderInvoiceLine_update_view():
+def tests_OrderLine_update_view():
     product = test_helpers.create_ProductInstance()
     order = test_helpers.create_Order()
     client = Client()
-    instance = test_helpers.create_purchase_OrderInvoiceLine()
-    url = reverse("purchase_OrderInvoiceLine_update", args=[instance.pk, ])
+    instance = test_helpers.create_purchase_OrderLine()
+    url = reverse("purchase_OrderLine_update", args=[instance.pk, ])
     data = {
         "unit_price": 1.0,
         "quantity": 1,

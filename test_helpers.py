@@ -102,7 +102,7 @@ def create_product_DiopterPower(**kwargs):
     defaults["value"] = ""
     defaults.update(**kwargs)
     return product_models.DiopterPower.objects.create(**defaults)
-def create_purchase_PurchaseInvoiceLine(**kwargs):
+def create_purchase_PurchaseLine(**kwargs):
     defaults = {}
     defaults["quantity"] = ""
     defaults["unit_price"] = ""
@@ -111,8 +111,8 @@ def create_purchase_PurchaseInvoiceLine(**kwargs):
     if "purchase" not in kwargs:
         defaults["purchase"] = create_Purchase()
     defaults.update(**kwargs)
-    return purchase_models.PurchaseInvoiceLine.objects.create(**defaults)
-def create_purchase_OrderInvoiceLine(**kwargs):
+    return purchase_models.PurchaseLine.objects.create(**defaults)
+def create_purchase_OrderLine(**kwargs):
     defaults = {}
     defaults["unit_price"] = ""
     defaults["quantity"] = ""
@@ -121,7 +121,7 @@ def create_purchase_OrderInvoiceLine(**kwargs):
     if "order" not in kwargs:
         defaults["order"] = create_Order()
     defaults.update(**kwargs)
-    return purchase_models.OrderInvoiceLine.objects.create(**defaults)
+    return purchase_models.OrderLine.objects.create(**defaults)
 def create_purchase_Order(**kwargs):
     defaults = {}
     defaults["invoice_date"] = datetime.now()

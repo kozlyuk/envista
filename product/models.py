@@ -12,9 +12,9 @@ class Product(models.Model):
     """ Model contains Products """
     title = models.CharField(_('Product title'), max_length=255, unique=True)
     short_description = models.TextField(_('Short description'))
-    product_image = models.ImageField(_('Product image'), upload_to='Product/image')
+    product_image = models.ImageField(_('Product image'), upload_to='product/')
     brand_name = models.CharField(_('Brand name'), max_length=32)
-    brand_image = models.ImageField(_('Brand Image'), upload_to='brands/')
+    brand_image = models.ImageField(_('Brand Image'), upload_to='brand/')
     footer = models.TextField(_('Site footer'), blank=True)
 
     # Creator and Date information
@@ -73,7 +73,7 @@ class ProductInstance(models.Model):
         verbose_name_plural = _('Product Instances')
 
     def __str__(self):
-        return self.product.title + str(self.cylinder) + str(self.diopter)
+        return self.product.title + ' ' + str(self.cylinder) + '-' + str(self.diopter)
 
     def get_price(self):
         return str(self.price) + ' ' + settings.DEFAULT_CURRENCY

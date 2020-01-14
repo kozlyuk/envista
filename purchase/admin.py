@@ -4,15 +4,15 @@ from django import forms
 from . import models
 
 
-class PurchaseInvoiceLineAdminForm(forms.ModelForm):
+class PurchaseLineAdminForm(forms.ModelForm):
 
     class Meta:
-        model = models.PurchaseInvoiceLine
+        model = models.PurchaseLine
         fields = "__all__"
 
 
-class PurchaseInvoiceLineAdmin(admin.ModelAdmin):
-    form = PurchaseInvoiceLineAdminForm
+class PurchaseLineAdmin(admin.ModelAdmin):
+    form = PurchaseLineAdminForm
     list_display = [
         "quantity",
         "unit_price",
@@ -23,15 +23,15 @@ class PurchaseInvoiceLineAdmin(admin.ModelAdmin):
     ]
 
 
-class OrderInvoiceLineAdminForm(forms.ModelForm):
+class OrderLineAdminForm(forms.ModelForm):
 
     class Meta:
-        model = models.OrderInvoiceLine
+        model = models.OrderLine
         fields = "__all__"
 
 
-class OrderInvoiceLineAdmin(admin.ModelAdmin):
-    form = OrderInvoiceLineAdminForm
+class OrderLineAdmin(admin.ModelAdmin):
+    form = OrderLineAdminForm
     list_display = [
         "unit_price",
         "quantity",
@@ -100,7 +100,7 @@ class PurchaseAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(models.PurchaseInvoiceLine, PurchaseInvoiceLineAdmin)
-admin.site.register(models.OrderInvoiceLine, OrderInvoiceLineAdmin)
+admin.site.register(models.PurchaseLine, PurchaseLineAdmin)
+admin.site.register(models.OrderLine, OrderLineAdmin)
 admin.site.register(models.Order, OrderAdmin)
 admin.site.register(models.Purchase, PurchaseAdmin)

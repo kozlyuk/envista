@@ -12,12 +12,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='orderinvoiceline',
+            model_name='OrderLine',
             name='order',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='purchase.Order', verbose_name='Order'),
         ),
         migrations.AlterField(
-            model_name='purchaseinvoiceline',
+            model_name='PurchaseLine',
             name='purchase',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='purchase.Purchase', verbose_name='Purchase'),
         ),

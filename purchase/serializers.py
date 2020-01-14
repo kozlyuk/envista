@@ -3,19 +3,19 @@ from rest_framework import serializers
 from . import models
 
 
-class PurchaseInvoiceLineSerializer(serializers.ModelSerializer):
+class PurchaseLineSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.PurchaseInvoiceLine
+        model = models.PurchaseLine
         fields = [
             "quantity",
             "unit_price",
         ]
 
-class OrderInvoiceLineSerializer(serializers.ModelSerializer):
+class OrderLineSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.OrderInvoiceLine
+        model = models.OrderLine
         fields = [
             "unit_price",
             "quantity",
