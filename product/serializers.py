@@ -8,16 +8,10 @@ class ProductInstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductInstance
         fields = [
-            "date_updated",
-            "date_created",
+            "product",
+            "cylinder",
+            "diopter",
             "price",
-        ]
-
-class StockSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Stock
-        fields = [
             "quantity_in_hand",
         ]
 

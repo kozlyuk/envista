@@ -10,7 +10,7 @@ product = Product.objects.create(title='ІНТРАОКУЛЯРНА ЛІНЗА EN
                                  date_created=date.today(),
                                  date_updated=date.today(),
                                  created_by_id=1,
-                                 footer="© 2020 ООО «Оптдіея». Усі права захищені."
+                                 footer="© 2020 ТОВ «Оптдіея». Усі права захищені."
                                 )
 
 for value in range(125, 576, 75):
@@ -21,5 +21,7 @@ for value in range(60, 301, 5):
 
 for column in Cylinder.objects.all():
     for row in DiopterPower.objects.all():
-        pi = ProductInstance.objects.create(product=product, cylinder=column, diopter=row)
-        Stock.objects.create(product_instance=pi, quantity_in_hand=random.randint(1,10))
+        ProductInstance.objects.create(product=product,
+                                       cylinder=column,
+                                       diopter=row,
+                                       quantity_in_hand=random.randint(1,10))

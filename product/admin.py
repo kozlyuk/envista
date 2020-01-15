@@ -14,22 +14,10 @@ class ProductInstanceAdminForm(forms.ModelForm):
 class ProductInstanceAdmin(admin.ModelAdmin):
     form = ProductInstanceAdminForm
     list_display = [
-        "date_updated",
-        "date_created",
+        "product",
+        "cylinder",
+        "diopter",
         "price",
-    ]
-
-
-class StockAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = models.Stock
-        fields = "__all__"
-
-
-class StockAdmin(admin.ModelAdmin):
-    form = StockAdminForm
-    list_display = [
         "quantity_in_hand",
     ]
 
@@ -86,7 +74,6 @@ class DiopterPowerAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.ProductInstance, ProductInstanceAdmin)
-admin.site.register(models.Stock, StockAdmin)
 admin.site.register(models.Cylinder, CylinderAdmin)
 admin.site.register(models.Product, ProductAdmin)
 admin.site.register(models.DiopterPower, DiopterPowerAdmin)

@@ -6,7 +6,6 @@ from . import api
 
 router = routers.DefaultRouter()
 router.register("ProductInstance", api.ProductInstanceViewSet)
-router.register("Stock", api.StockViewSet)
 router.register("Cylinder", api.CylinderViewSet)
 router.register("Product", api.ProductViewSet)
 router.register("DiopterPower", api.DiopterPowerViewSet)
