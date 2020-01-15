@@ -80,6 +80,12 @@ class DelFromCart(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, row: int, column: int):
+        # get the existing object of ProductInstance
+        try:
+            product = ProductInstance.objects.get(diopter=row, cylinder=column)
+        except ProductInstance.DoesNotExist:
+            return Response(_('Product does not exist'), status=status.HTTP_404_NOT_FOUND)
+
         # get the existing customer cart
         try:
             order = Order.objects.get(customer=self.request.user, status=Order.InCart)
@@ -90,13 +96,10 @@ class DelFromCart(views.APIView):
 
         # get the existing OrderLine or returm exception
         try:
-            invoice_line = order.products.get(cylinder=row, diopter=column).clear()         # TODO Try if it works (maybe delete())
-            # invoice_line = OrderLine.objects.get(order=order,
-            #                                      product__cylinder=row,
-            #                                      product__diopter=column).delete()
+            order.products.remove(product)
             return Response(_('Product deleted'), status=status.HTTP_200_OK)
         except Order.DoesNotExist:
-            return Response(_('Product is out of stock'), status=status.HTTP_404_NOT_FOUND)
+            return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
 
 
 # class UpdateQuantity(views.APIView):
