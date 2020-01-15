@@ -1,5 +1,17 @@
+/*
+ *
+ *   Basket component.
+ *
+ *   @author    Andrey Perestyuk (Arrathilar)
+ *   @email-primary a.perestyuk@itel.rv.ua
+ *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
+ *   @copyright 2020 ITEL-Service
+ *
+ *
+ */
+
 import React from "react";
-import { Container, Row, Card, Col } from "react-bootstrap";
+import {Card, Col, Container, Row} from "react-bootstrap";
 import BasketItem from "../basketItem/basketItem";
 
 export default class Basket extends React.Component {
@@ -19,7 +31,7 @@ export default class Basket extends React.Component {
 					<Col>
 						<Card>
 							<Card.Header className="text-center">Ваші замовлення</Card.Header>
-							<BasketItem />
+							<BasketItem/>
 						</Card>
 					</Col>
 				</Row>

@@ -1,5 +1,17 @@
+/*
+ *
+ *   Submit component for data from table.
+ *
+ *   @author    Andrey Perestyuk (Arrathilar)
+ *   @email-primary a.perestyuk@itel.rv.ua
+ *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
+ *   @copyright 2020 ITEL-Service
+ *
+ *
+ */
+
 import React from "react";
-import { Button } from "react-bootstrap";
+import {Button} from "react-bootstrap";
 
 export default class Submit extends React.Component {
 	constructor(props) {
@@ -16,10 +28,10 @@ export default class Submit extends React.Component {
 			},
 			body: JSON.stringify(this.purchase)
 		})
-			.then(function(data) {
+			.then(function (data) {
 				console.log("Request succeeded with JSON response", data);
 			})
-			.catch(function(error) {
+			.catch(function (error) {
 				console.log("Request failed", error);
 			});
 	}

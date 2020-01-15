@@ -1,5 +1,17 @@
+/*
+ *
+ *   Navbar component.
+ *
+ *   @author    Andrey Perestyuk (Arrathilar)
+ *   @email-primary a.perestyuk@itel.rv.ua
+ *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
+ *   @copyright 2020 ITEL-Service
+ *
+ *
+ */
+
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 class Navbar extends React.Component {
 	logOut() {
@@ -9,9 +21,11 @@ class Navbar extends React.Component {
 				result => {
 					console.log(result);
 				},
-				error => {}
+				error => {
+				}
 			);
 	}
+
 	render() {
 		return (
 			<div
@@ -29,24 +43,24 @@ class Navbar extends React.Component {
 						/>
 					</a>
 					<nav role="navigation" className="w-nav-menu p-0">
-						<a href="#" className="nav-link w-nav-link" style={{ maxWidth: 940 }}>
+						<a href="#" className="nav-link w-nav-link" style={{maxWidth: 940}}>
 							<Link to="/">Vendor main page</Link>
 						</a>
 						<a
 							href="https://envista.toriccalculator.com/(S(3p54nq0ludca5hrzdtsqdtfl))/UserAgreement.aspx"
 							target="_blank"
 							className="nav-link-2 w-nav-link"
-							style={{ maxWidth: 940 }}>
+							style={{maxWidth: 940}}>
 							Calculator
 						</a>
-						<a className="nav-link-3 w-nav-link" style={{ maxWidth: 940 }}>
-							<Link style={{ maxWidth: 940 }} to="/basket">
+						<a className="nav-link-3 w-nav-link" style={{maxWidth: 940}}>
+							<Link style={{maxWidth: 940}} to="/basket">
 								Корзина
 							</Link>
 						</a>
-						<a className="nav-link-3 w-nav-link" style={{ maxWidth: 940 }}>
+						<a className="nav-link-3 w-nav-link" style={{maxWidth: 940}}>
 							<Link
-								style={{ maxWidth: 940 }}
+								style={{maxWidth: 940}}
 								to="/logout"
 								onClick={() => {
 									this.logOut();
@@ -56,10 +70,10 @@ class Navbar extends React.Component {
 						</a>
 					</nav>
 					<div className="w-nav-button">
-						<div className="w-icon-nav-menu" />
+						<div className="w-icon-nav-menu"/>
 					</div>
 				</div>
-				<div className="w-nav-overlay" data-wf-ignore />
+				<div className="w-nav-overlay" data-wf-ignore/>
 			</div>
 		);
 	}

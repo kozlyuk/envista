@@ -1,3 +1,15 @@
+/*
+ *
+ *   Purchase list component.
+ *
+ *   @author    Andrey Perestyuk (Arrathilar)
+ *   @email-primary a.perestyuk@itel.rv.ua
+ *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
+ *   @copyright 2020 ITEL-Service
+ *
+ *
+ */
+
 import React from "react";
 
 export default class PurchaseList extends React.Component {
@@ -40,57 +52,57 @@ export default class PurchaseList extends React.Component {
 					<h4>Обрано:</h4>
 					<table className="table-bordered col mb-4">
 						<tbody className="rc-table-tbody">
-							<tr className="rc-table-row rc-table-row-level-0" data-row-key={1}>
-								<td className="rc-table-row-cell-break-word text-center">
+						<tr className="rc-table-row rc-table-row-level-0" data-row-key={1}>
+							<td className="rc-table-row-cell-break-word text-center">
 									<span
 										className="rc-table-row-indent indent-level-0"
-										style={{ paddingLeft: 0 }}>
+										style={{paddingLeft: 0}}>
 										#
 									</span>
-								</td>
-								<td className="rc-table-row-cell-break-word text-center">
+							</td>
+							<td className="rc-table-row-cell-break-word text-center">
 									<span
 										className="rc-table-row-indent indent-level-0"
-										style={{ paddingLeft: 0 }}>
+										style={{paddingLeft: 0}}>
 										Cylinder
 									</span>
-								</td>
-								<td className="rc-table-row-cell-break-word text-center">
+							</td>
+							<td className="rc-table-row-cell-break-word text-center">
 									<span
 										className="rc-table-row-indent indent-level-0"
-										style={{ paddingLeft: 0 }}>
+										style={{paddingLeft: 0}}>
 										Diopter
 									</span>
-								</td>
-							</tr>
-							{this.props.purchaseList.map((item, index) => (
-								<tr
-									key={index}
-									className="rc-table-row rc-table-row-level-0"
-									data-row-key={1}>
-									<td className="rc-table-row-cell-break-word text-center">
+							</td>
+						</tr>
+						{this.props.purchaseList.map((item, index) => (
+							<tr
+								key={index}
+								className="rc-table-row rc-table-row-level-0"
+								data-row-key={1}>
+								<td className="rc-table-row-cell-break-word text-center">
 										<span
 											className="rc-table-row-indent indent-level-0"
-											style={{ paddingLeft: 0 }}>
+											style={{paddingLeft: 0}}>
 											{index + 1}
 										</span>
-									</td>
-									<td className="rc-table-row-cell-break-word text-center">
+								</td>
+								<td className="rc-table-row-cell-break-word text-center">
 										<span
 											className="rc-table-row-indent indent-level-0"
-											style={{ paddingLeft: 0 }}>
+											style={{paddingLeft: 0}}>
 											{this.state.rows[item[1]]}
 										</span>
-									</td>
-									<td className="rc-table-row-cell-break-word text-center">
+								</td>
+								<td className="rc-table-row-cell-break-word text-center">
 										<span
 											className="rc-table-row-indent indent-level-0"
-											style={{ paddingLeft: 0 }}>
+											style={{paddingLeft: 0}}>
 											{this.state.columns[item[0]]}
 										</span>
-									</td>
-								</tr>
-							))}
+								</td>
+							</tr>
+						))}
 						</tbody>
 					</table>
 				</div>
