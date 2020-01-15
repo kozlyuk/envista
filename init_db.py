@@ -1,4 +1,4 @@
-from product.models import ProductInstance, DiopterPower, Cylinder, Stock, Product
+from product.models import ProductInstance, DiopterPower, Cylinder, Product
 import random
 from datetime import date
 
