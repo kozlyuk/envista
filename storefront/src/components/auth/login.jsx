@@ -10,7 +10,7 @@ export default class Login extends Component {
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.state = {
-			username: null,
+			email: null,
 			password: null,
 		}
 	}
@@ -24,13 +24,13 @@ export default class Login extends Component {
 		event.preventDefault();
 		let user = new Auth();
 		const target = event.target;
-		const username = target.username.value;
+		const email = target.email.value;
 		const password = target.password.value;
 		this.setState({
 			password: password,
-			username: username
+			email: email
 		});
-		user.login(username, password)
+		user.login(email, password)
 	}
 
 	static validation() {
@@ -39,15 +39,15 @@ export default class Login extends Component {
 
 	render() {
 		return (
-			<Container>
+			<Container className="auth-container">
 				<div className="box">
 					<form onSubmit={this.handleSubmit}>
 						<h1>Вхід</h1>
 						<div className="group">
-							<input name="username" className="inputMaterial" type="text" required/>
+							<input name="email" className="inputMaterial" type="email" required/>
 							<span className="highlight"/>
 							<span className="bar"/>
-							<label>Username</label>
+							<label>Email</label>
 						</div>
 						<div className="group">
 							<input name="password" className="inputMaterial" type="password" required/>

@@ -36,7 +36,7 @@ export default class Auth {
 		if (g_session_token == null) {
 			g_session_token = sessionStorage.getItem("auth");
 		}
-		return g_session_token
+		return g_session_token.split(':')[1].replace(/["}]+/g, '')
 	}
 
 	/*
@@ -54,27 +54,27 @@ export default class Auth {
 	}
 
 	/*
-	 * method login(username, password) get parameters from backend
+	 * method login(email, password) get parameters from backend
 	 * end put it to local storage
 	 */
-	async login(username, password) {
-		let result = await this.postLoginData(username, password);
+	async login(email, password) {
+		let result = await this.postLoginData(email, password);
 		localStorage.setItem("auth", await result.text())
 	}
 
 	/*
-	 * method postLoginData(username, password) get parameters
+	 * method postLoginData(email, password) get parameters
 	 * and post to backend
 	 */
-	async postLoginData(username, password) {
+	async postLoginData(email, password) {
 		try {
 			const url = process.env.REACT_APP_LOGIN;
 			const resp = fetch(url, {
-				method: "post",
+				method: "POST",
 				headers: {
 					"Content-type": "application/json; charset=UTF-8"
 				},
-				body: JSON.stringify({username: username, password: password})
+				body: JSON.stringify({email: email, password: password})
 			});
 			console.log(resp);
 			return resp

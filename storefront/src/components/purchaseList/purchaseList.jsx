@@ -11,6 +11,8 @@
  */
 
 import React from "react";
+import Auth from "../auth/auth";
+
 
 export default class PurchaseList extends React.Component {
 	constructor(props) {
@@ -23,17 +25,23 @@ export default class PurchaseList extends React.Component {
 
 	//get data from backend => then mount component
 	componentDidMount() {
-		fetch(process.env.REACT_APP_PURCHASE_DATA_URL)
+		const user = new Auth();
+		const authToken = user.getAuthToken();
+		fetch(process.env.REACT_APP_PURCHASE_DATA_URL, {
+			headers: {
+				"Authorization": "Token " + authToken
+			}
+		})
 			.then(res => res.json())
 			.then(
 				result => {
-					const rowName = result[0].rows.map(item => {
+					const rowName = result[1].rows.map(item => {
 						return item.rowName;
 					});
 					this.setState({
 						isLoaded: true,
 						rows: rowName,
-						columns: result[0].columnsName
+						columns: result[0].columns
 					});
 				},
 				error => {

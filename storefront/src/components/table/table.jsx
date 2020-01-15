@@ -9,6 +9,7 @@
 
 
 import React from "react";
+import Auth from "../auth/auth";
 import ButtonBackground from "../buttonBackground/buttonBackground";
 
 
@@ -27,11 +28,11 @@ export class Table extends React.PureComponent {
 	decreaseQty(counter, columnIdx, rowIdx) {
 		const newQty = counter > 0 ? counter - 1 : 0;
 		let newArray = [...this.state.rows];
-		newArray[rowIdx].counters[columnIdx] = newQty;
+		console.log(newArray)
+		newArray[rowIdx].quantity[columnIdx] = newQty;
 		this.sendData(newQty); // TODO: !!!
 		this.setState({rows: newArray});
 		this.getData(counter, columnIdx, rowIdx);
-		console.log(this)
 	}
 
 	sendData(data) {
@@ -48,14 +49,20 @@ export class Table extends React.PureComponent {
 
 //get data from backend => then mount component
 	componentDidMount() {
-		fetch(process.env.REACT_APP_TABLE_DATA)
+		const user = new Auth();
+		const authToken = user.getAuthToken();
+		fetch(process.env.REACT_APP_TABLE_DATA, {
+			headers: {
+				"Authorization": "Token " + authToken
+			}
+		})
 			.then(res => res.json())
 			.then(
 				result => {
 					this.setState({
 						isLoaded: true,
-						rows: result[0].rows,
-						columnsName: result[0].columnsName
+						rows: result[1].rows,
+						columnsName: result[0].columns
 					});
 				},
 				error => {
@@ -91,19 +98,16 @@ export class Table extends React.PureComponent {
 						</tr>
 						</thead>
 						<tbody className="rc-table-tbody">
+						{console.log(this.state.rows)}
 						{this.state.rows.map((item, rowIdx) => (
-							<tr
-								key={rowIdx}
+							<tr key={rowIdx}
 								className="rc-table-row rc-table-row-level-0"
 								data-row-key={1}>
 								<td className="rc-table-row-cell-break-word text-center">
-										<span
-											className="rc-table-row-indent indent-level-0"
-											style={{paddingLeft: 0}}>
-											{item.rowName}
-										</span>
+									<span className="rc-table-row-indent indent-level-0"
+										  style={{paddingLeft: 0}}>{item.row}</span>
 								</td>
-								{item.counters.map((counter, columnIdx) => (
+								{item.quantity.map((counter, columnIdx) => (
 									<td
 										key={columnIdx}
 										className="rc-table-row-cell-break-word">
