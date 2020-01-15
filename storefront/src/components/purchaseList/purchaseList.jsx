@@ -1,4 +1,18 @@
+/*
+ *
+ *   Purchase list component.
+ *
+ *   @author    Andrey Perestyuk (Arrathilar)
+ *   @email-primary a.perestyuk@itel.rv.ua
+ *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
+ *   @copyright 2020 ITEL-Service
+ *
+ *
+ */
+
 import React from "react";
+import Auth from "../auth/auth";
+
 
 export default class PurchaseList extends React.Component {
 	constructor(props) {
@@ -11,17 +25,23 @@ export default class PurchaseList extends React.Component {
 
 	//get data from backend => then mount component
 	componentDidMount() {
-		fetch(process.env.REACT_APP_PURCHASE_DATA_URL)
+		const user = new Auth();
+		const authToken = user.getAuthToken();
+		fetch(process.env.REACT_APP_PURCHASE_DATA_URL, {
+			headers: {
+				"Authorization": "Token " + authToken
+			}
+		})
 			.then(res => res.json())
 			.then(
 				result => {
-					const rowName = result[0].rows.map(item => {
+					const rowName = result[1].rows.map(item => {
 						return item.rowName;
 					});
 					this.setState({
 						isLoaded: true,
 						rows: rowName,
-						columns: result[0].columnsName
+						columns: result[0].columns
 					});
 				},
 				error => {
@@ -40,57 +60,57 @@ export default class PurchaseList extends React.Component {
 					<h4>Обрано:</h4>
 					<table className="table-bordered col mb-4">
 						<tbody className="rc-table-tbody">
-							<tr className="rc-table-row rc-table-row-level-0" data-row-key={1}>
-								<td className="rc-table-row-cell-break-word text-center">
+						<tr className="rc-table-row rc-table-row-level-0" data-row-key={1}>
+							<td className="rc-table-row-cell-break-word text-center">
 									<span
 										className="rc-table-row-indent indent-level-0"
-										style={{ paddingLeft: 0 }}>
+										style={{paddingLeft: 0}}>
 										#
 									</span>
-								</td>
-								<td className="rc-table-row-cell-break-word text-center">
+							</td>
+							<td className="rc-table-row-cell-break-word text-center">
 									<span
 										className="rc-table-row-indent indent-level-0"
-										style={{ paddingLeft: 0 }}>
+										style={{paddingLeft: 0}}>
 										Cylinder
 									</span>
-								</td>
-								<td className="rc-table-row-cell-break-word text-center">
+							</td>
+							<td className="rc-table-row-cell-break-word text-center">
 									<span
 										className="rc-table-row-indent indent-level-0"
-										style={{ paddingLeft: 0 }}>
+										style={{paddingLeft: 0}}>
 										Diopter
 									</span>
-								</td>
-							</tr>
-							{this.props.purchaseList.map((item, index) => (
-								<tr
-									key={index}
-									className="rc-table-row rc-table-row-level-0"
-									data-row-key={1}>
-									<td className="rc-table-row-cell-break-word text-center">
+							</td>
+						</tr>
+						{this.props.purchaseList.map((item, index) => (
+							<tr
+								key={index}
+								className="rc-table-row rc-table-row-level-0"
+								data-row-key={1}>
+								<td className="rc-table-row-cell-break-word text-center">
 										<span
 											className="rc-table-row-indent indent-level-0"
-											style={{ paddingLeft: 0 }}>
+											style={{paddingLeft: 0}}>
 											{index + 1}
 										</span>
-									</td>
-									<td className="rc-table-row-cell-break-word text-center">
+								</td>
+								<td className="rc-table-row-cell-break-word text-center">
 										<span
 											className="rc-table-row-indent indent-level-0"
-											style={{ paddingLeft: 0 }}>
+											style={{paddingLeft: 0}}>
 											{this.state.rows[item[1]]}
 										</span>
-									</td>
-									<td className="rc-table-row-cell-break-word text-center">
+								</td>
+								<td className="rc-table-row-cell-break-word text-center">
 										<span
 											className="rc-table-row-indent indent-level-0"
-											style={{ paddingLeft: 0 }}>
+											style={{paddingLeft: 0}}>
 											{this.state.columns[item[0]]}
 										</span>
-									</td>
-								</tr>
-							))}
+								</td>
+							</tr>
+						))}
 						</tbody>
 					</table>
 				</div>

@@ -75,9 +75,15 @@ CORS_ORIGIN_WHITELIST = [
     ]
 
 CORS_ALLOW_HEADERS = [
-    'WWW-Authenticate',
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
     'x-csrftoken',
-    'Authorization',
+    'x-requested-with',
 ]
 
 REST_FRAMEWORK = {
