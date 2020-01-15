@@ -24,12 +24,12 @@ export class Table extends React.PureComponent {
 		};
 	}
 
-	//decrease counter of item quantity and write to state
+	//decrease counter of item quantities and write to state
 	decreaseQty(counter, columnIdx, rowIdx) {
 		const newQty = counter > 0 ? counter - 1 : 0;
 		let newArray = [...this.state.rows];
 		console.log(newArray)
-		newArray[rowIdx].quantity[columnIdx] = newQty;
+		newArray[rowIdx].quantities[columnIdx] = newQty;
 		this.sendData(newQty); // TODO: !!!
 		this.setState({rows: newArray});
 		this.getData(counter, columnIdx, rowIdx);
@@ -107,7 +107,7 @@ export class Table extends React.PureComponent {
 									<span className="rc-table-row-indent indent-level-0"
 										  style={{paddingLeft: 0}}>{item.row}</span>
 								</td>
-								{item.quantity.map((counter, columnIdx) => (
+								{item.quantities.map((counter, columnIdx) => (
 									<td
 										key={columnIdx}
 										className="rc-table-row-cell-break-word">
