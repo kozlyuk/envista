@@ -36,7 +36,7 @@ export default class PurchaseList extends React.Component {
 			.then(
 				result => {
 					const rowName = result[1].rows.map(item => {
-						return item.rowName;
+						return item.row;
 					});
 					this.setState({
 						isLoaded: true,

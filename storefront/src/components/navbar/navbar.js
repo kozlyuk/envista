@@ -44,14 +44,14 @@ class Navbar extends React.Component {
 					</a>
 					<nav role="navigation" className="w-nav-menu p-0">
 						<a href="#" className="nav-link w-nav-link" style={{maxWidth: 940}}>
-							<Link to="/">Vendor main page</Link>
+							<Link to="/">Головна</Link>
 						</a>
 						<a
 							href="https://envista.toriccalculator.com/(S(3p54nq0ludca5hrzdtsqdtfl))/UserAgreement.aspx"
 							target="_blank"
 							className="nav-link-2 w-nav-link"
 							style={{maxWidth: 940}}>
-							Calculator
+							Калькулятор
 						</a>
 						<a className="nav-link-3 w-nav-link" style={{maxWidth: 940}}>
 							<Link style={{maxWidth: 940}} to="/basket">
@@ -65,7 +65,7 @@ class Navbar extends React.Component {
 								onClick={() => {
 									this.logOut();
 								}}>
-								Logout
+								Вийти
 							</Link>
 						</a>
 					</nav>
