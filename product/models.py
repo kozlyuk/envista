@@ -62,6 +62,7 @@ class ProductInstance(models.Model):
     diopter = models.ForeignKey(DiopterPower, on_delete=models.PROTECT)
     cylinder = models.ForeignKey(Cylinder, on_delete=models.PROTECT)
     price = models.DecimalField(_('Product price'), max_digits=8, decimal_places=2, default=0)
+    quantity_in_hand = models.PositiveSmallIntegerField(_('Quantity in hand'), default=0)
     # Creator and Date information
     created_by = models.ForeignKey(User, verbose_name=_('Created by'),
         blank=True, null=True, on_delete=models.CASCADE)
@@ -77,15 +78,3 @@ class ProductInstance(models.Model):
 
     def get_price(self):
         return str(self.price) + ' ' + settings.DEFAULT_CURRENCY
-
-
-class Stock(models.Model):
-    product_instance = models.OneToOneField(ProductInstance, verbose_name=_('Product'), on_delete=models.CASCADE)
-    quantity_in_hand = models.IntegerField(_('Quantity in hand'))
-
-    class Meta:
-        verbose_name = _('Stock')
-        verbose_name_plural = _('Stocks')
-
-    def __str__(self):
-        return self.product_instance.diopter.value + ' - ' + self.product_instance.cylinder.value

@@ -12,14 +12,6 @@ class ProductInstanceViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class StockViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Stock class"""
-
-    queryset = models.Stock.objects.all()
-    serializer_class = serializers.StockSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
 class CylinderViewSet(viewsets.ModelViewSet):
     """ViewSet for the Cylinder class"""
 

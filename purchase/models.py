@@ -110,6 +110,9 @@ class PurchaseLine(models.Model):
     quantity = models.PositiveSmallIntegerField(_('Amount'), default=1)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
 
+    class Meta:
+        unique_together = ['purchase', 'product']
+
 
 class OrderLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
@@ -117,6 +120,9 @@ class OrderLine(models.Model):
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(_('Quantity'), default=0)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
+
+    class Meta:
+        unique_together = ['order', 'product']
 
     def value_total(self):
         """ return calculated invoice_line value"""
