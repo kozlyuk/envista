@@ -59,12 +59,13 @@ class AddToCart(views.APIView):
             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
 
         # get the existing OrderLine or create new one
-        if product.quantity_in_hand and product.quantity_in_hand > 0:
+        if product.quantity_in_hand > 0:
             order_line, created = OrderLine.objects.get_or_create(product=product,
-                                                                    order=order,
-                                                                    defaults={'unit_price': product.price})
+                                                                  order=order,
+                                                                  defaults={'unit_price': product.price})
             if order_line.quantity + 1 <= product.quantity_in_hand:
                 order_line.quantity += 1
+                order_line.save()
                 return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
         return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
 
@@ -96,7 +97,7 @@ class DelFromCart(views.APIView):
 
         # remove the existing OrderLine or returm exception if it is not exists
         try:
-            order.products.remove(product)
+            OrderLine.objects.get(product=product, order=order).delete()
             return Response(_('Product deleted'), status=status.HTTP_200_OK)
         except OrderLine.DoesNotExist:
             return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
@@ -130,12 +131,13 @@ class UpdateQuantity(views.APIView):
 
         # update the existing OrderLine or returm exception if it is not exists
         try:
-            order_line = order.orderline_set.get(product=product)
+            order_line = OrderLine.objects.get(product=product, order=order)
             if quantity <= product.quantity_in_hand:
                 order_line.quantity = quantity
+                order_line.save()
                 return Response(_('Product updated'), status=status.HTTP_200_OK)
             else:
-                return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+                return Response(_('Product is not enough in stock'), status=status.HTTP_409_CONFLICT)
         except OrderLine.DoesNotExist:
             return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
 

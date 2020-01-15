@@ -24,4 +24,5 @@ for column in Cylinder.objects.all():
         ProductInstance.objects.create(product=product,
                                        cylinder=column,
                                        diopter=row,
-                                       quantity_in_hand=random.randint(1,10))
+                                       quantity_in_hand=random.randint(1,10),
+                                       price=random.randint(1000,10000))
