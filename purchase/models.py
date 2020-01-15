@@ -52,18 +52,16 @@ class Order(models.Model):
         (NewOrder, _('New order')),
         (Cancelled, _('Order canceled')),
         (Confirmed, _('Order confirmed')),
-        (Sent, _('Order sent')),
-        (Received, _('Order received')),
         (Returned, _('Order returned')),
     )
     NotPaid = 'NP'
     AdvancePaid = 'AP'
     PaidUp = 'PU'
-    PAYMENT_STATUS_CHOICES = (
-        (NotPaid, 'Не оплачений'),
-        (AdvancePaid, 'Оплачений аванс'),
-        (PaidUp, 'Оплачений')
-        )
+    # PAYMENT_STATUS_CHOICES = (
+    #     (NotPaid, 'Не оплачений'),
+    #     (AdvancePaid, 'Оплачений аванс'),
+    #     (PaidUp, 'Оплачений')
+    #     )
     products = models.ManyToManyField(ProductInstance, through='OrderLine', related_name='orders',
                                       verbose_name=_('Goods'), blank=True)
     customer = models.ForeignKey(User, verbose_name=_('Customer'), blank=True, null=True, on_delete=models.PROTECT)
@@ -71,7 +69,7 @@ class Order(models.Model):
     invoice_date = models.DateField(_('Invoice date'), default=datetime.date.today)
     comment = models.TextField(_('Comment'), blank=True)
     status = models.CharField(_('Deal type'), max_length=2, choices=STATUS_CHOICES, default=InCart)
-    pay_status = models.CharField('Статус оплати', max_length=2, choices=PAYMENT_STATUS_CHOICES, default=NotPaid)
+    # pay_status = models.CharField('Статус оплати', max_length=2, choices=PAYMENT_STATUS_CHOICES, default=NotPaid)
     value = models.DecimalField(_('Value'), max_digits=8, decimal_places=2, default=0)
     invoice_file = models.FileField(_('Invoice'), upload_to=docs_directory_path, blank=True, null=True)
     # Creator and Date information
