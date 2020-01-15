@@ -10,8 +10,8 @@ from purchase.models import Order, OrderLine
 
 class GetStocks(views.APIView):
     """
-    This view sending JSON list of stocks for product instances.
-    Creating user cart or clear existing on loading.
+    Send JSON-coded list of stocks for product instances.
+    Create new user cart or clear existing.
     """
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -30,6 +30,34 @@ class GetStocks(views.APIView):
         for row in DiopterPower.objects.values_list('value', flat=True):
             quantity_list = ProductInstance.objects.filter(diopter__value=row).values_list('quantity_in_hand', flat=True)
             json_data[1]["rows"].append({"row": row, "quantities": quantity_list})
+        return Response(json_data, status=status.HTTP_200_OK)
+
+
+class GetCart(views.APIView):
+    """
+    Send JSON-coded list of orderlines in customer cart.
+    If exists problems with cart return status HTTP_400_BAD_REQUEST
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        # get the existing customer cart
+        try:
+            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
+        except Order.DoesNotExist:
+            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        except Order.MultipleObjectsReturned:
+            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
+
+        # send JSON-coded list of orderlines in customer cart
+        json_data = []
+        json_data.append({"lines": []})
+        index = 0
+        for line in order.orderline_set.all():
+            index += 1
+            order_line = [index, line.product.__str__(), line.quantity, line.unit_price]
+            json_data[0]["lines"].append({"line": order_line})
+        json_data.append({"value_total": order.value_total()})
         return Response(json_data, status=status.HTTP_200_OK)
 
 

@@ -90,8 +90,8 @@ class Order(models.Model):
 
     def value_total(self):
         """ return calculated from invoice_lines purchase value"""
-        return self.invoiceline_set.aggregate(total_value=Sum(F('quantity')*F('price'),
-                                                              output_field=FloatField()))['total_value']
+        return self.orderline_set.aggregate(total_value=Sum(F('quantity')*F('unit_price'),
+                                            output_field=FloatField()))['total_value']
     value_total.short_description = _('Calculated invoice value')
 
     @classmethod
