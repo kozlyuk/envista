@@ -34,7 +34,6 @@ html {
 /* BOX LOGIN */
 .box {
     position: relative;
-    margin: auto;
     height: 365px;
     top: 40px;
     left: 0;
@@ -47,7 +46,7 @@ html {
     background: rgba(255, 255, 255, 1);
     border-top: 2px solid #C0C0C0;
     border-bottom: 2px solid #3898EC;
-    margin-bottom: 100px;
+    margin: auto auto 100px;
 }
 
 .box h1 {

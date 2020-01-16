@@ -15,17 +15,6 @@ import {Link} from "react-router-dom";
 import Auth from "../auth/auth";
 
 class Navbar extends React.Component {
-	logOut() {
-		fetch("http://localhost:3004/auth")
-			.then(res => res.json())
-			.then(
-				result => {
-					console.log(result);
-				},
-				error => {
-				}
-			);
-	}
 
 	user = new Auth();
 
@@ -46,8 +35,8 @@ class Navbar extends React.Component {
 						/>
 					</a>
 					<nav role="navigation" className="w-nav-menu p-0">
-						<a href="#" className="nav-link w-nav-link" style={{maxWidth: 940}}>
-							<Link to="/">Головна</Link>
+						<a className="nav-link w-nav-link" style={{maxWidth: 940}}>
+							<Link to="/123">Головна</Link>
 						</a>
 						<a
 							href="https://envista.toriccalculator.com/(S(3p54nq0ludca5hrzdtsqdtfl))/UserAgreement.aspx"
@@ -64,7 +53,7 @@ class Navbar extends React.Component {
 						<a className="nav-link-3 w-nav-link" style={{maxWidth: 940}}>
 							<Link
 								style={{maxWidth: 940}}
-								to="/login"
+								to="/logout"
 								onClick={() => {
 									this.user.logout();
 								}}>

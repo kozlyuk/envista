@@ -104,7 +104,8 @@ export default class Auth {
 	}
 
 	logout() {
-		localStorage.removeItem("auth")
+		localStorage.removeItem("auth");
+		window.location.reload(false);
 	}
 
 	/*

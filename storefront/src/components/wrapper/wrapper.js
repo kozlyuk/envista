@@ -10,7 +10,7 @@
  *
  */
 
-import React from "react";
+import React, {Fragment} from "react";
 import Navbar from "../navbar/navbar";
 import Content from "../content/content";
 import Footer from "../footer/footer";
@@ -78,26 +78,25 @@ class Welcome extends React.Component {
 		} else {
 			return (
 				<div>
-					{this.state.isAuthenticate ? <Router>
-						<Navbar/>
-						<div className="section">
-							<div>
-								<Switch>
-									<Route path="/login">
-										<h1>LoginPage</h1>
-									</Route>
-									<Route path="/basket">
-										<Basket/>
-									</Route>
-									<Route path="/">
-										<Content/>
-									</Route>
-								</Switch>
-							</div>
-						</div>
-						<Footer/>
-					</Router> : <Login/>}
-
+					<Router>
+						{this.state.isAuthenticate ? <Fragment>
+								<Navbar/>
+								<div className="section">
+									<div>
+										<Switch>
+											<Route path="/basket">
+												<Basket/>
+											</Route>
+											<Route path="/">
+												<Content/>
+											</Route>
+										</Switch>
+									</div>
+								</div>
+								<Footer/>
+							</Fragment>
+							: <Login/>}
+					</Router>
 				</div>)
 		}
 	}
