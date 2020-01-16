@@ -98,7 +98,6 @@ export class Table extends React.PureComponent {
 						</tr>
 						</thead>
 						<tbody className="rc-table-tbody">
-						{console.log(this.state.rows)}
 						{this.state.rows.map((item, rowIdx) => (
 							<tr key={rowIdx}
 								className="rc-table-row rc-table-row-level-0"

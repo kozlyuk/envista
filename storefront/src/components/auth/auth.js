@@ -11,7 +11,8 @@
  */
 
 export default class Auth {
-	constructor() {
+	constructor(authenticate = false) {
+		this.authenticate = authenticate
 	}
 
 	/*
@@ -23,7 +24,23 @@ export default class Auth {
 		if (g_auth == null) {
 			g_auth = sessionStorage.getItem("auth");
 		}
-		return !!g_auth;
+		fetch(process.env.REACT_APP_USER_DATA, {
+			headers: {
+				"Authorization": "Token " + this.getAuthToken()
+			}
+		})
+			.then(res => res.json())
+			.then(
+				result => {
+					console.log(result)
+					console.log(true)
+					return true
+				},
+				error => {
+					console.log(false)
+					return false
+				}
+			);
 	}
 
 	/*
@@ -33,10 +50,34 @@ export default class Auth {
 	 */
 	getAuthToken() {
 		let g_session_token = localStorage.getItem("auth");
-		if (g_session_token == null) {
-			g_session_token = sessionStorage.getItem("auth");
+		if (g_session_token) {
+			if (g_session_token == null) {
+				g_session_token = sessionStorage.getItem("auth");
+			}
+			return g_session_token.split(':')[1].replace(/["}]+/g, '')
+		} else {
+			return false
 		}
-		return g_session_token.split(':')[1].replace(/["}]+/g, '')
+
+	}
+
+	getUser() {
+		fetch(process.env.REACT_APP_USER_DATA, {
+			headers: {
+				"Authorization": "Token " + this.getAuthToken()
+			}
+		})
+			.then(res => res.json())
+			.then(
+				result => {
+					console.log(result)
+					this.authenticate = true;
+					return result
+				},
+				error => {
+					return error
+				}
+			);
 	}
 
 	/*
@@ -60,6 +101,10 @@ export default class Auth {
 	async login(email, password) {
 		let result = await this.postLoginData(email, password);
 		localStorage.setItem("auth", await result.text())
+	}
+
+	logout() {
+		localStorage.removeItem("auth")
 	}
 
 	/*

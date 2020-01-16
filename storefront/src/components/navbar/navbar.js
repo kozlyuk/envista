@@ -12,6 +12,7 @@
 
 import React from "react";
 import {Link} from "react-router-dom";
+import Auth from "../auth/auth";
 
 class Navbar extends React.Component {
 	logOut() {
@@ -25,6 +26,8 @@ class Navbar extends React.Component {
 				}
 			);
 	}
+
+	user = new Auth();
 
 	render() {
 		return (
@@ -61,9 +64,9 @@ class Navbar extends React.Component {
 						<a className="nav-link-3 w-nav-link" style={{maxWidth: 940}}>
 							<Link
 								style={{maxWidth: 940}}
-								to="/logout"
+								to="/login"
 								onClick={() => {
-									this.logOut();
+									this.user.logout();
 								}}>
 								Вийти
 							</Link>
