@@ -11,6 +11,7 @@
  */
 
 import React from "react";
+import Auth from "../auth/auth";
 import {Table} from "react-bootstrap";
 
 export default class BasketItem extends React.Component {
@@ -21,16 +22,43 @@ export default class BasketItem extends React.Component {
 			error: null,
 			isLoaded: false
 		};
+		this.user = new Auth();
+		this.authToken = this.user.getAuthToken();
+	}
+
+	cell(colIdx, item) {
+		if (colIdx === 2) {
+			return (<td key={colIdx}><input className="form-control"
+											type="number"
+											defaultValue={item}
+											style={{
+												height: 30,
+												fontSize: 14,
+												width: 100,
+												marginLeft: "auto",
+												marginRight: "auto",
+												display: "flex",
+												position: "relative",
+											}}
+			/>
+			</td>)
+		} else {
+			return (<td key={colIdx}>{item}</td>)
+		}
 	}
 
 	componentDidMount() {
-		fetch(process.env.REACT_APP_BASKET_DATA_URL)
+		fetch(process.env.REACT_APP_BASKET_DATA_URL, {
+			headers: {
+				"Authorization": "Token " + this.authToken
+			}
+		})
 			.then(res => res.json())
 			.then(
 				result => {
 					this.setState({
 						isLoaded: true,
-						array: result
+						array: result[0].lines
 					});
 				},
 				error => {
@@ -54,18 +82,16 @@ export default class BasketItem extends React.Component {
 					<thead>
 					<tr>
 						<th>#</th>
-						<th>Cylinder</th>
-						<th>Diopter</th>
-						<th>Кількість</th>
+						<th>Назва</th>
+						<th className="text-center">Кількість</th>
 						<th>Вартість</th>
 					</tr>
 					</thead>
 					<tbody>
 					{this.state.array.map((items, rowIdx) => (
 						<tr key={rowIdx}>
-							<td>{rowIdx + 1}</td>
-							{items.map((item, colIdx) => (
-								<td key={colIdx}>{item}</td>
+							{items.line.map((item, colIdx) => (
+								this.cell(colIdx, item)
 							))}
 						</tr>
 					))}

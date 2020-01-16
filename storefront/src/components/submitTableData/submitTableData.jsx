@@ -12,8 +12,9 @@
 
 import React from "react";
 import {Button} from "react-bootstrap";
+import {withRouter} from 'react-router-dom'
 
-export default class Submit extends React.Component {
+class Submit extends React.Component {
 	constructor(props) {
 		super(props);
 	}
@@ -21,19 +22,20 @@ export default class Submit extends React.Component {
 	send(purchase) {
 		const url = "http://localhost:3004/data";
 		console.log(this.props.purchaseList);
-		fetch(url, {
-			method: "post",
-			headers: {
-				"Content-type": "application/json; charset=UTF-8"
-			},
-			body: JSON.stringify(this.purchase)
-		})
-			.then(function (data) {
-				console.log("Request succeeded with JSON response", data);
-			})
-			.catch(function (error) {
-				console.log("Request failed", error);
-			});
+		this.props.history.push('/basket')
+		// fetch(url, {
+		// 	method: "post",
+		// 	headers: {
+		// 		"Content-type": "application/json; charset=UTF-8"
+		// 	},
+		// 	body: JSON.stringify(this.purchase)
+		// })
+		// 	.then(function (data) {
+		// 		console.log("Request succeeded with JSON response", data);
+		// 	})
+		// 	.catch(function (error) {
+		// 		console.log("Request failed", error);
+		// 	});
 	}
 
 	render() {
@@ -45,9 +47,11 @@ export default class Submit extends React.Component {
 					onClick={() => {
 						this.send(this.props.purchaseList);
 					}}>
-					Оформити замовлення
+					Перейти в корзину
 				</Button>
 			</div>
 		);
 	}
 }
+
+export default withRouter(Submit)

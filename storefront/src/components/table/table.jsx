@@ -22,21 +22,28 @@ export class Table extends React.PureComponent {
 			error: null,
 			isLoaded: false,
 		};
+		this.user = new Auth();
+		this.authToken = this.user.getAuthToken();
 	}
+
 
 	//decrease counter of item quantities and write to state
 	decreaseQty(counter, columnIdx, rowIdx) {
 		const newQty = counter > 0 ? counter - 1 : 0;
 		let newArray = [...this.state.rows];
-		console.log(newArray)
 		newArray[rowIdx].quantities[columnIdx] = newQty;
-		this.sendData(newQty); // TODO: !!!
-		this.setState({rows: newArray});
+		this.sendData(rowIdx, columnIdx)
+			.then(() => this.setState({rows: newArray}))
+			.catch(error => alert(error.message)); // send get request to backend, then setstate with new quantity
 		this.getData(counter, columnIdx, rowIdx);
 	}
 
-	sendData(data) {
-		console.log(data); // TODO: !!!
+	async sendData(rowIdx, columnIdx) {
+		await fetch(process.env.REACT_APP_ADD_TO_CARD + rowIdx + "/" + columnIdx, {
+			headers: {
+				"Authorization": "Token " + this.authToken
+			}
+		})
 	}
 
 	//send data to parent component
@@ -49,11 +56,9 @@ export class Table extends React.PureComponent {
 
 //get data from backend => then mount component
 	componentDidMount() {
-		const user = new Auth();
-		const authToken = user.getAuthToken();
 		fetch(process.env.REACT_APP_TABLE_DATA, {
 			headers: {
-				"Authorization": "Token " + authToken
+				"Authorization": "Token " + this.authToken
 			}
 		})
 			.then(res => res.json())

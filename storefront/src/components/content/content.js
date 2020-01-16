@@ -37,7 +37,6 @@ class Content extends React.Component {
 		this.setState(prevState => ({
 			purchase: [...prevState.purchase, purchase]
 		}));
-		console.log(this.count(this.state.purchase));
 	};
 
 	render() {
