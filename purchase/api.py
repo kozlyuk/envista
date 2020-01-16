@@ -10,8 +10,8 @@ from purchase.models import Order, OrderLine
 
 class GetStocks(views.APIView):
     """
-    This view sending JSON list of stocks for product instances.
-    Creating user cart or clear existing on loading.
+    Send JSON-coded list of stocks for product instances
+    Create new user cart or clear existing
     """
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -33,9 +33,37 @@ class GetStocks(views.APIView):
         return Response(json_data, status=status.HTTP_200_OK)
 
 
+class GetCart(views.APIView):
+    """
+    Send JSON-coded list of orderlines in customer cart
+    If exists problems with cart return status HTTP_400_BAD_REQUEST
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        # get the existing customer cart
+        try:
+            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
+        except Order.DoesNotExist:
+            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        except Order.MultipleObjectsReturned:
+            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
+
+        # send JSON-coded list of orderlines in customer cart
+        json_data = []
+        json_data.append({"lines": []})
+        index = 0
+        for line in order.orderline_set.all():
+            index += 1
+            order_line = [index, line.product.__str__(), line.quantity, line.unit_price]
+            json_data[0]["lines"].append({"line": order_line})
+        json_data.append({"value_total": order.value_total()})
+        return Response(json_data, status=status.HTTP_200_OK)
+
+
 class AddToCart(views.APIView):
     """
-    This view add to cart the instance of product.
+    This view add to cart the instance of product
     If product added return status HTTP_201_CREATED
     If product not found in ProductInstance's return HTTP_404_NOT_FOUND
     If exists problems with cart return status HTTP_400_BAD_REQUEST
@@ -72,7 +100,7 @@ class AddToCart(views.APIView):
 
 class DelFromCart(views.APIView):
     """
-    This view delete the product from cart.
+    This view delete the product from cart
     If product deleted return status HTTP_200_OK
     If product not found in ProductInstance's return HTTP_404_NOT_FOUND
     If product not found in cart return status HTTP_404_NOT_FOUND
@@ -105,7 +133,7 @@ class DelFromCart(views.APIView):
 
 class UpdateQuantity(views.APIView):
     """
-    This view update the product in cart.
+    This view update the product in cart
     If product updated return status HTTP_200_OK
     If product not found in ProductInstance's return HTTP_404_NOT_FOUND
     If product not found in cart return status HTTP_404_NOT_FOUND
@@ -142,42 +170,27 @@ class UpdateQuantity(views.APIView):
             return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
 
 
-# class ConfirmOrder(views.APIView):
-#     """
-#     This view dell the product from cart.
-#     If cart is not exist create new cart one.
-#     If product added return status HTTP_201_CREATED
-#     If inbound parameters is wrong return status HTTP_400_BAD_REQUEST
-#     If product out of stock return status HTTP_409_CONFLICT
-#     """
-#     permission_classes = (permissions.IsAuthenticated,)
+class ConfirmOrder(views.APIView):
+    """
+    Change order status from InCart to NewOrder and assign invoice number
+    If exists problems with cart return status HTTP_400_BAD_REQUEST
+    """
+    permission_classes = (permissions.IsAuthenticated,)
 
-#     def get(self, request, row: int, column: int):
-#         # get the existing object of ProductInstance
-#         try:
-#             product = ProductInstance.objects.get(diopter=row, cylinder=column)
-#         except ProductInstance.DoesNotExist:
-#             return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request):
+        # get the existing customer cart
+        try:
+            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
+        except Order.DoesNotExist:
+            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        except Order.MultipleObjectsReturned:
+            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
 
-#         # get the existing customer cart
-#         try:
-#             order = Order.objects.get(customer=self.request.user, status=Order.InCart)
-#         except Order.DoesNotExist:
-#             return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
-#         except Order.MultipleObjectsReturned:
-#             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
-
-#         # get the existing OrderLine or create new one
-#         if product.quantity_in_hand and product.quantity_in_hand > 0:
-#             order_line, created = OrderLine.objects.get_or_create(product=product,
-#                                                                            order=order,
-#                                                                            defaults={'unit_price': product.price})
-#             if order_line.quantity + 1 <= product.quantity_in_hand:
-#                 order_line.quantity += 1
-#             else:
-#                 return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
-
-#         return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
+        # change order status to NewOrder and assign invoice number
+        order.status = Order.NewOrder
+        order.invoice_number = order.invoice_number_generate()
+        order.save()
+        return Response(_('Order created'), status=status.HTTP_201_CREATED)
 
 
 class PurchaseLineViewSet(viewsets.ModelViewSet):
