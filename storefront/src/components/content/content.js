@@ -20,7 +20,8 @@ class Content extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			purchase: []
+			purchase: [],
+			array: []
 		};
 	}
 
@@ -32,10 +33,17 @@ class Content extends React.Component {
 		return counts;
 	}
 
-	//get data from child component and put it to state
+	//get data from child component and put into state
 	makePurchase = purchase => {
 		this.setState(prevState => ({
 			purchase: [...prevState.purchase, purchase]
+		}));
+	};
+
+	//get table data from child component and put into state
+	getArray = array => {
+		this.setState(prevState => ({
+			array: [...prevState.array, array]
 		}));
 	};
 
@@ -61,8 +69,8 @@ class Content extends React.Component {
 					</div>
 					<div className="mobile-first w-col w-col-6">
 						<h4 className="text-center">Таблиця наявності лінз на складі</h4>
-						<Table getData={this.makePurchase}/>
-						<PurchaseList purchaseList={this.state.purchase}/>
+						<Table getData={this.makePurchase} getArray={this.getArray}/>
+						<PurchaseList purchaseList={this.state.purchase} array={this.state.array}/>
 						{this.state.purchase.length !== 0 && (
 							<Submit purchaseList={this.state.purchase}/>
 						)}

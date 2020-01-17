@@ -1,16 +1,17 @@
 /**
  * Table component.
  *
- * @author    Andrey Perestyuk (Arrathilar)
- * @email-primary a.perestyuk@itel.rv.ua
+ * @author           Andrey Perestyuk (Arrathilar)
+ * @email-primary    a.perestyuk@itel.rv.ua
  * @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
- * @copyright 2020 ITEL-Service
+ * @copyright        2020 ITEL-Service
  */
 
 
 import React from "react";
 import Auth from "../auth/auth";
 import ButtonBackground from "../buttonBackground/buttonBackground";
+import axios from "axios";
 
 
 export class Table extends React.PureComponent {
@@ -40,6 +41,8 @@ export class Table extends React.PureComponent {
 			.then(() => this.setState({rows: newArray}))
 			.catch(error => alert(error.message)); // send get request to backend, then setstate with new quantity
 		this.getData(counter, columnIdx, rowIdx);
+		this.getArray(this.state.columnsName, this.state.rows);
+		return void 0;
 	}
 
 	/*
@@ -49,42 +52,52 @@ export class Table extends React.PureComponent {
 	async sendData(rowIdx, columnIdx) {
 		const row = rowIdx + 1;
 		const col = columnIdx + 1;
-		await fetch(process.env.REACT_APP_ADD_TO_CARD + row + "/" + col, {
+		return axios(process.env.REACT_APP_ADD_TO_CARD + row + "/" + col, {
 			headers: {
 				"Authorization": "Token " + this.authToken
 			}
-		})
+		});
 	}
 
 	/*
-	 * decreaseQty(counter, columnIdx, rowIdx): void
+	 * getData(counter, columnIdx, rowIdx): void
 	 */
 
 	// send data to parent component
 	getData(counter, columnIdx, rowIdx) {
 		if (counter !== 0) {
-			this.props.getData((this.state.makePurchase = [columnIdx, rowIdx])); //maybe need to add id
+			this.props.getData((this.state.makePurchase = ([columnIdx, rowIdx]))); //maybe need to add id
 		}
+		return void 0;
+	}
+
+	/*
+	 * getArray(counter, columnIdx, rowIdx): void
+	 */
+
+	// send array to parent component
+	getArray(columnsName, rows) {
+		this.props.getArray((this.state.getArray = ([columnsName, rows]))); //maybe need to add id
+		return void 0;
 	}
 
 	/*
 	 * componentDidMount(): void
 	 */
 
-	//get data from backend => then mount component
+	// get data from backend => then mount component
 	componentDidMount() {
-		fetch(process.env.REACT_APP_TABLE_DATA, {
+		axios(process.env.REACT_APP_TABLE_DATA, {
 			headers: {
 				"Authorization": "Token " + this.authToken
 			}
 		})
-			.then(res => res.json())
 			.then(
 				result => {
 					this.setState({
 						isLoaded: true,
-						rows: result[1].rows,
-						columnsName: result[0].columns
+						rows: result.data[1].rows,
+						columnsName: result.data[0].columns
 					});
 				},
 				error => {
@@ -94,6 +107,7 @@ export class Table extends React.PureComponent {
 					});
 				}
 			);
+		return void 0;
 	}
 
 	render() {

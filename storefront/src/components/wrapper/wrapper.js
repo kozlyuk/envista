@@ -42,13 +42,11 @@ class Welcome extends React.Component {
 			.then(
 				(response) => {
 					if (response.status >= 400) {
-						console.log(this)
 						this.setState({
 							isAuthenticate: false,
 
 						})
 					} else if (response.status < 400) {
-						console.log(this)
 						this.setState({
 							isAuthenticate: true,
 						})

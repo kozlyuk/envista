@@ -27,30 +27,7 @@ export default class PurchaseList extends React.Component {
 	componentDidMount() {
 		const user = new Auth();
 		const authToken = user.getAuthToken();
-		fetch(process.env.REACT_APP_PURCHASE_DATA_URL, {
-			headers: {
-				"Authorization": "Token " + authToken
-			}
-		})
-			.then(res => res.json())
-			.then(
-				result => {
-					const rowName = result[1].rows.map(item => {
-						return item.row;
-					});
-					this.setState({
-						isLoaded: true,
-						rows: rowName,
-						columns: result[0].columns
-					});
-				},
-				error => {
-					this.setState({
-						isLoaded: true,
-						error
-					});
-				}
-			);
+
 	}
 
 	render() {
@@ -99,14 +76,14 @@ export default class PurchaseList extends React.Component {
 										<span
 											className="rc-table-row-indent indent-level-0"
 											style={{paddingLeft: 0}}>
-											{this.state.rows[item[1]]}
+											{this.props.array[0][1][item[1]].row} {/*[item[1]]*/}
 										</span>
 								</td>
 								<td className="rc-table-row-cell-break-word text-center">
 										<span
 											className="rc-table-row-indent indent-level-0"
 											style={{paddingLeft: 0}}>
-											{this.state.columns[item[0]]}
+											{this.props.array[0][0][item[0]]}
 										</span>
 								</td>
 							</tr>
