@@ -189,7 +189,15 @@ class ConfirmOrder(views.APIView):
         # change order status to NewOrder and assign invoice number
         order.status = Order.NewOrder
         order.invoice_number = order.invoice_number_generate()
+        order.value = order.value_total()
+        order.created_by = self.request.user
         order.save()
+
+        # reduce stocks
+        for order_line in order.orderline_set.all():
+            order_line.product.quantity_in_hand -= order_line.quantity
+            order_line.product.save()
+
         return Response(_('Order created'), status=status.HTTP_201_CREATED)
 
 
