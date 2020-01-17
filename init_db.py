@@ -28,5 +28,5 @@ for column in Cylinder.objects.all():
                                        cylinder=column,
                                        diopter=row,
                                        quantity_in_hand=random.randint(1,10),
-                                       price=pricesp[prices_index])
+                                       price=prices[prices_index])
     prices_index += 1
