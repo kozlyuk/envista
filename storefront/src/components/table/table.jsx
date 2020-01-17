@@ -27,7 +27,11 @@ export class Table extends React.PureComponent {
 	}
 
 
-	//decrease counter of item quantities and write to state
+	/*
+	 * decreaseQty(counter?, columnIdx?, rowIdx?): void
+	 */
+
+	// decrease counter of item quantities and write to state
 	decreaseQty(counter, columnIdx, rowIdx) {
 		const newQty = counter > 0 ? counter - 1 : 0;
 		let newArray = [...this.state.rows];
@@ -37,6 +41,10 @@ export class Table extends React.PureComponent {
 			.catch(error => alert(error.message)); // send get request to backend, then setstate with new quantity
 		this.getData(counter, columnIdx, rowIdx);
 	}
+
+	/*
+	 * Method sendData(rowIdx, columnIdx): Promise<void>
+	 */
 
 	async sendData(rowIdx, columnIdx) {
 		const row = rowIdx + 1;
@@ -48,15 +56,22 @@ export class Table extends React.PureComponent {
 		})
 	}
 
-	//send data to parent component
+	/*
+	 * decreaseQty(counter, columnIdx, rowIdx): void
+	 */
+
+	// send data to parent component
 	getData(counter, columnIdx, rowIdx) {
 		if (counter !== 0) {
-			// const id = rowIdx.toString() + columnIdx.toString();
 			this.props.getData((this.state.makePurchase = [columnIdx, rowIdx])); //maybe need to add id
 		}
 	}
 
-//get data from backend => then mount component
+	/*
+	 * componentDidMount(): void
+	 */
+
+	//get data from backend => then mount component
 	componentDidMount() {
 		fetch(process.env.REACT_APP_TABLE_DATA, {
 			headers: {
