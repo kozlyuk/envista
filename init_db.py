@@ -19,10 +19,14 @@ for value in range(125, 576, 75):
 for value in range(60, 301, 5):
     DiopterPower.objects.create(value=str(value/10))
 
+prices = [3000, 3850, 5600, 7300, 7300, 7300, 7300]
+prices_index = 0
+
 for column in Cylinder.objects.all():
     for row in DiopterPower.objects.all():
         ProductInstance.objects.create(product=product,
                                        cylinder=column,
                                        diopter=row,
                                        quantity_in_hand=random.randint(1,10),
-                                       price=random.randint(1000,10000))
+                                       price=pricesp[prices_index])
+    prices_index += 1
