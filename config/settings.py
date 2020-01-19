@@ -70,10 +70,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-    ]
-
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
