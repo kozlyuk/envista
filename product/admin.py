@@ -1,7 +1,12 @@
 from django.contrib import admin
 from django import forms
+from django.conf import settings
 
 from . import models
+
+admin.site.site_url = settings.SITE_URL
+admin.AdminSite.site_header = 'Адміністратор проектів Ітел-Сервіс'
+admin.AdminSite.site_title = 'Itel-Service ERP'
 
 
 class ProductInstanceAdminForm(forms.ModelForm):
