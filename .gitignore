@@ -1,5 +1,6 @@
 venv
 .vscode
+.production
 __pycache__
 config/settings_local.py
 .DS_STORE

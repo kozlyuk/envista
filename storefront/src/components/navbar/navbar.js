@@ -36,7 +36,7 @@ class Navbar extends React.Component {
 					</a>
 					<nav role="navigation" className="w-nav-menu p-0">
 						<a className="nav-link w-nav-link" style={{maxWidth: 940}}>
-							<Link to="/123">Головна</Link>
+							<Link to="/">Головна</Link>
 						</a>
 						<a
 							href="https://envista.toriccalculator.com/(S(3p54nq0ludca5hrzdtsqdtfl))/UserAgreement.aspx"
