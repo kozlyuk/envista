@@ -12,6 +12,7 @@ import React from "react";
 import Auth from "../auth/auth";
 import ButtonBackground from "../buttonBackground/buttonBackground";
 import axios from "axios";
+import {toast} from "react-toastify";
 
 
 export class Table extends React.PureComponent {
@@ -27,6 +28,10 @@ export class Table extends React.PureComponent {
 		this.authToken = this.user.getAuthToken();
 	}
 
+	dropError(error) {
+		const message = error.message
+		toast.info(`Download Counter is initialized with ${{message}}`)
+	}
 
 	/*
 	 * decreaseQty(counter?, columnIdx?, rowIdx?): void
@@ -39,7 +44,11 @@ export class Table extends React.PureComponent {
 		newArray[rowIdx].quantities[columnIdx] = newQty;
 		this.sendData(rowIdx, columnIdx)
 			.then(() => this.setState({rows: newArray}))
-			.catch(error => alert(error.message)); // send get request to backend, then setstate with new quantity
+			.catch(error => {
+				const message = error.response.data;
+				toast.error(message);
+			});
+		// send get request to backend, then setstate with new quantity
 		this.getData(counter, columnIdx, rowIdx);
 		this.getArray(this.state.columnsName, this.state.rows);
 		return void 0;
