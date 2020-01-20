@@ -24,14 +24,48 @@ export default class BasketItem extends React.Component {
 			error: null,
 			isLoaded: false
 		};
+		this.cell = this.cell.bind(this);
 		this.user = new Auth();
 		this.authToken = this.user.getAuthToken();
 	}
 
-	cell(colIdx, item) {
+	changeValue(rowIdx, colIdx, counter, target) {
+		Number.parseInt(rowIdx);
+		Number.parseInt(colIdx);
+		const itemPk = this.state.array[rowIdx].line[4]
+		const newQty = Number.parseInt(target.value);
+		let newArray = [...this.state.array];
+		newArray[rowIdx].line[2] = newQty;
+		const requestUrl = `${process.env.REACT_APP_CHANGE_QUANTITY}${itemPk}/${newQty}`;
+		axios(requestUrl, {
+			headers: {
+				"Authorization": "Token " + this.authToken
+			}
+		}).then((result) => {
+			console.log(result)
+			this.setState({
+				array: newArray
+			});
+		})
+			.catch((error) => {
+				const message = error.response.data;
+				toast.error(message);
+			})
+	}
+
+	calculcatePrice(colIdx, rowIdx) {
+		const quantity = this.state.array[rowIdx].line[2];
+		const pricePerUnit = this.state.array[rowIdx].line[3];
+		return quantity * pricePerUnit;
+	}
+
+	cell(colIdx, rowIdx, item) {
 		if (colIdx === 2) {
 			return (<td key={colIdx}><input className="form-control"
 											type="number"
+											onChange={(event) => {
+												this.changeValue(rowIdx, colIdx, item, event.target)
+											}}
 											defaultValue={item}
 											style={{
 												height: 30,
@@ -44,6 +78,12 @@ export default class BasketItem extends React.Component {
 											}}
 			/>
 			</td>)
+		} else if (colIdx === 3) {
+			return (<td key={colIdx}>
+				{this.calculcatePrice(colIdx, rowIdx)}
+			</td>)
+		} else if (colIdx === 4) {
+			return void 0
 		} else {
 			return (<td key={colIdx}>{item}</td>)
 		}
@@ -55,7 +95,7 @@ export default class BasketItem extends React.Component {
 				"Authorization": "Token " + this.authToken
 			}
 		}).then((response) => {
-			this.setState({array: []})
+			this.setState({array: []});
 			toast.success(response.data)
 		}).catch((error) => {
 			const message = error.data;
@@ -112,7 +152,7 @@ export default class BasketItem extends React.Component {
 						{this.state.array.map((items, rowIdx) => (
 							<tr key={rowIdx}>
 								{items.line.map((item, colIdx) => (
-									this.cell(colIdx, item)
+									this.cell(colIdx, rowIdx, item)
 								))}
 							</tr>
 						))}
