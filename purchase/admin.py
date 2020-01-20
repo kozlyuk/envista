@@ -1,104 +1,134 @@
+""" Admin configuration for Purchases app """
+
 from django.contrib import admin
-from django import forms
+from django.utils.translation import ugettext as _
+from django.forms import ModelForm, ChoiceField
+from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
-from . import models
-
-
-class PurchaseLineAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = models.PurchaseLine
-        fields = "__all__"
+from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 
 
-class PurchaseLineAdmin(admin.ModelAdmin):
-    form = PurchaseLineAdminForm
-    list_display = [
-        "quantity",
-        "unit_price",
-    ]
-    readonly_fields = [
-        "quantity",
-        "unit_price",
-    ]
+class ActiveValueFilter(admin.SimpleListFilter):
+    """ Show only list_filter options which is presented in queryset """
+    title = _('Order status')
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of Order.STATUS_CHOICES without InCart status.
+        """
+        qs = model_admin.get_queryset(request)
+        statuses_list = []
+        for status in Order.STATUS_CHOICES[1:]:
+            if qs.filter(status=status[0]).exists():
+                statuses_list.append(status)
+        return statuses_list
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        if self.value() is None:
+            return queryset.all()
+        return queryset.filter(status=self.value())
 
 
-class OrderLineAdminForm(forms.ModelForm):
+class PurchaseLineInline(admin.TabularInline):
 
-    class Meta:
-        model = models.OrderLine
-        fields = "__all__"
-
-
-class OrderLineAdmin(admin.ModelAdmin):
-    form = OrderLineAdminForm
-    list_display = [
-        "unit_price",
-        "quantity",
-    ]
-    readonly_fields = [
-        "unit_price",
-        "quantity",
-    ]
-
-
-class OrderAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = models.Order
-        fields = "__all__"
-
-
-class OrderAdmin(admin.ModelAdmin):
-    form = OrderAdminForm
-    list_display = [
-        "invoice_date",
-        "date_created",
-        "date_updated",
-        "invoice_file",
-        "comment",
-        "value",
-        "invoice_number",
-        "status",
-    ]
-    readonly_fields = [
-        "invoice_date",
-        "date_created",
-        "date_updated",
-        "invoice_file",
-        "comment",
-        "value",
-        "invoice_number",
-        "status",
-    ]
-
-
-class PurchaseAdminForm(forms.ModelForm):
-
-    class Meta:
-        model = models.Purchase
-        fields = "__all__"
+    model = PurchaseLine
+    fields = ['product', 'quantity', 'unit_price']
+    extra = 2
+    show_change_link = True
 
 
 class PurchaseAdmin(admin.ModelAdmin):
-    form = PurchaseAdminForm
+    """ Admin settings for Purchase table """
     list_display = [
-        "comment",
         "invoice_number",
         "invoice_date",
-        "date_created",
-        "date_updated",
+        "value",
+        "created_by",
+    ]
+    fieldsets = [
+        (None, {'fields': [('invoice_number', 'invoice_date'),
+                           ('value'),
+                           ('created_by'),
+                           ('date_created', 'date_updated'),
+                           ]})
     ]
     readonly_fields = [
-        "comment",
-        "invoice_number",
-        "invoice_date",
+        "created_by",
         "date_created",
         "date_updated",
     ]
+    search_fields = ['invoice_number', 'value']
+    date_hierarchy = 'invoice_date'
+    list_filter = ('created_by',)
+    ordering = ('-date_created',)
+    inlines = [PurchaseLineInline]
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            # Only set added_by during the first save.
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
 
 
-admin.site.register(models.PurchaseLine, PurchaseLineAdmin)
-admin.site.register(models.OrderLine, OrderLineAdmin)
-admin.site.register(models.Order, OrderAdmin)
-admin.site.register(models.Purchase, PurchaseAdmin)
+class OrderLineInline(admin.TabularInline):
+
+    model = OrderLine
+    fields = ['product', 'quantity', 'unit_price']
+    readonly_fields = ['unit_price']
+    extra = 2
+    show_change_link = True
+
+
+class OrderAdminForm(ModelForm):
+    """ Exclude Order.InCart from STATUS_CHOICES field """
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+    status = ChoiceField(
+        choices=Order.STATUS_CHOICES[1:]
+    )
+
+class OrderAdmin(admin.ModelAdmin):
+    """ Admin settings for Order table """
+    form = OrderAdminForm
+    list_display = [
+        "customer",
+        "status",
+        "invoice_number",
+        "invoice_date",
+        "value",
+        "created_by",
+    ]
+    readonly_fields = [
+        "value",
+        "created_by",
+        "date_created",
+        "date_updated",
+    ]
+    search_fields = ['invoice_number', 'value']
+    date_hierarchy = 'invoice_date'
+    list_filter = (ActiveValueFilter, ('customer', RelatedDropdownFilter))
+    ordering = ('-date_created',)
+    inlines = [OrderLineInline]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.exclude(status=Order.InCart)
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            # Only set added_by during the first save.
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
+
+
+
+admin.site.register(Purchase, PurchaseAdmin)
+admin.site.register(Order, OrderAdmin)

@@ -1,29 +1,40 @@
+""" Admin configuration for Accounts app """
+
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin, Group
+from django.conf import settings
+from rest_auth.models import TokenModel
 
 from accounts.forms import CustomUserCreationForm, CustomUserChangeForm
 from accounts.models import User
 
 
 class CustomUserAdmin(UserAdmin):
+    """ Admin settings for CustomUser table """
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    list_display = ('email', 'mobile_number', 'is_staff', 'is_active',)
-    list_filter = ('email', 'mobile_number', 'is_staff', 'is_active',)
+    list_display = ('email', 'first_name', 'last_name', 'mobile_number', 'is_staff', 'is_active',)
+    list_filter = ('is_staff', 'is_active',)
     fieldsets = (
-        (None, {'fields': ('first_name', 'last_name', 'mobile_number', 'email')}),
-        ('Permissions', {'fields': ('user_permissions', 'is_staff', 'is_active')}),
+        (None, {'fields': ('first_name', 'last_name', 'mobile_number', 'email', 'is_staff', 'is_active')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active',
-                       'mobile_number')
+            'fields': ('email', 'password1', 'password2')
         }),
     )
     search_fields = ('email', 'mobile_number',)
-    ordering = ('-date_joined',)
+    ordering = ('-is_staff', '-is_active', 'last_name',)
 
+
+admin.site.site_url = settings.SITE_URL
+admin.AdminSite.site_header = settings.SITE_HEADER
+admin.AdminSite.site_title = settings.SITE_TITLE
+admin.AdminSite.index_title = settings.INDEX_TITLE
+admin.site.disable_action('delete_selected')
+admin.site.unregister(TokenModel)
+admin.site.unregister(Group)
 
 admin.site.register(User, CustomUserAdmin)
