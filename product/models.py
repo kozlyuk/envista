@@ -1,11 +1,8 @@
 """ Models for managing products """
 
-import datetime
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-
-from accounts.models import User
 
 
 class Product(models.Model):
@@ -15,18 +12,12 @@ class Product(models.Model):
     product_image = models.ImageField(_('Product image'), upload_to='product/')
     brand_name = models.CharField(_('Brand name'), max_length=32)
     brand_image = models.ImageField(_('Brand Image'), upload_to='brand/')
-    footer = models.TextField(_('Site footer'), blank=True)
-
-    # Creator and Date information
-    created_by = models.ForeignKey(User, verbose_name=_('Created by'),
-        blank=True, null=True, on_delete=models.CASCADE)
-    date_created = models.DateField(_('Created'), auto_now_add=True)
-    date_updated = models.DateField(_('Updated'), auto_now=True)
+    footer = models.CharField(_('Site footer'), max_length=255, blank=True)
 
     class Meta:
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
-        ordering = ['-date_created', 'title']
+        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -63,11 +54,6 @@ class ProductInstance(models.Model):
     cylinder = models.ForeignKey(Cylinder, on_delete=models.PROTECT)
     price = models.DecimalField(_('Product price'), max_digits=8, decimal_places=2, default=0)
     quantity_in_hand = models.PositiveSmallIntegerField(_('Quantity in hand'), default=0)
-    # Creator and Date information
-    created_by = models.ForeignKey(User, verbose_name=_('Created by'),
-        blank=True, null=True, on_delete=models.CASCADE)
-    date_created = models.DateField(_('Created'), auto_now_add=True)
-    date_updated = models.DateField(_('Updated'), auto_now=True)
 
     class Meta:
         verbose_name = _('Product Instance')
@@ -77,4 +63,5 @@ class ProductInstance(models.Model):
         return self.product.title + ' ' + str(self.cylinder) + '-' + str(self.diopter)
 
     def get_price(self):
+        """Return price with currency"""
         return str(self.price) + ' ' + settings.DEFAULT_CURRENCY

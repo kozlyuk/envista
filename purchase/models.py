@@ -4,7 +4,6 @@ import datetime
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.db.models import F, FloatField, Sum
-from django.conf import settings
 
 from accounts.models import User
 from product.models import ProductInstance
@@ -19,13 +18,13 @@ class Purchase(models.Model):
     """ Abstract Model contains Purchases """
     products = models.ManyToManyField(ProductInstance, through='PurchaseLine', related_name='purchases',
                                       verbose_name=_('Goods'), blank=True)
-    customer = models.ForeignKey(User, verbose_name=_('Customer'), blank=True, null=True, on_delete=models.PROTECT)
     invoice_number = models.CharField(_('Invoice number'), max_length=45)
     invoice_date = models.DateField(_('Invoice date'), default=datetime.date.today)
+    value = models.DecimalField(_('Value'), max_digits=8, decimal_places=2, default=0)
     comment = models.TextField(_('Comment'), blank=True)
     # Creator and Date information
     created_by = models.ForeignKey(User, verbose_name=_('Created by'), related_name='creator_purchases',
-        blank=True, null=True, on_delete=models.CASCADE)
+                                   blank=True, null=True, on_delete=models.CASCADE)
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_updated = models.DateTimeField(_("Date updated"), auto_now=True, db_index=True)
 
@@ -52,6 +51,7 @@ class Order(models.Model):
         (NewOrder, _('New order')),
         (Cancelled, _('Order canceled')),
         (Confirmed, _('Order confirmed')),
+        (Sent, _('Order sent')),
         (Returned, _('Order returned')),
     )
     NotPaid = 'NP'
@@ -71,10 +71,10 @@ class Order(models.Model):
     status = models.CharField(_('Order status'), max_length=2, choices=STATUS_CHOICES, default=InCart)
     # pay_status = models.CharField('Статус оплати', max_length=2, choices=PAYMENT_STATUS_CHOICES, default=NotPaid)
     value = models.DecimalField(_('Value'), max_digits=8, decimal_places=2, default=0)
-    invoice_file = models.FileField(_('Invoice'), upload_to=docs_directory_path, blank=True, null=True)
+    invoice_file = models.FileField(_('Download Invoice'), upload_to=docs_directory_path, blank=True, null=True)
     # Creator and Date information
     created_by = models.ForeignKey(User, verbose_name=_('Created by'), related_name='creator_orders',
-        blank=True, null=True, on_delete=models.CASCADE)
+                                   blank=True, null=True, on_delete=models.CASCADE)
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_updated = models.DateTimeField(_("Date updated"), auto_now=True, db_index=True)
 
@@ -89,7 +89,8 @@ class Order(models.Model):
     def value_total(self):
         """ return calculated from invoice_lines purchase value"""
         return self.orderline_set.aggregate(total_value=Sum(F('quantity')*F('unit_price'),
-                                            output_field=FloatField()))['total_value']
+                                                            output_field=FloatField())) \
+                                            ['total_value']
     value_total.short_description = _('Calculated invoice value')
 
     @classmethod
@@ -114,13 +115,18 @@ class PurchaseLine(models.Model):
 
 class OrderLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
-    order= models.ForeignKey(Order, verbose_name=_('Order'), on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, verbose_name=_('Order'), on_delete=models.CASCADE)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(_('Quantity'), default=0)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
 
     class Meta:
         unique_together = ['order', 'product']
+
+    def save(self, *args, **kwargs):
+        """ Automatic set unit_price """
+        self.unit_price = self.product.price
+        super().save(*args, **kwargs)
 
     def value_total(self):
         """ return calculated invoice_line value"""

@@ -1,11 +1,13 @@
+""" API for Purchase app"""
+
+from datetime import date
 from django.utils.translation import gettext_lazy as _
 from rest_framework import viewsets, permissions, views, status
 from rest_framework.response import Response
 
 from purchase import serializers
-from purchase import models
+from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 from product.models import ProductInstance, Cylinder, DiopterPower
-from purchase.models import Order, OrderLine
 
 
 class GetStocks(views.APIView):
@@ -28,7 +30,8 @@ class GetStocks(views.APIView):
         json_data.append({"columns": Cylinder.objects.values_list('value', flat=True)})
         json_data.append({"rows": []})
         for row in DiopterPower.objects.order_by('pk').values_list('value', flat=True):
-            quantity_list = ProductInstance.objects.filter(diopter__value=row).order_by('pk').values_list('quantity_in_hand', flat=True)
+            quantity_list = ProductInstance.objects.filter(diopter__value=row).order_by('pk') \
+                                                   .values_list('quantity_in_hand', flat=True)
             json_data[1]["rows"].append({"row": row, "quantities": quantity_list})
         return Response(json_data, status=status.HTTP_200_OK)
 
@@ -189,6 +192,7 @@ class ConfirmOrder(views.APIView):
         # change order status to NewOrder and assign invoice number
         order.status = Order.NewOrder
         order.invoice_number = order.invoice_number_generate()
+        order.invoice_date = date.today()
         order.value = order.value_total()
         order.created_by = self.request.user
         order.save()
@@ -204,7 +208,7 @@ class ConfirmOrder(views.APIView):
 class PurchaseLineViewSet(viewsets.ModelViewSet):
     """ViewSet for the PurchaseLine class"""
 
-    queryset = models.PurchaseLine.objects.all()
+    queryset = PurchaseLine.objects.all()
     serializer_class = serializers.PurchaseLineSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -212,7 +216,7 @@ class PurchaseLineViewSet(viewsets.ModelViewSet):
 class OrderLineViewSet(viewsets.ModelViewSet):
     """ViewSet for the OrderLine class"""
 
-    queryset = models.OrderLine.objects.all()
+    queryset = OrderLine.objects.all()
     serializer_class = serializers.OrderLineSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -220,7 +224,7 @@ class OrderLineViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     """ViewSet for the Order class"""
 
-    queryset = models.Order.objects.all()
+    queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -228,6 +232,6 @@ class OrderViewSet(viewsets.ModelViewSet):
 class PurchaseViewSet(viewsets.ModelViewSet):
     """ViewSet for the Purchase class"""
 
-    queryset = models.Purchase.objects.all()
+    queryset = Purchase.objects.all()
     serializer_class = serializers.PurchaseSerializer
     permission_classes = [permissions.IsAuthenticated]
