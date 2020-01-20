@@ -11,7 +11,6 @@
  */
 
 import React from "react";
-import Auth from "../auth/auth";
 
 
 export default class PurchaseList extends React.Component {
@@ -23,12 +22,6 @@ export default class PurchaseList extends React.Component {
 		};
 	}
 
-	//get data from backend => then mount component
-	componentDidMount() {
-		const user = new Auth();
-		const authToken = user.getAuthToken();
-
-	}
 
 	render() {
 		if (this.props.purchaseList.length !== 0) {

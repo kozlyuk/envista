@@ -16,6 +16,7 @@ import PurchaseList from "../purchaseList/purchaseList";
 import InfoBlock from "../infoBlock/infoBlock";
 import {Container} from "react-bootstrap";
 
+
 class Content extends React.Component {
 	constructor(props) {
 		super(props);
@@ -24,6 +25,7 @@ class Content extends React.Component {
 			array: []
 		};
 	}
+
 
 	count(array) {
 		let counts = {};
@@ -72,7 +74,7 @@ class Content extends React.Component {
 						<Table getData={this.makePurchase} getArray={this.getArray}/>
 						<PurchaseList purchaseList={this.state.purchase} array={this.state.array}/>
 						{this.state.purchase.length !== 0 && (
-							<Submit purchaseList={this.state.purchase}/>
+							<Submit history={this.history} purchaseList={this.state.purchase}/>
 						)}
 					</div>
 				</div>

@@ -36,7 +36,8 @@ class Welcome extends React.Component {
 	componentDidMount() {
 		fetch(process.env.REACT_APP_USER_DATA, {
 			headers: {
-				"Authorization": "Token " + this.user.getAuthToken()
+				"Authorization": "Token " + this.user.getAuthToken(),
+				"WWW-Authenticate": "Token " + this.user.getAuthToken()
 			}
 		})
 			.then(

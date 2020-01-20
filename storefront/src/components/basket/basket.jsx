@@ -14,12 +14,15 @@ import React from "react";
 import {Card, Col, Container, Row} from "react-bootstrap";
 import BasketItem from "../basketItem/basketItem";
 import SubmitBasketData from "../submitBasketData/submitBasketData";
+import {createBrowserHistory} from "history";
 
 
 export default class Basket extends React.Component {
 	constructor(props) {
 		super(props);
 	}
+
+	history = createBrowserHistory();
 
 	render() {
 		return (
@@ -35,7 +38,7 @@ export default class Basket extends React.Component {
 							<Card.Header className="text-center">Ваші замовлення</Card.Header>
 							<BasketItem/>
 						</Card>
-						<SubmitBasketData/>
+						<SubmitBasketData history={this.history}/>
 					</Col>
 				</Row>
 			</Container>

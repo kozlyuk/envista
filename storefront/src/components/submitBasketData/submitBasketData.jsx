@@ -14,11 +14,10 @@ import React, {Fragment} from "react";
 import {Button} from "react-bootstrap";
 import Auth from "../auth/auth";
 
-
 export default class SubmitBasketData extends React.Component {
 	constructor(props) {
 		super(props);
-		this.user = new Auth()
+		this.user = new Auth();
 		this.authToken = this.user.getAuthToken()
 
 	}
@@ -29,7 +28,7 @@ export default class SubmitBasketData extends React.Component {
 			headers: {
 				"Authorization": "Token " + this.authToken
 			}
-		}).then(() => console.log("click"))
+		}).then(this.props.history.push("/"))
 	}
 
 	render() {
