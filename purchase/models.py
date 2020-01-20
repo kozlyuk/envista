@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models import F, FloatField, Sum
 
 from accounts.models import User
-from product.models import ProductInstance
+from product.models import ProductInstance, DiopterPower, Cylinder
 
 
 def docs_directory_path(filename):
@@ -106,6 +106,8 @@ class PurchaseLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
     purchase = models.ForeignKey(Purchase, verbose_name=_('Purchase'), on_delete=models.CASCADE)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
+    diopter = models.ForeignKey(DiopterPower, on_delete=models.PROTECT)
+    cylinder = models.ForeignKey(Cylinder, on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(_('Amount'), default=1)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
 
@@ -117,6 +119,8 @@ class OrderLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
     order = models.ForeignKey(Order, verbose_name=_('Order'), on_delete=models.CASCADE)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
+    diopter = models.ForeignKey(DiopterPower, on_delete=models.PROTECT)
+    cylinder = models.ForeignKey(Cylinder, on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(_('Quantity'), default=0)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
 

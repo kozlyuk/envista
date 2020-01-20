@@ -6,6 +6,7 @@ from django.forms import ModelForm, ChoiceField
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
+from product.models import Cylinder, DiopterPower
 
 
 class ActiveValueFilter(admin.SimpleListFilter):
@@ -38,11 +39,13 @@ class ActiveValueFilter(admin.SimpleListFilter):
 class PurchaseLineInline(admin.TabularInline):
 
     model = PurchaseLine
-    fields = ['product', 'quantity', 'unit_price']
-    extra = 2
+    fields = ['cylinder', 'diopter', 'quantity', 'unit_price']
+    autocomplete_fields = ['cylinder', 'diopter']
+    extra = 0
     show_change_link = True
 
 
+@admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
     """ Admin settings for Purchase table """
     list_display = [
@@ -79,10 +82,12 @@ class PurchaseAdmin(admin.ModelAdmin):
 class OrderLineInline(admin.TabularInline):
 
     model = OrderLine
-    fields = ['product', 'quantity', 'unit_price']
+    fields = ['cylinder', 'diopter', 'quantity', 'unit_price']
     readonly_fields = ['unit_price']
-    extra = 2
+    autocomplete_fields = ['cylinder', 'diopter']
+    extra = 0
     show_change_link = True
+
 
 
 class OrderAdminForm(ModelForm):
@@ -95,6 +100,7 @@ class OrderAdminForm(ModelForm):
         choices=Order.STATUS_CHOICES[1:]
     )
 
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     """ Admin settings for Order table """
     form = OrderAdminForm
@@ -127,8 +133,3 @@ class OrderAdmin(admin.ModelAdmin):
             # Only set added_by during the first save.
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
-
-
-
-admin.site.register(Purchase, PurchaseAdmin)
-admin.site.register(Order, OrderAdmin)

@@ -17,7 +17,6 @@ class Product(models.Model):
     class Meta:
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
-        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -30,6 +29,7 @@ class DiopterPower(models.Model):
     class Meta:
         verbose_name = _('Diopter Power')
         verbose_name_plural = _('Diopter Powers')
+        ordering = ['id']
 
     def __str__(self):
         return self.value
@@ -42,6 +42,7 @@ class  Cylinder(models.Model):
     class Meta:
         verbose_name = _('Cylinder')
         verbose_name_plural = _('Cylinders')
+        ordering = ['id']
 
     def __str__(self):
         return self.value
@@ -58,6 +59,7 @@ class ProductInstance(models.Model):
     class Meta:
         verbose_name = _('Product Instance')
         verbose_name_plural = _('Product Instances')
+        ordering = ['id']
 
     def __str__(self):
         return self.product.title + ' ' + str(self.cylinder) + '-' + str(self.diopter)

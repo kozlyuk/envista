@@ -2,8 +2,9 @@
 
 from django.contrib import admin
 
-from . import models
+from product.models import Product, ProductInstance, Cylinder, DiopterPower
 
+@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     """ Admin settings for Product table """
     list_display = [
@@ -12,8 +13,11 @@ class ProductAdmin(admin.ModelAdmin):
     ]
     def has_add_permission(self, request, obj=None):
         return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
+@admin.register(ProductInstance)
 class ProductInstanceAdmin(admin.ModelAdmin):
     """ Admin settings for ProductInstance table """
     list_display = [
@@ -40,7 +44,30 @@ class ProductInstanceAdmin(admin.ModelAdmin):
     list_filter = ('cylinder', 'diopter',)
     ordering = ('pk',)
 
+    def has_add_permission(self, request, obj=None):
+        return False
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+@admin.register(Cylinder)
+class CylinderAdmin(admin.ModelAdmin):
+    search_fields = ['value']
+
+    def has_add_permission(self, request, obj=None):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
-admin.site.register(models.Product, ProductAdmin)
-admin.site.register(models.ProductInstance, ProductInstanceAdmin)
+@admin.register(DiopterPower)
+class DiopterPowerAdmin(admin.ModelAdmin):
+    search_fields = ['value']
+
+    def has_add_permission(self, request, obj=None):
+        return False
+    def has_change_permission(self, request, obj=None):
+        return False
+    def has_delete_permission(self, request, obj=None):
+        return False
