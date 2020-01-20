@@ -10,15 +10,17 @@
  *
  */
 
-import React from "react";
+import React, {Fragment} from "react";
 import Auth from "../auth/auth";
-import {Table} from "react-bootstrap";
+import {Button, Table} from "react-bootstrap";
+import axios from "axios";
+import {toast} from "react-toastify";
 
 export default class BasketItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			array: [],
+			array: null,
 			error: null,
 			isLoaded: false
 		};
@@ -45,6 +47,20 @@ export default class BasketItem extends React.Component {
 		} else {
 			return (<td key={colIdx}>{item}</td>)
 		}
+	}
+
+	handleClick() {
+		axios(process.env.REACT_APP_CONFIRM_ORDER, {
+			headers: {
+				"Authorization": "Token " + this.authToken
+			}
+		}).then((response) => {
+			this.setState({array: []})
+			toast.success(response.data)
+		}).catch((error) => {
+			const message = error.data;
+			toast.error(message);
+		})
 	}
 
 	componentDidMount() {
@@ -76,28 +92,45 @@ export default class BasketItem extends React.Component {
 			return <div>Помилка: {error.message}</div>;
 		} else if (!isLoaded) {
 			return <div>Завантаження...</div>;
+		} else if (this.state.array.length === undefined || this.state.array.length === 0) {
+			return (
+				<div>У вас не має замовлень в корзині</div>
+			)
 		} else {
 			return (
-				<Table striped bordered hover className="mb-0">
-					<thead>
-					<tr>
-						<th>#</th>
-						<th>Назва</th>
-						<th className="text-center">Кількість</th>
-						<th>Вартість</th>
-					</tr>
-					</thead>
-					<tbody>
-					{this.state.array.map((items, rowIdx) => (
-						<tr key={rowIdx}>
-							{items.line.map((item, colIdx) => (
-								this.cell(colIdx, item)
-							))}
+				<Fragment>
+					<Table striped bordered hover className="mb-0">
+						<thead>
+						<tr>
+							<th>#</th>
+							<th>Назва</th>
+							<th className="text-center">Кількість</th>
+							<th>Вартість</th>
 						</tr>
-					))}
-					</tbody>
-				</Table>
-			);
+						</thead>
+						<tbody>
+						{this.state.array.map((items, rowIdx) => (
+							<tr key={rowIdx}>
+								{items.line.map((item, colIdx) => (
+									this.cell(colIdx, item)
+								))}
+							</tr>
+						))}
+						</tbody>
+					</Table>
+					<div className="text-center mt-4">
+						<Button
+							variant="outline-success"
+							size="sm"
+							onClick={() => {
+								this.handleClick();
+							}}>
+							Підтвердити замовлення
+						</Button>
+					</div>
+				</Fragment>
+			)
+
 		}
 	}
 }
