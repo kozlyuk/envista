@@ -58,7 +58,7 @@ class GetCart(views.APIView):
         index = 0
         for line in order.orderline_set.all():
             index += 1
-            order_line = [index, line.product.__str__(), line.quantity, line.unit_price]
+            order_line = [index, line.product.__str__(), line.quantity, line.unit_price, line.product.pk]
             json_data[0]["lines"].append({"line": order_line})
         json_data.append({"value_total": order.value_total()})
         return Response(json_data, status=status.HTTP_200_OK)
@@ -91,9 +91,13 @@ class AddToCart(views.APIView):
 
         # get the existing OrderLine or create new one
         if product.quantity_in_hand > 0:
+            cylinder = Cylinder.objects.get(pk=column)
+            diopter = DiopterPower.objects.get(pk=row)
             order_line, created = OrderLine.objects.get_or_create(product=product,
                                                                   order=order,
-                                                                  defaults={'unit_price': product.price})
+                                                                  defaults={'unit_price': product.price,
+                                                                            'cylinder': cylinder,
+                                                                            'diopter': diopter})
             if order_line.quantity + 1 <= product.quantity_in_hand:
                 order_line.quantity += 1
                 order_line.save()
@@ -145,10 +149,10 @@ class UpdateQuantity(views.APIView):
     """
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request, row: int, column: int, quantity: int):
+    def get(self, request, pk: int, quantity: int):
         # get the existing object of ProductInstance
         try:
-            product = ProductInstance.objects.get(diopter=row, cylinder=column)
+            product = ProductInstance.objects.get(pk=pk)
         except ProductInstance.DoesNotExist:
             return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
 
@@ -202,7 +206,8 @@ class ConfirmOrder(views.APIView):
             order_line.product.quantity_in_hand -= order_line.quantity
             order_line.product.save()
 
-        return Response(_('Order created'), status=status.HTTP_201_CREATED)
+        return Response(_('Order accepted. Wait for call from manager please!'),
+                        status=status.HTTP_201_CREATED)
 
 
 class PurchaseLineViewSet(viewsets.ModelViewSet):
