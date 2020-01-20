@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'product.apps.ProductConfig',
     'purchase.apps.PurchaseConfig',
-    'django_summernote',
 ]
 
 MIDDLEWARE = [
@@ -69,10 +68,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-    ]
 
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -143,30 +138,3 @@ MEDIA_URL = '/media/'
 # Units definitions
 DEFAULT_CURRENCY = 'грн'
 UNITS = 'шт'
-
-
-# SUMMERNOTE settings
-SUMMERNOTE_THEME = 'bs4'
-
-SUMMERNOTE_CONFIG = {
-    'iframe': True,
-    'summernote': {
-        # As an example, using Summernote Air-mode
-        'airMode': False,
-        'width': '100%',
-        'height': '480',
-        'toolbar': [
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-             ['font', ['strikethrough', 'superscript', 'subscript']],
-             ['fontsize', ['fontsize']],
-             ['color', ['color']],
-             ['para', ['ul', 'ol', 'paragraph']],
-             ['height', ['height']],
-        ],
-        'lazy': True,
-
-
-    },
-    'css': (STATIC_URL + 'components/summernote/main.css',),
-    'disable_attachment': True,
-}

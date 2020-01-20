@@ -27,8 +27,8 @@ class GetStocks(views.APIView):
         json_data = []
         json_data.append({"columns": Cylinder.objects.values_list('value', flat=True)})
         json_data.append({"rows": []})
-        for row in DiopterPower.objects.values_list('value', flat=True):
-            quantity_list = ProductInstance.objects.filter(diopter__value=row).values_list('quantity_in_hand', flat=True)
+        for row in DiopterPower.objects.order_by('pk').values_list('value', flat=True):
+            quantity_list = ProductInstance.objects.filter(diopter__value=row).order_by('pk').values_list('quantity_in_hand', flat=True)
             json_data[1]["rows"].append({"row": row, "quantities": quantity_list})
         return Response(json_data, status=status.HTTP_200_OK)
 
