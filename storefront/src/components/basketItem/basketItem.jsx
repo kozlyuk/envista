@@ -140,7 +140,7 @@ export default class BasketItem extends React.Component {
 		} else {
 			return (
 				<Fragment>
-					<Table striped bordered hover className="mb-0">
+					<Table responsive striped bordered hover className="mb-0">
 						<thead>
 						<tr>
 							<th>#</th>
