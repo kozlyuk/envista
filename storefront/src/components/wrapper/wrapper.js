@@ -31,6 +31,7 @@ class Welcome extends React.Component {
 			isAuthenticate: false
 		};
 		this.user = new Auth();
+		this.getDataFromChild = this.getDataFromChild.bind(this)
 	}
 
 	componentDidMount() {
@@ -59,6 +60,13 @@ class Welcome extends React.Component {
 		}, 1000)
 	}
 
+	getDataFromChild(data) {
+		(this.setState({
+			brandLogo: data
+		}));
+		return void 0
+	}
+
 	render() {
 		if (this.state.isLoading) {
 			return (
@@ -78,7 +86,7 @@ class Welcome extends React.Component {
 				<div>
 					<Router>
 						{this.state.isAuthenticate ? <Fragment>
-								<Navbar/>
+								<Navbar brandLogo={this.state.brandLogo}/>
 								<div className="section">
 									<div>
 										<Switch>
@@ -86,7 +94,7 @@ class Welcome extends React.Component {
 												<Basket/>
 											</Route>
 											<Route path="/">
-												<Content/>
+												<Content getData={this.getDataFromChild}/>
 											</Route>
 										</Switch>
 									</div>

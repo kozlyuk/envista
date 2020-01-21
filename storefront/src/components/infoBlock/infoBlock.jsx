@@ -26,14 +26,7 @@ export default class InfoBlock extends React.Component {
 				</ListGroup.Item>
 				<ListGroup.Item className="text-center">Інформація</ListGroup.Item>
 				<ListGroup.Item>
-					‍Glistening-Free Hydrophobic AcrylicThe ideal combination of stable performance
-					and predictabilityAberration-Free AsphericFenestrated, step-vaulted haptics with
-					56° Contact angle and square posterior edge optic are designed to optimize 360°
-					Capsular contact2360° posterior square edge with haptic-optic junction designed
-					to minimise PCOPolished for a smooth optic surfaceUnique fenestrated,
-					step-vaulted haptics with 56° contact angle are designed to maximise stability•
-					91 % of patients had ≤ 5° rotation from day of surgery to 6 months1• 3° absolute
-					mean rotation at 6 months1• 0.28 mm mean decentration1
+					‍{this.props.info}
 				</ListGroup.Item>
 			</ListGroup>
 		);

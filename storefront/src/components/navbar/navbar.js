@@ -26,14 +26,14 @@ class Navbar extends React.Component {
 				data-duration={400}
 				className="navbar w-nav p-0 pl-4 pr-4">
 				<div className="d-flex justify-content-between w-container-flex">
-					<a href="#" className="mr-auto m-0 brand w-nav-brand p-0">
+					<Link to="/" className="mr-auto m-0 brand w-nav-brand p-0">
 						<img
-							src="https://uploads-ssl.webflow.com/5e01df57cdae92c47396eee8/5e048287478a40140bf39ce3_logo-crop.svg"
+							src={this.props.brandLogo}
 							height={50}
 							alt="brand"
 							className="image-2"
 						/>
-					</a>
+					</Link>
 					<nav role="navigation" className="w-nav-menu p-0">
 						<a className=" w-nav-link" style={{maxWidth: 940}}> {/*nav-link*/}
 							<Link style={{color: "#222222"}} to="/">Головна</Link>

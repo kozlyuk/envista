@@ -28,12 +28,9 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Product
         fields = [
-            "date_created",
-            "date_updated",
             "brand_name",
             "brand_image",
             "short_description",
-            "long_description",
             "product_image",
             "title",
         ]
