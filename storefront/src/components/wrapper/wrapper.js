@@ -2,10 +2,10 @@
  *
  *   Main wrapper.
  *
- *   @author    Andrey Perestyuk (Arrathilar)
- *   @email-primary a.perestyuk@itel.rv.ua
+ *   @author           Andrey Perestyuk (Arrathilar)
+ *   @email-primary    a.perestyuk@itel.rv.ua
  *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
- *   @copyright 2020 ITEL-Service
+ *   @copyright        2020 ITEL-Service
  *
  *
  */
@@ -22,6 +22,7 @@ import Auth from "../auth/auth";
 
 import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import axios from "axios";
 
 class Welcome extends React.Component {
 	constructor(props) {
@@ -34,8 +35,19 @@ class Welcome extends React.Component {
 		this.getDataFromChild = this.getDataFromChild.bind(this)
 	}
 
+	/*
+	 * Welcome.componentDidMount(): void
+	 *
+	 * Called immediately after a component is mounted.
+	 * Setting state here will trigger re-rendering.
+	 * Get user from API
+	 * When success write in state isAuthenticate: true
+	 * and user data
+	 * When error write in state isAuthenticate: false
+	 * and redirect to login page
+	 */
 	componentDidMount() {
-		fetch(process.env.REACT_APP_USER_DATA, {
+		axios(process.env.REACT_APP_USER_DATA, {
 			headers: {
 				"Authorization": "Token " + this.user.getAuthToken(),
 			}
@@ -45,11 +57,12 @@ class Welcome extends React.Component {
 					if (response.status >= 400) {
 						this.setState({
 							isAuthenticate: false,
-
 						})
+
 					} else if (response.status < 400) {
 						this.setState({
 							isAuthenticate: true,
+							user: response.data
 						})
 					}
 				});
@@ -60,6 +73,12 @@ class Welcome extends React.Component {
 		}, 1000)
 	}
 
+	/*
+	 * Welcome.getDataFromChild(data?):void
+	 * 
+	 * method initiator for child component
+	 * get from child props with brand logo and write to state
+	 */
 	getDataFromChild(data) {
 		(this.setState({
 			brandLogo: data
@@ -86,7 +105,7 @@ class Welcome extends React.Component {
 				<div>
 					<Router>
 						{this.state.isAuthenticate ? <Fragment>
-								<Navbar brandLogo={this.state.brandLogo}/>
+								<Navbar brandLogo={this.state.brandLogo} userEmail={this.state.user.email}/>
 								<div className="section">
 									<div>
 										<Switch>

@@ -31,18 +31,28 @@ export default class BasketItem extends React.Component {
 		this.authToken = this.user.getAuthToken();
 	}
 
+	/*
+	 * BasketItem.updateQuantity(value)
+	 *
+	 * Middleware reducer.
+	 * Need to catch value from child component, and put to parent state
+	 * return same data as input
+	 */
 	updateQuantity(value) {
 		return value
 	}
 
+	/*
+	 * BasketItem.cell(colIdx:number, rowIdx:number, item:object): React.Component
+	 *
+	 * Filter method for cell in table
+	 */
 	cell(colIdx, rowIdx, item) {
 		if (colIdx === 2) {
 			return (<BasketInputNumber colIdx={colIdx} rowIdx={rowIdx} item={item} array={this.state.array}
 									   updateQuantity={this.updateQuantity}/>)
 		} else if (colIdx === 3) {
 			return void 0
-			// return (<BasketPrice colIdx={colIdx} rowIdx={rowIdx} array={this.state.array}
-			// 					 updateQuantity={this.updateQuantity}/>)
 		} else if (colIdx === 4 || colIdx === 5) {
 			return void 0
 		} else {
@@ -50,6 +60,13 @@ export default class BasketItem extends React.Component {
 		}
 	}
 
+	/*
+	 * BasketItem.handleClick(): void
+	 *
+	 * Method handler
+	 * When success - confirm order and put response to state
+	 * When error - drop error toast
+	 */
 	handleClick() {
 		axios(process.env.REACT_APP_CONFIRM_ORDER, {
 			headers: {
@@ -64,6 +81,13 @@ export default class BasketItem extends React.Component {
 		})
 	}
 
+
+	/*
+	 * BasketItem.componentDidMount()
+	 * Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+	 * Get data from API
+	 * While error - drop error
+	 */
 	componentDidMount() {
 		axios(process.env.REACT_APP_BASKET_DATA_URL, {
 			headers: {

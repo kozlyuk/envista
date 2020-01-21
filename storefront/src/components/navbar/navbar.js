@@ -57,7 +57,7 @@ class Navbar extends React.Component {
 								onClick={() => {
 									this.user.logout();
 								}}>
-								Вийти
+								Вийти ({this.props.userEmail})
 							</Link>
 						</a>
 					</nav>

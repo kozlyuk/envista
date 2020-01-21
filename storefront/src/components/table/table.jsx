@@ -13,6 +13,7 @@ import Auth from "../auth/auth";
 import ButtonBackground from "../buttonBackground/buttonBackground";
 import axios from "axios";
 import {toast} from "react-toastify";
+import "../table/style.css"
 
 
 export class Table extends React.PureComponent {
@@ -30,9 +31,9 @@ export class Table extends React.PureComponent {
 
 	/*
 	 * decreaseQty(counter?, columnIdx?, rowIdx?): void
+	 *
+	 * decrease counter of item quantities and write to state
 	 */
-
-	// decrease counter of item quantities and write to state
 	decreaseQty(counter, columnIdx, rowIdx) {
 		const newQty = counter > 0 ? counter - 1 : 0;
 		let newArray = [...this.state.rows];
@@ -50,9 +51,10 @@ export class Table extends React.PureComponent {
 	}
 
 	/*
-	 * Method sendData(rowIdx, columnIdx): Promise<void>
+	 * Method sendData(rowIdx, columnIdx): AxiosPromise<any>
+	 *
+	 * send data to API
 	 */
-
 	async sendData(rowIdx, columnIdx) {
 		const row = rowIdx + 1;
 		const col = columnIdx + 1;
@@ -65,9 +67,9 @@ export class Table extends React.PureComponent {
 
 	/*
 	 * getData(counter, columnIdx, rowIdx): void
+	 *
+	 * send data to parent component
 	 */
-
-	// send data to parent component
 	getData(counter, columnIdx, rowIdx) {
 		if (counter !== 0) {
 			this.props.getData((this.state.makePurchase = ([columnIdx, rowIdx]))); //maybe need to add id
@@ -76,10 +78,10 @@ export class Table extends React.PureComponent {
 	}
 
 	/*
-	 * getArray(counter, columnIdx, rowIdx): void
+	 * getArray(columnsName, rows): void
+	 *
+	 * send array to parent component
 	 */
-
-	// send array to parent component
 	getArray(columnsName, rows) {
 		this.props.getArray((this.state.getArray = ([columnsName, rows]))); //maybe need to add id
 		return void 0;
@@ -87,9 +89,9 @@ export class Table extends React.PureComponent {
 
 	/*
 	 * componentDidMount(): void
+	 *
+	 * get data from backend => then mount component
 	 */
-
-	// get data from backend => then mount component
 	componentDidMount() {
 		axios(process.env.REACT_APP_TABLE_DATA, {
 			headers: {
@@ -123,11 +125,11 @@ export class Table extends React.PureComponent {
 		} else {
 			return (
 				<div className="row">
-					<table className="table-bordered col mb-4">
+					<table className="table-bordered col mb-4 header-fixed">
 						<colgroup>
 							<col style={{width: 50, minWidth: 50}}/>
 						</colgroup>
-						<thead className="rc-table-thead text-center">
+						<thead style={{position: "sticky"}} className="rc-table-thead text-center">
 						<tr>
 							<th className="rc-table-row-cell-break-word"/>
 							{this.state.columnsName.map((name, rowIdx) => (

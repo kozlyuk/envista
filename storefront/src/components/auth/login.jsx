@@ -20,6 +20,10 @@ export default class Login extends Component {
 		//TODO: validations
 	}
 
+	/*
+	 * Login.handleSubmit(event): void
+	 * collect data from target form, and send to Auth.login method
+	 */
 	handleSubmit(event) {
 		event.preventDefault();
 		let user = new Auth();

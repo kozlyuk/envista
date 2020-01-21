@@ -21,6 +21,9 @@ export default class Basket extends React.Component {
 		super(props);
 	}
 
+	/*
+	 * browser history object
+	 */
 	history = createBrowserHistory();
 
 	render() {

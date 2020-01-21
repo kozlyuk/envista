@@ -61,7 +61,6 @@ export default class Content extends React.Component {
 		})
 			.then(
 				result => {
-					console.log(result.data[0])
 					this.setState({
 						isLoaded: true,
 						product: result.data[0]
