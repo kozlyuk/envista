@@ -42,14 +42,14 @@ export default class PurchaseList extends React.Component {
 									<span
 										className="rc-table-row-indent indent-level-0"
 										style={{paddingLeft: 0}}>
-										Cylinder
+										Diopter
 									</span>
 							</td>
 							<td className="rc-table-row-cell-break-word text-center">
 									<span
 										className="rc-table-row-indent indent-level-0"
 										style={{paddingLeft: 0}}>
-										Diopter
+										Cylinder
 									</span>
 							</td>
 						</tr>
