@@ -17,9 +17,6 @@ import BasketItem from "../basketItem/basketItem";
 
 
 export default class Basket extends React.Component {
-	constructor(props) {
-		super(props);
-	}
 
 	/*
 	 * browser history object

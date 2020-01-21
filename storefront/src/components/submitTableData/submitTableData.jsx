@@ -15,12 +15,7 @@ import {Button} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
 
 class Submit extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
 	send(purchase) {
-		const url = "http://localhost:3004/data";
 		this.props.history.push('/basket')
 	}
 

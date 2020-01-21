@@ -35,31 +35,28 @@ class Navbar extends React.Component {
 						/>
 					</Link>
 					<nav role="navigation" className="w-nav-menu p-0">
-						<a className=" w-nav-link" style={{maxWidth: 940}}> {/*nav-link*/}
-							<Link style={{color: "#222222"}} to="/">Головна</Link>
-						</a>
+						<Link className=" w-nav-link" style={{color: "#222222"}} to="/">Головна</Link>
 						<a
 							href="https://envista.toriccalculator.com/(S(3p54nq0ludca5hrzdtsqdtfl))/UserAgreement.aspx"
 							target="_blank"
+							rel="noopener noreferrer"
 							className="nav-link-2 w-nav-link"
 							style={{maxWidth: 940}}>
 							Калькулятор
 						</a>
-						<a className="nav-link-3 w-nav-link" style={{maxWidth: 940}}>
-							<Link style={{maxWidth: 940, color: "#222222"}} to="/basket">
-								Корзина
-							</Link>
-						</a>
-						<a className="nav-link-3 w-nav-link" style={{maxWidth: 940}}>
-							<Link
-								style={{maxWidth: 940, color: "#222222"}}
-								to="/logout"
-								onClick={() => {
-									this.user.logout();
-								}}>
-								Вийти ({this.props.userEmail})
-							</Link>
-						</a>
+						<Link сlassName="nav-link-3 w-nav-link"
+							  style={{maxWidth: 940, color: "#222222", display: "inline-block", padding: "20px"}}
+							  to="/basket">
+							Корзина
+						</Link>
+						<Link
+							style={{maxWidth: 940, color: "#222222", display: "inline-block", padding: "20px"}}
+							to="/logout"
+							onClick={() => {
+								this.user.logout();
+							}}>
+							Вийти ({this.props.userEmail})
+						</Link>
 					</nav>
 					<div className="w-nav-button">
 						<div className="w-icon-nav-menu"/>

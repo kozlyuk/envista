@@ -30,15 +30,6 @@ export default class Content extends React.Component {
 		this.authToken = this.user.getAuthToken()
 	}
 
-
-	count(array) {
-		let counts = {};
-		array.map(x => {
-			counts[x] = (counts[x] || 0) + 1;
-		});
-		return counts;
-	}
-
 	//get data from child component and put into state
 	makePurchase = purchase => {
 		this.setState(prevState => ({

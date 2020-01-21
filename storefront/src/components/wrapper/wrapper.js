@@ -75,7 +75,7 @@ class Welcome extends React.Component {
 
 	/*
 	 * Welcome.getDataFromChild(data?):void
-	 * 
+	 *
 	 * method initiator for child component
 	 * get from child props with brand logo and write to state
 	 */

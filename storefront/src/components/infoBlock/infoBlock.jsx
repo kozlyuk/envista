@@ -14,10 +14,6 @@ import React from "react";
 import {ListGroup} from "react-bootstrap";
 
 export default class InfoBlock extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
 	render() {
 		return (
 			<ListGroup className="ml-4 mr-4" variant="flush" defaultActiveKey="#link1">
