@@ -11,9 +11,9 @@
  */
 
 import React from "react";
-import {Card, Col, Container, Row} from "react-bootstrap";
-import BasketItem from "../basketItem/basketItem";
+import {Col, Container, Row} from "react-bootstrap";
 import {createBrowserHistory} from "history";
+import BasketItem from "../basketItem/basketItem";
 
 
 export default class Basket extends React.Component {
@@ -33,13 +33,12 @@ export default class Basket extends React.Component {
 				</Row>
 				<Row>
 					<Col>
-						<Card>
-							<Card.Header className="text-center">Ваші замовлення</Card.Header>
-							<BasketItem/>
-						</Card>
+						<h4 className="text-center">Ваші замовлення</h4>
+						<BasketItem/>
 					</Col>
 				</Row>
 			</Container>
 		);
 	}
 }
+
