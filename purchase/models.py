@@ -81,7 +81,7 @@ class Order(models.Model):
     class Meta:
         verbose_name = _('Order')
         verbose_name_plural = _('Orders')
-        ordering = ['-date_created', '-invoice_number']
+        ordering = ['-date_created', 'invoice_number']
 
     def __str__(self):
         return self.invoice_number
