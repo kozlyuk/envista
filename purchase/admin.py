@@ -6,7 +6,6 @@ from django.forms import ModelForm, ChoiceField
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
-from product.models import Cylinder, DiopterPower
 
 
 class ActiveValueFilter(admin.SimpleListFilter):

@@ -1,11 +1,10 @@
 import random
-from datetime import date
 
-from product.models import ProductInstance, DiopterPower, Cylinder, Product
 from django.contrib.auth.models import Group, Permission
+from product.models import ProductInstance, DiopterPower, Cylinder, Product
 
 
-product = Product.objects.create(title='ІНТРАОКУЛЯРНА ЛІНЗА ENVISTA® TORIC',
+PRODUCT = Product.objects.create(title='ІНТРАОКУЛЯРНА ЛІНЗА ENVISTA® TORIC',
                                  short_description="The Clear Choice for Exceptional Astigmatism Management. Exacting astigmatism correction. Dependable stability. Pristine visual clarity. It all comes together in the proven enVista platform to deliver:"
                                  "- Aberration-free, glistening-free performance"
                                  "- Proven rotational stability"
@@ -23,16 +22,16 @@ for value in range(125, 576, 75):
 for value in range(60, 301, 5):
     DiopterPower.objects.create(value=str(value/10))
 
-prices = [3000, 3850, 5600, 7300, 7300, 7300, 7300]
-prices_index = 0
+PRICES = [3000, 3850, 5600, 7300, 7300, 7300, 7300]
+PRICES_INDEX = 0
 
 for column in Cylinder.objects.all():
     for row in DiopterPower.objects.all():
-        ProductInstance.objects.create(product=product,
+        ProductInstance.objects.create(product=PRODUCT,
                                        cylinder=column,
                                        diopter=row,
-                                       quantity_in_hand=random.randint(1,10),
-                                       price=prices[prices_index])
+                                       quantity_in_hand=random.randint(1, 10),
+                                       price=PRICES[PRICES_INDEX])
     prices_index += 1
 
 

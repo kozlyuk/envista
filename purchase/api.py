@@ -58,7 +58,8 @@ class GetCart(views.APIView):
         index = 0
         for line in order.orderline_set.all():
             index += 1
-            order_line = [index, line.product.__str__(), line.quantity, line.unit_price, line.product.pk]
+            order_line = [index, line.product.__str__(), line.quantity,
+                          line.unit_price, line.product.pk, line.product.quantity_in_hand]
             json_data[0]["lines"].append({"line": order_line})
         json_data.append({"value_total": order.value_total()})
         return Response(json_data, status=status.HTTP_200_OK)
@@ -149,10 +150,10 @@ class UpdateQuantity(views.APIView):
     """
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request, pk: int, quantity: int):
+    def get(self, request, product_pk: int, quantity: int):
         # get the existing object of ProductInstance
         try:
-            product = ProductInstance.objects.get(pk=pk)
+            product = ProductInstance.objects.get(pk=product_pk)
         except ProductInstance.DoesNotExist:
             return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
 

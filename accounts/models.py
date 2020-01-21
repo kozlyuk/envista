@@ -3,8 +3,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import Group
 
-from .managers import CustomUserManager
+from accounts.managers import CustomUserManager
 
 
 class User(AbstractUser):
@@ -25,3 +26,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
+
+    def save(self, *args, **kwargs):
+        self.groups.clear()
+        if self.is_staff:
+            group = Group.objects.get(name='Менеджери')
+        else:
+            group = Group.objects.get(name='Клієнти')
+        self.groups.add(group)
+        super().save(*args, **kwargs)
