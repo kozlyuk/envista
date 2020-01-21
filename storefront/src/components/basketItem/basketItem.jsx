@@ -104,17 +104,17 @@ export default class BasketItem extends React.Component {
 	}
 
 	componentDidMount() {
-		fetch(process.env.REACT_APP_BASKET_DATA_URL, {
+		axios(process.env.REACT_APP_BASKET_DATA_URL, {
 			headers: {
 				"Authorization": "Token " + this.authToken
 			}
 		})
-			.then(res => res.json())
+			// .then(res => res.json())
 			.then(
 				result => {
 					this.setState({
 						isLoaded: true,
-						array: result[0].lines
+						array: result.data[0].lines
 					});
 				},
 				error => {
