@@ -1,9 +1,13 @@
-import random
-
-from django.contrib.auth.models import Group, Permission
+""" Create initial database """
+from accounts.models import User
 from product.models import ProductInstance, DiopterPower, Cylinder, Product
+from purchase.models import Purchase, PurchaseLine
+
+# Cteare superuser
+User.objects.create_superuser('sergey.kozlyuk@gmail.com', 'password')
 
 
+# Create initial db for product app
 PRODUCT = Product.objects.create(title='ІНТРАОКУЛЯРНА ЛІНЗА ENVISTA® TORIC',
                                  short_description="The Clear Choice for Exceptional Astigmatism Management. Exacting astigmatism correction. Dependable stability. Pristine visual clarity. It all comes together in the proven enVista platform to deliver:"
                                  "- Aberration-free, glistening-free performance"
@@ -14,7 +18,7 @@ PRODUCT = Product.objects.create(title='ІНТРАОКУЛЯРНА ЛІНЗА EN
                                  brand_name='Bausch&Lomb',
                                  brand_image='brand/BL_logo.png',
                                  footer="© 2020 ТОВ «Оптдіея». Усі права захищені."
-                                )
+                                 )
 
 for value in range(125, 576, 75):
     Cylinder.objects.create(value=str(value/100))
@@ -22,20 +26,79 @@ for value in range(125, 576, 75):
 for value in range(60, 301, 5):
     DiopterPower.objects.create(value=str(value/10))
 
-PRICES = [3000, 3850, 5600, 7300, 7300, 7300, 7300]
-PRICES_INDEX = 0
+# Create initial db for purchase app
 
+PRICES = [3000, 3850, 5600, 7300, 7300, 7300, 7300]
+
+QUANTITIES = [[1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [3, 3, 3, 2, 2, 2, 2],
+              [2, 2, 2, 2, 2, 2, 2],
+              [2, 2, 2, 2, 2, 2, 2],
+              [2, 2, 2, 2, 2, 2, 2],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1]
+              ]
+
+PURCHASE = Purchase.objects.create(invoice_number='first_purchase', created_by_id=1)
 for column in Cylinder.objects.all():
     for row in DiopterPower.objects.all():
-        ProductInstance.objects.create(product=PRODUCT,
-                                       cylinder=column,
-                                       diopter=row,
-                                       quantity_in_hand=random.randint(1, 10),
-                                       price=PRICES[PRICES_INDEX])
-    prices_index += 1
+        pi = ProductInstance.objects.create(product=PRODUCT,
+                                            cylinder=column,
+                                            diopter=row,
+                                            quantity_in_hand=QUANTITIES[row.pk-1][column.pk-1],
+                                            price=PRICES[column.pk-1])
+        PurchaseLine.objects.create(product=pi,
+                                    purchase=PURCHASE,
+                                    cylinder=column,
+                                    diopter=row,
+                                    quantity=QUANTITIES[row.pk-1][column.pk-1])
 
 
+# Create users permissions
 def create_permission(group, model, permission):
+    from django.contrib.auth.models import Group, Permission
     new_group, created = Group.objects.get_or_create(name=group)
     name = 'Can {} {}'.format(permission, model)
     try:
@@ -72,10 +135,14 @@ create_permission('Менеджери', 'purchase line', 'add')
 create_permission('Менеджери', 'purchase line', 'change')
 create_permission('Менеджери', 'purchase line', 'delete')
 
-create_permission('Клієнт', 'Order', 'view')
-create_permission('Клієнт', 'Order', 'add')
-create_permission('Клієнт', 'Order', 'change')
-create_permission('Клієнт', 'order line', 'view')
-create_permission('Клієнт', 'order line', 'add')
-create_permission('Клієнт', 'order line', 'change')
-create_permission('Клієнт', 'order line', 'delete')
+create_permission('Клієнти', 'Product', 'view')
+create_permission('Клієнти', 'Product Instance', 'view')
+create_permission('Клієнти', 'Cylinder', 'view')
+create_permission('Клієнти', 'Diopter Power', 'view')
+create_permission('Клієнти', 'Order', 'view')
+create_permission('Клієнти', 'Order', 'add')
+create_permission('Клієнти', 'Order', 'change')
+create_permission('Клієнти', 'order line', 'view')
+create_permission('Клієнти', 'order line', 'add')
+create_permission('Клієнти', 'order line', 'change')
+create_permission('Клієнти', 'order line', 'delete')
