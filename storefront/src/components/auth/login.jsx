@@ -30,8 +30,9 @@ export default class Login extends Component {
 			password: password,
 			email: email
 		});
-		user.login(email, password).then(r => window.location.reload(false)
-		)
+		user.login(email, password).then(r => {
+			return r;
+		})
 	}
 
 	render() {

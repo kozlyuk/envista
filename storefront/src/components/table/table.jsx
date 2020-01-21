@@ -28,11 +28,6 @@ export class Table extends React.PureComponent {
 		this.authToken = this.user.getAuthToken();
 	}
 
-	dropError(error) {
-		const message = error.message
-		toast.info(`Download Counter is initialized with ${{message}}`)
-	}
-
 	/*
 	 * decreaseQty(counter?, columnIdx?, rowIdx?): void
 	 */
