@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
 from django.conf import settings
 
 from accounts.forms import CustomUserCreationForm, CustomUserChangeForm
@@ -27,6 +28,18 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ('email', 'mobile_number',)
     ordering = ('-is_staff', '-is_active', 'last_name',)
+
+    def save_model(self, request, obj, form, change):
+        """ Automatic add user to group """
+        if obj.pk:
+            obj.groups.clear()
+            if obj.is_staff:
+                group = Group.objects.get(name='Менеджери')
+            else:
+                group = Group.objects.get(name='Клієнти')
+            obj.groups.add(group)
+        super().save_model(request, obj, form, change)
+
 
 
 admin.site.site_url = settings.SITE_URL
