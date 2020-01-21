@@ -15,8 +15,8 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    list_display = ('email', 'first_name', 'last_name', 'mobile_number', 'is_staff', 'is_active',)
-    list_filter = ('is_staff', 'is_active',)
+    list_display = ('email', 'first_name', 'last_name', 'mobile_number', 'is_active', 'custom_group')
+    list_filter = ('groups__name', 'is_active')
     fieldsets = (
         (None, {'fields': ('first_name', 'last_name', 'mobile_number', 'email', 'is_staff', 'is_active')}),
     )
@@ -28,6 +28,12 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ('email', 'mobile_number',)
     ordering = ('-is_staff', '-is_active', 'last_name',)
+
+    def custom_group(self, obj):
+        """
+        get group, separate by comma, and display empty string if user has no group
+        """
+        return ','.join([g.name for g in obj.groups.all()]) if obj.groups.count() else ''
 
     def save_model(self, request, obj, form, change):
         """ Automatic add user to group """
