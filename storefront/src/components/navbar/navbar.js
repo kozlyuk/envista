@@ -35,7 +35,7 @@ class Navbar extends React.Component {
 						/>
 					</Link>
 					<nav role="navigation" className="w-nav-menu p-0">
-						<Link className=" w-nav-link" style={{color: "#222222"}} to="/">Головна</Link>
+						<Link style={{color: "#222222"}} to="/">Головна</Link>
 						<a
 							href="https://envista.toriccalculator.com/(S(3p54nq0ludca5hrzdtsqdtfl))/UserAgreement.aspx"
 							target="_blank"
@@ -44,11 +44,13 @@ class Navbar extends React.Component {
 							style={{maxWidth: 940}}>
 							Калькулятор
 						</a>
-						<Link сlassName="nav-link-3 w-nav-link"
-							  style={{maxWidth: 940, color: "#222222", display: "inline-block", padding: "20px"}}
-							  to="/basket">
+
+						<Link
+							style={{maxWidth: 940, color: "#222222", display: "inline-block", padding: "20px"}}
+							to="/basket">
 							Корзина
 						</Link>
+
 						<Link
 							style={{maxWidth: 940, color: "#222222", display: "inline-block", padding: "20px"}}
 							to="/logout"

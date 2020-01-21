@@ -72,6 +72,7 @@ export class Table extends React.PureComponent {
 	 */
 	getData(counter, columnIdx, rowIdx) {
 		if (counter !== 0) {
+			/* eslint-disable react/no-direct-mutation-state */
 			this.props.getData((this.state.makePurchase = ([columnIdx, rowIdx]))); //maybe need to add id
 		}
 		return void 0;
@@ -83,6 +84,7 @@ export class Table extends React.PureComponent {
 	 * send array to parent component
 	 */
 	getArray(columnsName, rows) {
+		/* eslint-disable react/no-direct-mutation-state */
 		this.props.getArray((this.state.getArray = ([columnsName, rows]))); //maybe need to add id
 		return void 0;
 	}
