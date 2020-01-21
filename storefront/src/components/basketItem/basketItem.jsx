@@ -36,7 +36,7 @@ export default class BasketItem extends React.Component {
 		const newQty = Number.parseInt(target.value);
 		let newArray = [...this.state.array];
 		newArray[rowIdx].line[2] = newQty;
-		const requestUrl = `${process.env.REACT_APP_CHANGE_QUANTITY}${itemPk}/${newQty}`;
+		const requestUrl = `${process.env.REACT_APP_CHANGE_QUANTITY}${itemPk}/${newQty}/`;
 		axios(requestUrl, {
 			headers: {
 				"Authorization": "Token " + this.authToken
