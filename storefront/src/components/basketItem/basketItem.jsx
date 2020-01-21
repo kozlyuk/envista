@@ -124,6 +124,7 @@ export default class BasketItem extends React.Component {
 					});
 				}
 			);
+		return void 0;
 	}
 
 	render() {
