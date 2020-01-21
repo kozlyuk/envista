@@ -28,11 +28,6 @@ export class Table extends React.PureComponent {
 		this.authToken = this.user.getAuthToken();
 	}
 
-	dropError(error) {
-		const message = error.message
-		toast.info(`Download Counter is initialized with ${{message}}`)
-	}
-
 	/*
 	 * decreaseQty(counter?, columnIdx?, rowIdx?): void
 	 */
@@ -61,7 +56,7 @@ export class Table extends React.PureComponent {
 	async sendData(rowIdx, columnIdx) {
 		const row = rowIdx + 1;
 		const col = columnIdx + 1;
-		return axios(process.env.REACT_APP_ADD_TO_CARD + row + "/" + col, {
+		return axios(process.env.REACT_APP_ADD_TO_CARD + row + "/" + col + "/", {
 			headers: {
 				"Authorization": "Token " + this.authToken
 			}

@@ -10,6 +10,8 @@
  *
  */
 
+import {toast} from "react-toastify";
+
 export default class Auth {
 	constructor(authenticate = false) {
 		this.authenticate = authenticate
@@ -100,7 +102,13 @@ export default class Auth {
 	 */
 	async login(email, password) {
 		let result = await this.postLoginData(email, password);
-		localStorage.setItem("auth", await result.text())
+		if (result.status < 400) {
+			localStorage.setItem("auth", await result.text())
+			window.location.reload(false);
+		} else {
+			const error = await result.json();
+			toast.error(error.non_field_errors[0])
+		}
 	}
 
 	logout() {
@@ -122,7 +130,6 @@ export default class Auth {
 				},
 				body: JSON.stringify({email: email, password: password})
 			});
-			console.log(resp);
 			return resp
 		} catch (err) {
 			console.log(err)
