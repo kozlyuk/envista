@@ -26,6 +26,13 @@ export default class BasketInputNumber extends React.Component {
 		this.authToken = this.user.getAuthToken();
 	}
 
+	/*
+	 * BasketInputNumber.changeValue(rowIdx?, colIdx?, counter:number, target): void
+	 *
+	 * onChange handler send data to API.
+	 * When success - update state
+	 * When error - drop error in toast
+	 */
 	changeValue(rowIdx, colIdx, counter, target) {
 		Number.parseInt(rowIdx);
 		Number.parseInt(colIdx);
@@ -50,6 +57,12 @@ export default class BasketInputNumber extends React.Component {
 			})
 	}
 
+	/*
+	 * BasketInputNumber.calculatePrice(colIdx:number, rowIdx:number): summaryPrice:number
+	 *
+	 * Get column adn row coordinate
+	 * return summary price from state
+	 */
 	calculcatePrice(colIdx, rowIdx) {
 		const quantity = this.props.array[rowIdx].line[2];
 		const pricePerUnit = this.props.array[rowIdx].line[3];

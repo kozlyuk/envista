@@ -18,7 +18,9 @@ export default class Auth {
 	}
 
 	/*
-	 * isAuthenticate() check if client is authorised
+	 * isAuthenticate(): void
+	 *
+	 * check if client is authorised
 	 * return "true" when user have auth token, and "false" when don't have
 	 */
 	isAuthenticate() {
@@ -46,7 +48,9 @@ export default class Auth {
 	}
 
 	/*
-	 * getAuthToken() return auth token from
+	 * getAuthToken()
+	 *
+	 * return auth token from
 	 * local storage (in case when user activate checkbox "remember me")
 	 * or from session storage
 	 */
@@ -63,41 +67,12 @@ export default class Auth {
 
 	}
 
-	getUser() {
-		fetch(process.env.REACT_APP_USER_DATA, {
-			headers: {
-				"Authorization": "Token " + this.getAuthToken()
-			}
-		})
-			.then(res => res.json())
-			.then(
-				result => {
-					console.log(result)
-					this.authenticate = true;
-					return result
-				},
-				error => {
-					return error
-				}
-			);
-	}
-
 	/*
-	 * getCSRFToken() return csrf token
-	 */
-	static getCSRFToken() {
-		return localStorage.getItem("csrf-middleware-token")
-	}
-
-	/*
-	 * method registration() does registration a new user
-	 */
-	registration() {
-
-	}
-
-	/*
-	 * method login(email, password) get parameters from backend
+	 * method Auth.login(
+	 * 	email?,
+	 * 	password?): Promise<void>
+	 *
+	 * get parameters from backend
 	 * end put it to local storage
 	 */
 	async login(email, password) {
@@ -117,7 +92,9 @@ export default class Auth {
 	}
 
 	/*
-	 * method postLoginData(email, password) get parameters
+	 * method postLoginData(email?, password?): Promise<Response | undefined>
+	 *
+	 * get parameters
 	 * and post to backend
 	 */
 	async postLoginData(email, password) {
