@@ -2590,3 +2590,7 @@ input[type='text'] {
     bottom: 0;
     width: 100%;
 }
+
+.container > .collapse.show {
+    display: block !important;
+}

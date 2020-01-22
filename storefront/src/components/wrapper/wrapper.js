@@ -11,7 +11,7 @@
  */
 
 import React, {Fragment} from "react";
-import Navbar from "../navbar/navbar";
+import NavbarMenu from "../navbar/navbarMenu";
 import Content from "../content/content";
 import Footer from "../footer/footer";
 
@@ -105,7 +105,7 @@ class Welcome extends React.Component {
 				<div>
 					<Router>
 						{this.state.isAuthenticate ? <Fragment>
-								<Navbar brandLogo={this.state.brandLogo} userEmail={this.state.user.email}/>
+								<NavbarMenu brandLogo={this.state.brandLogo} userEmail={this.state.user.email}/>
 								<div className="section">
 									<div>
 										<Switch>
