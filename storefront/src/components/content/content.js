@@ -1,12 +1,11 @@
 /**
  * Content component.
  *
- * @author    Andrey Perestyuk (Arrathilar)
- * @email-primary a.perestyuk@itel.rv.ua
+ * @author           Andrey Perestyuk (Arrathilar)
+ * @email-primary    a.perestyuk@itel.rv.ua
  * @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
- * @copyright 2020 ITEL-Service
+ * @copyright        2020 ITEL-Service
  */
-
 
 import React from "react";
 
@@ -18,7 +17,6 @@ import {Container} from "react-bootstrap";
 import axios from "axios";
 import Auth from "../auth/auth";
 
-
 export default class Content extends React.Component {
 	constructor(props) {
 		super(props);
@@ -27,7 +25,7 @@ export default class Content extends React.Component {
 			array: []
 		};
 		this.user = new Auth();
-		this.authToken = this.user.getAuthToken()
+		this.authToken = this.user.getAuthToken();
 	}
 
 	//get data from child component and put into state
@@ -47,24 +45,23 @@ export default class Content extends React.Component {
 	componentDidMount() {
 		axios(process.env.REACT_APP_INFO_CONTEXT, {
 			headers: {
-				"Authorization": "Token " + this.authToken
+				Authorization: "Token " + this.authToken
 			}
-		})
-			.then(
-				result => {
-					this.setState({
-						isLoaded: true,
-						product: result.data[0]
-					})
-					this.props.getData(this.state.product.brand_image)
-				},
-				error => {
-					this.setState({
-						isLoaded: true,
-						error
-					});
-				}
-			);
+		}).then(
+			result => {
+				this.setState({
+					isLoaded: true,
+					product: result.data[0]
+				});
+				this.props.getData(this.state.product.brand_image);
+			},
+			error => {
+				this.setState({
+					isLoaded: true,
+					error
+				});
+			}
+		);
 		return void 0;
 	}
 
@@ -97,7 +94,10 @@ export default class Content extends React.Component {
 						<div className="mobile-first w-col w-col-6">
 							<h4 className="text-center">Таблиця наявності лінз на складі</h4>
 							<Table getData={this.makePurchase} getArray={this.getArray}/>
-							<PurchaseList purchaseList={this.state.purchase} array={this.state.array}/>
+							<PurchaseList
+								purchaseList={this.state.purchase}
+								array={this.state.array}
+							/>
 							{this.state.purchase.length !== 0 && (
 								<Submit history={this.history} purchaseList={this.state.purchase}/>
 							)}
