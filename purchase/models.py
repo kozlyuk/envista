@@ -90,7 +90,7 @@ class Order(models.Model):
         """ return calculated from invoice_lines purchase value"""
         return self.orderline_set.aggregate(total_value=Sum(F('quantity')*F('unit_price'),
                                                             output_field=FloatField())) \
-                                            ['total_value']
+                                            ['total_value'] or 0
     value_total.short_description = _('Calculated invoice value')
 
     @classmethod
@@ -108,7 +108,8 @@ class PurchaseLine(models.Model):
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
     diopter = models.ForeignKey(DiopterPower, on_delete=models.PROTECT)
     cylinder = models.ForeignKey(Cylinder, on_delete=models.PROTECT)
-    quantity = models.PositiveSmallIntegerField(_('Amount'), default=1)
+    quantity = models.PositiveSmallIntegerField(_('Quantity'), default=1)
+    last_quantity = models.PositiveSmallIntegerField(default=0)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
 
     class Meta:
@@ -122,15 +123,15 @@ class OrderLine(models.Model):
     diopter = models.ForeignKey(DiopterPower, on_delete=models.PROTECT)
     cylinder = models.ForeignKey(Cylinder, on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(_('Quantity'), default=0)
+    last_quantity = models.PositiveSmallIntegerField(default=0)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
 
     class Meta:
         unique_together = ['order', 'product']
 
     def save(self, *args, **kwargs):
-        """ Automatic set unit_price """
-        self.unit_price = self.product.price
-        super().save(*args, **kwargs)
+        self.last_quantity = self.quantity
+        super().save(*args, **kwargs) # Call the real save() method
 
     def value_total(self):
         """ return calculated invoice_line value"""
