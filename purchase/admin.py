@@ -37,9 +37,46 @@ class ActiveValueFilter(admin.SimpleListFilter):
         return queryset.filter(status=self.value())
 
 
+class PurchaseLineInlineFormSet(BaseInlineFormSet):
+
+    def clean(self):
+        super().clean()
+        for form in self.forms:
+            # check if form is valid
+            if not form.is_valid():
+                return
+
+            # get stock of product from form
+            product = ProductInstance.objects.get(cylinder=form.instance.cylinder,
+                                                  diopter=form.instance.diopter)
+
+            # check stock of product
+            quantity_in_hand = product.quantity_in_hand
+            if form.instance.pk and form.instance.product == product:
+                quantity_in_hand -= form.instance.last_quantity
+
+            # validation error if quality = 0
+            if form.instance.quantity == 0:
+                msg = _('Quantity must be more then 0')
+                form._errors["quantity"] = self.error_class([msg])
+
+            # validation error if not enough in stock
+            if form.instance.quantity + quantity_in_hand < 0:
+                msg = _('Product is not enough in stock. Available - {}').format(quantity_in_hand)
+                form._errors["quantity"] = self.error_class([msg])
+
+            # check instance is existing and product was changed
+            form.instance.__product_changed__ = False
+            if form.instance.pk:
+                if form.instance.product != product:
+                    form.instance.__product_changed__ = True
+                    form.instance.__previous_product__ = form.instance.product
+
+
 class PurchaseLineInline(admin.TabularInline):
 
     model = PurchaseLine
+    formset = PurchaseLineInlineFormSet
     fields = ['cylinder', 'diopter', 'quantity', 'unit_price']
     autocomplete_fields = ['cylinder', 'diopter']
     extra = 0
@@ -79,6 +116,44 @@ class PurchaseAdmin(admin.ModelAdmin):
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
 
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            # get stock of product from form
+            product = ProductInstance.objects.get(cylinder=instance.cylinder, diopter=instance.diopter)
+
+            # set product
+            if not instance.pk or instance.__product_changed__:
+                instance.product = product
+
+            # if product was changed add previous_quantity to previous_product
+            if instance.__product_changed__:
+                instance.__previous_product__.quantity_in_hand -= instance.last_quantity
+                instance.__previous_product__.save()
+
+            # reduce stocks
+            if instance.__product_changed__:
+                instance.product.quantity_in_hand += instance.quantity
+            else:
+                instance.product.quantity_in_hand += instance.quantity - instance.last_quantity
+
+            instance.product.save()
+
+        # if product was deleted add previous_quantity to it
+        for obj in formset.deleted_objects:
+            product = ProductInstance.objects.get(pk=obj.product.pk)
+            product.quantity_in_hand -= obj.quantity
+            product.save()
+
+        super().save_formset(request, form, formset, change)
+
+    def delete_model(self, request, obj):
+        for line in obj.purchaseline_set.all():
+            product = ProductInstance.objects.get(pk=line.product.pk)
+            product.quantity_in_hand -= line.quantity
+            product.save()
+        super().delete_model(request, obj)
+
 
 class OrderLineInlineFormSet(BaseInlineFormSet):
 
@@ -89,13 +164,9 @@ class OrderLineInlineFormSet(BaseInlineFormSet):
             if not form.is_valid():
                 return
 
-            # get data from form
-            quantity = form.cleaned_data.get('quantity')
-            diopter = form.cleaned_data.get('diopter')
-            cylinder = form.cleaned_data.get('cylinder')
-
             # get stock of product from form
-            product = ProductInstance.objects.get(cylinder=cylinder, diopter=diopter)
+            product = ProductInstance.objects.get(cylinder=form.instance.cylinder,
+                                                  diopter=form.instance.diopter)
 
             # check stock of product
             quantity_in_hand = product.quantity_in_hand
@@ -103,12 +174,12 @@ class OrderLineInlineFormSet(BaseInlineFormSet):
                 quantity_in_hand += form.instance.last_quantity
 
             # validation error if quality = 0
-            if quantity == 0:
+            if form.instance.quantity == 0:
                 msg = _('Quantity must be more then 0')
                 form._errors["quantity"] = self.error_class([msg])
 
             # validation error if not enough in stock
-            if quantity > quantity_in_hand:
+            if form.instance.quantity > quantity_in_hand:
                 msg = _('Product is not enough in stock. Available - {}').format(quantity_in_hand)
                 form._errors["quantity"] = self.error_class([msg])
 
@@ -182,7 +253,6 @@ class OrderAdmin(admin.ModelAdmin):
         for instance in instances:
             # get stock of product from form
             product = ProductInstance.objects.get(cylinder=instance.cylinder, diopter=instance.diopter)
-            quantity_in_hand = product.quantity_in_hand
 
             # set product and unit_price
             if not instance.pk or instance.__product_changed__:
@@ -210,8 +280,14 @@ class OrderAdmin(admin.ModelAdmin):
 
         super().save_formset(request, form, formset, change)
 
-
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
         form.instance.value = form.instance.value_total()
         form.instance.save()
+
+    def delete_model(self, request, obj):
+        for line in obj.orderline_set.all():
+            product = ProductInstance.objects.get(pk=line.product.pk)
+            product.quantity_in_hand += line.quantity
+            product.save()
+        super().delete_model(request, obj)

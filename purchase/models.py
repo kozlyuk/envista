@@ -115,6 +115,10 @@ class PurchaseLine(models.Model):
     class Meta:
         unique_together = ['purchase', 'product']
 
+    def save(self, *args, **kwargs):
+        self.last_quantity = self.quantity
+        super().save(*args, **kwargs) # Call the real save() method
+
 
 class OrderLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
