@@ -11,7 +11,7 @@
  */
 
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import Auth from "../auth/auth";
 
 class Navbar extends React.Component {
@@ -34,7 +34,7 @@ class Navbar extends React.Component {
 						/>
 					</Link>
 					<nav role="navigation" className="w-nav-menu p-0">
-						<Link style={{ color: "#222222" }} to="/">
+						<Link style={{color: "#222222", padding: "20px"}} to="/">
 							Головна
 						</Link>
 						<a
@@ -42,7 +42,7 @@ class Navbar extends React.Component {
 							target="_blank"
 							rel="noopener noreferrer"
 							className="nav-link-2 w-nav-link"
-							style={{ maxWidth: 940 }}>
+							style={{maxWidth: 940}}>
 							Калькулятор
 						</a>
 
@@ -72,10 +72,10 @@ class Navbar extends React.Component {
 						</Link>
 					</nav>
 					<div className="w-nav-button">
-						<div className="w-icon-nav-menu" />
+						<div className="w-icon-nav-menu"/>
 					</div>
 				</div>
-				<div className="w-nav-overlay" data-wf-ignore />
+				<div className="w-nav-overlay" data-wf-ignore/>
 			</div>
 		);
 	}
