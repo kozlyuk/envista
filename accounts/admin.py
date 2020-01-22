@@ -27,7 +27,7 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
     search_fields = ('email', 'mobile_number',)
-    ordering = ('-is_staff', '-is_active', 'last_name',)
+    ordering = ('is_staff', '-is_active', 'last_name',)
 
     def custom_group(self, obj):
         """
