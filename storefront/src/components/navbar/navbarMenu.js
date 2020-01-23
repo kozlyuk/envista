@@ -47,6 +47,16 @@ class NavbarMenu extends React.Component {
 										style={{maxWidth: 940, color: "#222222", padding: "20px"}}>
 										Калькулятор
 									</a>
+									{this.props.userIsStaff ? <Link
+										style={{
+											maxWidth: 940,
+											color: "#222222",
+											display: "inline-block",
+											padding: "20px"
+										}}
+										to="/warehouse">
+										Склад
+									</Link> : ""}
 									<Link
 										style={{
 											maxWidth: 940,

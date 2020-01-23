@@ -29,7 +29,8 @@ class Welcome extends React.Component {
 		super(props);
 		this.state = {
 			isLoading: true,
-			isAuthenticate: false
+			isAuthenticate: false,
+			user: null
 		};
 		this.user = new Auth();
 		this.getDataFromChild = this.getDataFromChild.bind(this)
@@ -105,13 +106,25 @@ class Welcome extends React.Component {
 				<div>
 					<Router>
 						{this.state.isAuthenticate ? <Fragment>
-								<NavbarMenu brandLogo={this.state.brandLogo} userEmail={this.state.user.email}/>
+								<NavbarMenu brandLogo={this.state.brandLogo} userEmail={this.state.user.email}
+											userIsStaff={this.state.user.is_staff}/>
 								<div className="section">
 									<div>
 										<Switch>
 											<Route path="/basket">
 												<Basket/>
 											</Route>
+
+											<Route path="/warehouse">
+												{this.state.user.is_staff ?
+													<div className="text-center">warehouse</div>
+													:
+													<h3 className="text-center text-muted">На жаль у Вас не має дозволу для
+														перегляду
+														сторінки</h3>
+												}
+											</Route>
+
 											<Route path="/">
 												<Content getData={this.getDataFromChild}/>
 											</Route>
