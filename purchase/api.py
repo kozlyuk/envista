@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from purchase import serializers
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 from product.models import ProductInstance, Cylinder, DiopterPower
+from messaging.tasks import send_confirmation_email
 
 
 class GetStocks(views.APIView):
@@ -206,6 +207,9 @@ class ConfirmOrder(views.APIView):
         for order_line in order.orderline_set.all():
             order_line.product.quantity_in_hand -= order_line.quantity
             order_line.product.save()
+
+        # send confirmation email
+        send_confirmation_email(self.request.user.pk, order.pk)
 
         return Response(_('Order accepted. Wait for call from manager please!'),
                         status=status.HTTP_201_CREATED)

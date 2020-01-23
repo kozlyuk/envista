@@ -1,5 +1,6 @@
-from celery.utils.log import get_task_logger
+from __future__ import absolute_import, unicode_literals
 
+from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
@@ -29,8 +30,8 @@ def send_confirmation_email(user_id, order_id):
                'signature': settings.SIGNATURE}
 
     title = "Підтвердження замовлення {}".format(order.invoice_number)
-    msg_plain = render_to_string('email.txt', context)
-    msg_html = render_to_string('confirmation.html', context)
+    msg_plain = title
+    msg_html = render_to_string('order_confirmation.html', context)
 
     if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL, [user.email], html_message=msg_html):
         logger.info("Confirmation email to %s sent", user)
