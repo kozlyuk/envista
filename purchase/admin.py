@@ -65,13 +65,6 @@ class PurchaseLineInlineFormSet(BaseInlineFormSet):
                 msg = _('Product is not enough in stock. Available - {}').format(quantity_in_hand)
                 form._errors["quantity"] = self.error_class([msg])
 
-            # check instance is existing and product was changed
-            form.instance.__product_changed__ = False
-            if form.instance.pk:
-                if form.instance.product != product:
-                    form.instance.__product_changed__ = True
-                    form.instance.__previous_product__ = form.instance.product
-
 
 class PurchaseLineInline(admin.TabularInline):
 
@@ -122,18 +115,17 @@ class PurchaseAdmin(admin.ModelAdmin):
             # get stock of product from form
             product = ProductInstance.objects.get(cylinder=instance.cylinder, diopter=instance.diopter)
 
-            # set product
-            if not instance.pk or instance.__product_changed__:
-                instance.product = product
-
             # if product was changed add previous_quantity to previous_product
-            if instance.__product_changed__:
-                instance.__previous_product__.quantity_in_hand -= instance.last_quantity
-                instance.__previous_product__.save()
+            if instance.pk and instance.product != product:
+                instance.product.quantity_in_hand -= instance.last_quantity
+                instance.product.save()
 
-            # reduce stocks
-            if instance.__product_changed__:
+            # if purchaseline new or product changed - set product and unit_price and reduce stock
+            if not instance.pk or instance.product != product:
+                instance.product = product
                 instance.product.quantity_in_hand += instance.quantity
+                instance.unit_price = instance.product.price
+            # else product exist and not changed - reduce stock
             else:
                 instance.product.quantity_in_hand += instance.quantity - instance.last_quantity
 
@@ -148,6 +140,7 @@ class PurchaseAdmin(admin.ModelAdmin):
         super().save_formset(request, form, formset, change)
 
     def delete_model(self, request, obj):
+        # if purchase was deleted add previous_quantity to all purchaselines
         for line in obj.purchaseline_set.all():
             product = ProductInstance.objects.get(pk=line.product.pk)
             product.quantity_in_hand -= line.quantity
@@ -182,13 +175,6 @@ class OrderLineInlineFormSet(BaseInlineFormSet):
             if form.instance.quantity > quantity_in_hand:
                 msg = _('Product is not enough in stock. Available - {}').format(quantity_in_hand)
                 form._errors["quantity"] = self.error_class([msg])
-
-            # check instance is existing and product was changed
-            form.instance.__product_changed__ = False
-            if form.instance.pk:
-                if form.instance.product != product:
-                    form.instance.__product_changed__ = True
-                    form.instance.__previous_product__ = form.instance.product
 
 
 class OrderLineInline(admin.TabularInline):
@@ -254,19 +240,17 @@ class OrderAdmin(admin.ModelAdmin):
             # get stock of product from form
             product = ProductInstance.objects.get(cylinder=instance.cylinder, diopter=instance.diopter)
 
-            # set product and unit_price
-            if not instance.pk or instance.__product_changed__:
-                instance.product = product
-                instance.unit_price = instance.product.price
-
             # if product was changed add previous_quantity to previous_product
-            if instance.__product_changed__:
-                instance.__previous_product__.quantity_in_hand += instance.last_quantity
-                instance.__previous_product__.save()
+            if instance.pk and instance.product != product:
+                instance.product.quantity_in_hand += instance.last_quantity
+                instance.product.save()
 
-            # reduce stocks
-            if instance.__product_changed__:
+            # if orderline new or product changed - set product and unit_price and reduce stock
+            if not instance.pk or instance.product != product:
+                instance.product = product
                 instance.product.quantity_in_hand -= instance.quantity
+                instance.unit_price = instance.product.price
+            # else product exist and not changed - reduce stock
             else:
                 instance.product.quantity_in_hand -= instance.quantity - instance.last_quantity
 
@@ -281,11 +265,13 @@ class OrderAdmin(admin.ModelAdmin):
         super().save_formset(request, form, formset, change)
 
     def save_related(self, request, form, formsets, change):
+        # when orderlines saved - calculate order total value
         super().save_related(request, form, formsets, change)
         form.instance.value = form.instance.value_total()
         form.instance.save()
 
     def delete_model(self, request, obj):
+        # if order was deleted add previous_quantity to all orderlines
         for line in obj.orderline_set.all():
             product = ProductInstance.objects.get(pk=line.product.pk)
             product.quantity_in_hand += line.quantity
