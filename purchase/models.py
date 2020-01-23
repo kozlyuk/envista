@@ -20,8 +20,7 @@ class Purchase(models.Model):
                                       verbose_name=_('Goods'), blank=True)
     invoice_number = models.CharField(_('Invoice number'), max_length=45)
     invoice_date = models.DateField(_('Invoice date'), default=datetime.date.today)
-    value = models.DecimalField(_('Value'), max_digits=8, decimal_places=2, default=0)
-    comment = models.TextField(_('Comment'), blank=True)
+    comment = models.CharField(_('Comment'), max_length=255, blank=True)
     # Creator and Date information
     created_by = models.ForeignKey(User, verbose_name=_('Created by'), related_name='creator_purchases',
                                    blank=True, null=True, on_delete=models.CASCADE)
@@ -67,9 +66,9 @@ class Order(models.Model):
     customer = models.ForeignKey(User, verbose_name=_('Customer'), blank=True, null=True, on_delete=models.PROTECT)
     invoice_number = models.CharField(_('Invoice number'), max_length=45)
     invoice_date = models.DateField(_('Invoice date'), default=datetime.date.today)
-    comment = models.TextField(_('Comment'), blank=True)
+    comment = models.CharField(_('Comment'), max_length=255, blank=True)
     status = models.CharField(_('Order status'), max_length=2, choices=STATUS_CHOICES, default=InCart)
-    old_status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=InCart)
+    old_status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=NewOrder)
     # pay_status = models.CharField('Статус оплати', max_length=2, choices=PAYMENT_STATUS_CHOICES, default=NotPaid)
     value = models.DecimalField(_('Value'), max_digits=8, decimal_places=2, default=0)
     invoice_file = models.FileField(_('Download Invoice'), upload_to=docs_directory_path, blank=True, null=True)
@@ -111,7 +110,6 @@ class PurchaseLine(models.Model):
     cylinder = models.ForeignKey(Cylinder, on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(_('Quantity'), default=1)
     last_quantity = models.PositiveSmallIntegerField(default=0)
-    unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
 
     class Meta:
         unique_together = ['purchase', 'product']

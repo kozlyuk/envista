@@ -71,7 +71,7 @@ class PurchaseLineInline(admin.TabularInline):
 
     model = PurchaseLine
     formset = PurchaseLineInlineFormSet
-    fields = ['cylinder', 'diopter', 'quantity', 'unit_price']
+    fields = ['cylinder', 'diopter', 'quantity']
     autocomplete_fields = ['cylinder', 'diopter']
     extra = 0
     show_change_link = True
@@ -83,22 +83,14 @@ class PurchaseAdmin(admin.ModelAdmin):
     list_display = [
         "invoice_number",
         "invoice_date",
-        "value",
         "created_by",
     ]
     fieldsets = [
         (None, {'fields': [('invoice_number', 'invoice_date'),
-                           ('value'),
-                           ('created_by'),
-                           ('date_created', 'date_updated'),
+                           'comment',
                            ]})
     ]
-    readonly_fields = [
-        "created_by",
-        "date_created",
-        "date_updated",
-    ]
-    search_fields = ['invoice_number', 'value']
+    search_fields = ['invoice_number']
     date_hierarchy = 'invoice_date'
     list_filter = ('created_by',)
     ordering = ('-date_created',)
@@ -211,13 +203,14 @@ class OrderAdmin(admin.ModelAdmin):
         "value",
         "created_by",
     ]
+    fieldsets = [
+        (None, {'fields': [('customer', 'status'),
+                           ('invoice_number', 'invoice_date'),
+                           ('comment', 'value'),
+                           ]})
+    ]
     readonly_fields = [
         "value",
-        "invoice_number",
-        "invoice_date",
-        "created_by",
-        "date_created",
-        "date_updated",
     ]
     search_fields = ['invoice_number', 'value']
     date_hierarchy = 'invoice_date'
@@ -239,8 +232,7 @@ class OrderAdmin(admin.ModelAdmin):
                (obj.old_status == Order.NewOrder and obj.status == Order.Confirmed) or \
                (obj.old_status == Order.NewOrder and obj.status == Order.Sent) or \
                (obj.old_status == Order.Confirmed and obj.status == Order.Sent):
-                send_status_change_email(obj.pk)
-
+                send_status_change_email.delay(obj.pk)
         obj.old_status = obj.status
         super().save_model(request, obj, form, change)
 

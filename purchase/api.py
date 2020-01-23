@@ -210,8 +210,8 @@ class ConfirmOrder(views.APIView):
 
         # send confirmation email
         if not self.request.user.groups.filter(name='Менеджери').exists():
-            send_confirmation_email(order.pk)
-        send_new_order_email(order.pk)
+            send_confirmation_email.delay(order.pk)
+        send_new_order_email.delay(order.pk)
 
         return Response(_('Order accepted. Wait for call from manager please!'),
                         status=status.HTTP_201_CREATED)
