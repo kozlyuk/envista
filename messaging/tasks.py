@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from envista.celery import app
 
 from accounts.models import User
-from purchase.models import Order
+from purchase.models import OrderLine, Order
 
 logger = get_task_logger(__name__)
 
@@ -27,6 +27,7 @@ def send_confirmation_email(customer_id, order_id):
 
     context = {'customer': customer,
                'order': order,
+               'orderlines': order.orderline_set.all(),
                'signature': settings.SIGNATURE}
 
     title = "Підтвердження замовлення {}".format(order.invoice_number)

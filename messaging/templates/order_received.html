@@ -1,3 +1,15 @@
+<!--
+  ~
+  ~   Module_name.
+  ~
+  ~   @author                  Andrey Perestyuk (Arrathilar)
+  ~   @email-primary      a.perestyuk@itel.rv.ua
+  ~   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
+  ~   @copyright             2020 ITEL-Service
+  ~
+  ~
+  -->
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -197,12 +209,6 @@
             Margin-left: 8.33333% !important;
         }
 
-        table.body td.small-offset-2,
-        table.body th.small-offset-2 {
-            margin-left: 16.66667% !important;
-            Margin-left: 16.66667% !important;
-        }
-
         table.body td.small-offset-3,
         table.body th.small-offset-3 {
             margin-left: 25% !important;
@@ -352,10 +358,10 @@
                                             <tr style="padding: 0; text-align: left; vertical-align: top;">
                                                 <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left;">
                                                     <h1 style="Margin: 0; Margin-bottom: 10px; color: inherit; font-family: Helvetica, Arial, sans-serif; font-size: 34px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left; word-wrap: normal;">
-                                                        Дякуємо за замовлення.</h1>
-                                                    <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">
-                                                        Ваше замовлення прийнято, чекайте на дзвінок від нас.
-                                                    </p>
+                                                        Отримано нове замовлення.</h1>
+                                                    <!--                                                    <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">-->
+                                                    <!--                                                        Статус вашого замовлення було змінено.-->
+                                                    <!--                                                    </p>-->
                                                     <table class="spacer"
                                                            style="border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%;">
                                                         <tbody>
@@ -395,6 +401,11 @@
                                                                                         <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">
                                                                                             <strong>Покупець</strong><br>
                                                                                             {{ customer }}
+                                                                                        </p>
+                                                                                        <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">
+                                                                                            <strong>Номер
+                                                                                                телефону</strong><br>
+                                                                                            {{ customer.mobile_number }}
                                                                                         </p>
                                                                                         <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">
                                                                                             <strong>Номер
@@ -445,6 +456,9 @@
                                                             <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left;">
                                                                 Ціна за одиницю
                                                             </th>
+                                                            <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left;">
+                                                                Статус
+                                                            </th>
                                                         </tr>
                                                         {% for item in orderlines %}
 
@@ -457,6 +471,9 @@
                                                             </td>
                                                             <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 1.3; margin: 0; padding: 0; text-align: left; vertical-align: top; word-wrap: break-word;">
                                                                 {{item.unit_price}} грн.
+                                                            </td>
+                                                            <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 1.3; margin: 0; padding: 0; text-align: left; vertical-align: top; word-wrap: break-word;">
+                                                                {{item.order.status}}
                                                             </td>
                                                         </tr>
                                                         {% endfor %}
