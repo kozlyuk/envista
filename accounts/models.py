@@ -17,6 +17,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_('Email address'), unique=True)
     mobile_number = models.CharField(_('Mobile number'), max_length=10, blank=True)
+    address = models.TextField(_('Address'), blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
