@@ -4,7 +4,7 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from config.celery import app
+from envista.celery import app
 
 from accounts.models import User
 from purchase.models import OrderLine, Order
