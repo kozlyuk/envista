@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from config.celery import app
 
 from accounts.models import User
-from purchase.models import Order
+from purchase.models import OrderLine, Order
 
 logger = get_task_logger(__name__)
 
@@ -26,6 +26,7 @@ def send_confirmation_email(user_id, order_id):
 
     context = {'customer': user,
                'order': order,
+               'orderlines': order.orderline_set.all(),
                'url': settings.SITE_URL,
                'signature': settings.SIGNATURE}
 
