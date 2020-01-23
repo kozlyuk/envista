@@ -69,6 +69,7 @@ class Order(models.Model):
     invoice_date = models.DateField(_('Invoice date'), default=datetime.date.today)
     comment = models.TextField(_('Comment'), blank=True)
     status = models.CharField(_('Order status'), max_length=2, choices=STATUS_CHOICES, default=InCart)
+    old_status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=InCart)
     # pay_status = models.CharField('Статус оплати', max_length=2, choices=PAYMENT_STATUS_CHOICES, default=NotPaid)
     value = models.DecimalField(_('Value'), max_digits=8, decimal_places=2, default=0)
     invoice_file = models.FileField(_('Download Invoice'), upload_to=docs_directory_path, blank=True, null=True)

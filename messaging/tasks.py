@@ -7,25 +7,20 @@ from django.core.mail import send_mail
 from envista.celery import app
 
 from accounts.models import User
-from purchase.models import OrderLine, Order
+from purchase.models import Order
 
 logger = get_task_logger(__name__)
 
 @app.task
-def send_confirmation_email(customer_id, order_id):
+def send_confirmation_email(order_id):
     """ send email to client about order confirmation """
-
-    try:
-        customer = User.objects.get(pk=customer_id)
-    except User.DoesNotExist:
-        logger.warning("Tried to send email to non-existing user '%s'", customer_id)
 
     try:
         order = Order.objects.get(pk=order_id)
     except Order.DoesNotExist:
-        logger.warning("Tried to send email to non-existing user '%s'", order_id)
+        logger.warning("Order with id '%s' does not exist", order_id)
 
-    context = {'customer': customer,
+    context = {'customer': order.customer,
                'order': order,
                'orderlines': order.orderline_set.all(),
                'signature': settings.SIGNATURE}
@@ -34,8 +29,9 @@ def send_confirmation_email(customer_id, order_id):
     msg_plain = title
     msg_html = render_to_string('order_confirmation.html', context)
 
-    if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL, [customer.email], html_message=msg_html):
-        logger.info("Confirmation email to %s sent", customer)
+    if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
+        [order.customer.email], html_message=msg_html):
+        logger.info("Confirmation email to %s sent", order.customer)
 
 
 @app.task
@@ -45,11 +41,10 @@ def send_new_order_email(order_id):
     try:
         order = Order.objects.get(pk=order_id)
     except Order.DoesNotExist:
-        logger.warning("Tried to send verification email to non-existing user '%s'", order_id)
+        logger.warning("Order with id '%s' does not exist", order_id)
 
     managers = User.objects.filter(groups__name='Менеджери') \
-                           .exclude(pk=order.customer.pk) \
-                           .values_list('email', flat=True)
+                   .values_list('email', flat=True)
 
     context = {'order': order,
                'signature': settings.SIGNATURE}
@@ -58,25 +53,21 @@ def send_new_order_email(order_id):
     msg_plain = title
     msg_html = render_to_string('order_received.html', context)
 
-    if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL, managers, html_message=msg_html):
+    if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
+        managers, html_message=msg_html):
         logger.info("Email about receiving a new order sent to all managers")
 
 
 @app.task
-def send_status_change_email(customer_id, order_id):
+def send_status_change_email(order_id):
     """ send email about changing order status to customer """
-
-    try:
-        customer = User.objects.get(pk=customer_id)
-    except User.DoesNotExist:
-        logger.warning("Tried to send email to non-existing user '%s'", customer_id)
 
     try:
         order = Order.objects.get(pk=order_id)
     except Order.DoesNotExist:
-        logger.warning("Tried to send email to non-existing user '%s'", order_id)
+        logger.warning("Order with id '%s' does not exist", order_id)
 
-    context = {'customer': customer,
+    context = {'customer': order.customer,
                'order': order,
                'signature': settings.SIGNATURE}
 
@@ -84,5 +75,6 @@ def send_status_change_email(customer_id, order_id):
     msg_plain = title
     msg_html = render_to_string('status_change.html', context)
 
-    if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL, [customer.email], html_message=msg_html):
-        logger.info("Changing status email to %s sent", customer)
+    if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
+        [order.customer.email], html_message=msg_html):
+        logger.info("Changing status email to %s sent", order.customer)

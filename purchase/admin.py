@@ -8,6 +8,7 @@ from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 from product.models import ProductInstance
+from messaging.tasks import send_status_change_email
 
 
 class ActiveValueFilter(admin.SimpleListFilter):
@@ -232,6 +233,15 @@ class OrderAdmin(admin.ModelAdmin):
         if not obj.pk:
             # Only set created_by during the first save.
             obj.created_by = request.user
+        else:
+            #check if status changed and send email
+            if (obj.old_status == Order.NewOrder and obj.status == Order.Cancelled) or \
+               (obj.old_status == Order.NewOrder and obj.status == Order.Confirmed) or \
+               (obj.old_status == Order.NewOrder and obj.status == Order.Sent) or \
+               (obj.old_status == Order.Confirmed and obj.status == Order.Sent):
+                send_status_change_email(obj.pk)
+
+        obj.old_status = obj.status
         super().save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):
