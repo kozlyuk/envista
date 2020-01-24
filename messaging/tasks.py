@@ -46,7 +46,9 @@ def send_new_order_email(order_id):
     managers = User.objects.filter(groups__name='Менеджери') \
                    .values_list('email', flat=True)
 
-    context = {'order': order,
+    context = {'customer': order.customer,
+               'order': order,
+               'orderlines': order.orderline_set.all(),
                'signature': settings.SIGNATURE}
 
     title = "Отримано нове замовлення {}".format(order.invoice_number)
@@ -69,6 +71,7 @@ def send_status_change_email(order_id):
 
     context = {'customer': order.customer,
                'order': order,
+               'orderlines': order.orderline_set.all(),
                'signature': settings.SIGNATURE}
 
     title = "Статус Вашого замовлення {} змінено".format(order.invoice_number)
