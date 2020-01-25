@@ -107,39 +107,6 @@ class AddToCart(views.APIView):
         return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
 
 
-class DelFromCart(views.APIView):
-    """
-    This view delete the product from cart
-    If product deleted return status HTTP_200_OK
-    If product not found in ProductInstance's return HTTP_404_NOT_FOUND
-    If product not found in cart return status HTTP_404_NOT_FOUND
-    If exists problems with cart return status HTTP_400_BAD_REQUEST
-    """
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get(self, request, row: int, column: int):
-        # get the existing object of ProductInstance
-        try:
-            product = ProductInstance.objects.get(diopter=row, cylinder=column)
-        except ProductInstance.DoesNotExist:
-            return Response(_('Product does not exist'), status=status.HTTP_404_NOT_FOUND)
-
-        # get the existing customer cart
-        try:
-            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
-        except Order.DoesNotExist:
-            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
-        except Order.MultipleObjectsReturned:
-            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
-
-        # remove the existing OrderLine or returm exception if it is not exists
-        try:
-            OrderLine.objects.get(product=product, order=order).delete()
-            return Response(_('Product deleted'), status=status.HTTP_200_OK)
-        except OrderLine.DoesNotExist:
-            return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
-
-
 class UpdateQuantity(views.APIView):
     """
     This view update the product in cart
@@ -215,9 +182,12 @@ class ConfirmOrder(views.APIView):
             order.save()
 
             # send confirmation email
-            if not self.request.user.groups.filter(name='Менеджери').exists():
-                send_confirmation_email.delay(order.pk)
-            send_new_order_email.delay(order.pk)
+            try:
+                if not self.request.user.groups.filter(name='Менеджери').exists():
+                    send_confirmation_email.delay(order.pk)
+                send_new_order_email.delay(order.pk)
+            except ConnectionError:
+                pass
             return Response(_('Order accepted. Wait for call from manager please!'),
                             status=status.HTTP_201_CREATED)
         else:
@@ -292,40 +262,7 @@ class AddToPurchase(views.APIView):
         return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
 
 
-class DelFromPurchase(views.APIView):
-    """
-    This view delete the product from cart
-    If product deleted return status HTTP_200_OK
-    If product not found in ProductInstance's return HTTP_404_NOT_FOUND
-    If product not found in cart return status HTTP_404_NOT_FOUND
-    If exists problems with cart return status HTTP_400_BAD_REQUEST
-    """
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get(self, request, row: int, column: int):
-        # get the existing object of ProductInstance
-        try:
-            product = ProductInstance.objects.get(diopter=row, cylinder=column)
-        except ProductInstance.DoesNotExist:
-            return Response(_('Product does not exist'), status=status.HTTP_404_NOT_FOUND)
-
-        # get the existing customer cart
-        try:
-            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
-        except Order.DoesNotExist:
-            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
-        except Order.MultipleObjectsReturned:
-            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
-
-        # remove the existing OrderLine or returm exception if it is not exists
-        try:
-            OrderLine.objects.get(product=product, order=order).delete()
-            return Response(_('Product deleted'), status=status.HTTP_200_OK)
-        except OrderLine.DoesNotExist:
-            return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
-
-
-class UpdatePurchase(views.APIView):
+class UpdatePurchaseLine(views.APIView):
     """
     This view update the product in cart
     If product updated return status HTTP_200_OK

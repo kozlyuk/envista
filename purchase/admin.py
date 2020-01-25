@@ -232,7 +232,10 @@ class OrderAdmin(admin.ModelAdmin):
                (obj.old_status == Order.NewOrder and obj.status == Order.Confirmed) or \
                (obj.old_status == Order.NewOrder and obj.status == Order.Sent) or \
                (obj.old_status == Order.Confirmed and obj.status == Order.Sent):
-                send_status_change_email.delay(obj.pk)
+                try:
+                    send_status_change_email.delay(obj.pk)
+                except ConnectionError:
+                    pass
         obj.old_status = obj.status
         super().save_model(request, obj, form, change)
 
