@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'product.apps.ProductConfig',
     'purchase.apps.PurchaseConfig',
     'messaging.apps.MessagingConfig',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -150,8 +151,9 @@ UNITS = 'шт'
 
 # REDIS and CELERY related settings
 CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+#CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+CELERY_RESULT_BACKEND = 'django-db'
