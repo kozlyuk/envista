@@ -1,16 +1,18 @@
 """ Admin configuration for Product app """
 
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
 
 from product.models import Product, ProductInstance, Cylinder, DiopterPower
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(SummernoteModelAdmin):
     """ Admin settings for Product table """
     list_display = [
         "title",
         "brand_name",
     ]
+    summernote_fields = '__all__'
 
 
 @admin.register(ProductInstance)

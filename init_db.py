@@ -85,8 +85,8 @@ QUANTITIES = [[1, 1, 1, 1, 1, 1, 1],
               ]
 
 for column in Cylinder.objects.all():
-    invoice_number = 'Initial purchase {}'.format(column.name)
-    PURCHASE = Purchase.objects.create(invoice_number='invoice_number', created_by_id=1)
+    invoice_number = 'Initial purchase {}'.format(column.value)
+    PURCHASE = Purchase.objects.create(invoice_number=invoice_number, created_by_id=1)
     for row in DiopterPower.objects.all():
         pi = ProductInstance.objects.create(product=PRODUCT,
                                             cylinder=column,

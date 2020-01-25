@@ -12,6 +12,7 @@ class Product(models.Model):
     product_image = models.ImageField(_('Product image'), upload_to='product/')
     brand_name = models.CharField(_('Brand name'), max_length=32)
     brand_image = models.ImageField(_('Brand Image'), upload_to='brand/')
+    specifications_url = models.URLField(_('Specification'), blank=True, null=True)
     footer = models.CharField(_('Site footer'), max_length=255, blank=True)
 
     class Meta:

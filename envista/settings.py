@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'purchase.apps.PurchaseConfig',
     'messaging.apps.MessagingConfig',
     'django_celery_results',
+    'django_summernote',
 ]
 
 MIDDLEWARE = [
@@ -157,3 +158,9 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_RESULT_BACKEND = 'django-db'
+
+
+SUMMERNOTE_CONFIG = {
+    # # You can disable attachment feature.
+    'disable_attachment': True,
+}
