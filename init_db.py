@@ -19,12 +19,15 @@ PRODUCT = Product.objects.create(title='ІНТРАОКУЛЯРНА ЛІНЗА EN
                                  brand_image='brand/BL_logo.png',
                                  footer="© 2020 ТОВ «Оптдіея». Усі права захищені."
                                  )
+print("Initial Product created")
 
 for value in range(125, 576, 75):
     Cylinder.objects.create(value=str(value/100))
+print("Initial Cylinders created")
 
 for value in range(60, 301, 5):
     DiopterPower.objects.create(value=str(value/10))
+print("Initial Diopters created")
 
 # Create initial db for purchase app
 
@@ -81,8 +84,9 @@ QUANTITIES = [[1, 1, 1, 1, 1, 1, 1],
               [1, 1, 1, 1, 1, 1, 1]
               ]
 
-PURCHASE = Purchase.objects.create(invoice_number='first_purchase', created_by_id=1)
 for column in Cylinder.objects.all():
+    invoice_number = 'Initial purchase {}'.format(column.name)
+    PURCHASE = Purchase.objects.create(invoice_number='invoice_number', created_by_id=1)
     for row in DiopterPower.objects.all():
         pi = ProductInstance.objects.create(product=PRODUCT,
                                             cylinder=column,
@@ -94,6 +98,7 @@ for column in Cylinder.objects.all():
                                     cylinder=column,
                                     diopter=row,
                                     quantity=QUANTITIES[row.pk-1][column.pk-1])
+print("Initial Purchases created")
 
 
 # Create users permissions
