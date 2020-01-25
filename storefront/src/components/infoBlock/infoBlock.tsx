@@ -13,8 +13,10 @@
 import React from "react";
 import {ListGroup} from "react-bootstrap";
 
-export default class InfoBlock extends React.Component {
+export default class InfoBlock extends React.Component<{ info: string }> {
 	render() {
+		let info: string;
+		({info} = this.props);
 		return (
 			<ListGroup className="ml-4 mr-4" variant="flush" defaultActiveKey="#link1">
 				<ListGroup.Item className="text-center" action href="#link1">
@@ -22,7 +24,7 @@ export default class InfoBlock extends React.Component {
 				</ListGroup.Item>
 				<ListGroup.Item className="text-center">Інформація</ListGroup.Item>
 				<ListGroup.Item>
-					‍{this.props.info}
+					‍{info}
 				</ListGroup.Item>
 			</ListGroup>
 		);

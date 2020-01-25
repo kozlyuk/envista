@@ -9,13 +9,14 @@
 
 import React from "react";
 
-import {Table} from "../table/table";
+import {Table} from "../table/table.tsx";
 import Submit from "../submitTableData/submitTableData";
 import PurchaseList from "../purchaseList/purchaseList";
-import InfoBlock from "../infoBlock/infoBlock";
+import InfoBlock from "../infoBlock/infoBlock.tsx";
 import {Container} from "react-bootstrap";
 import axios from "axios";
 import Auth from "../auth/auth";
+import Loader from "react-loader-spinner";
 
 export default class Content extends React.Component {
 	constructor(props) {
@@ -70,7 +71,19 @@ export default class Content extends React.Component {
 		if (error) {
 			return <div>Помилка: {error.message}</div>;
 		} else if (!isLoaded) {
-			return <div>Загрузка...</div>;
+			return (
+				<div className="loaderWrapper text-center mt-4">
+					<Loader
+						type="MutatingDots"
+						color="#007bff"
+						height={100}
+						width={100}
+						timeout={3000} //3 secs
+
+					/>
+					<h3 className="text-center text-muted">Завантаження...</h3>
+				</div>
+			);
 		} else {
 			return (
 				<Container>

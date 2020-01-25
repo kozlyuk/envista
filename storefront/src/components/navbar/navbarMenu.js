@@ -55,7 +55,7 @@ class NavbarMenu extends React.Component {
 											padding: "20px"
 										}}
 										to="/warehouse">
-										Склад
+										Поповнення складу
 									</Link> : ""}
 									<Link
 										style={{

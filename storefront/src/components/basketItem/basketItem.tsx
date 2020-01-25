@@ -18,15 +18,18 @@ import {toast} from "react-toastify";
 import {Button, Col, Row, Table} from "react-bootstrap";
 import "../basketItem/style.css"
 
-interface State {
-	array: any
-	error: any
-	isLoaded: boolean
-	maxQuantity: number
-	isBasketActive: boolean
+/*
+ * State interface
+ */
+interface BasketItemState {
+	array?: any
+	error?: any
+	isLoaded?: boolean
+	maxQuantity?: number
+	isBasketActive?: boolean
 }
 
-export default class BasketItem extends React.Component<{}, State> {
+export default class BasketItem extends React.Component<{}, BasketItemState> {
 	private user: Auth;
 	private authToken: any;
 

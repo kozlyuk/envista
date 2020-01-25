@@ -1,41 +1,41 @@
-/**
- * Table component.
+/*
  *
- * @author           Andrey Perestyuk (Arrathilar)
- * @email-primary    a.perestyuk@itel.rv.ua
- * @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
- * @copyright        2020 ITEL-Service
+ *   Module_name.
+ *
+ *   @author                  Andrey Perestyuk (Arrathilar)
+ *   @email-primary      a.perestyuk@itel.rv.ua
+ *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
+ *   @copyright             2020 ITEL-Service
+ *
+ *
  */
 
-
 import React from "react";
-import Auth from "../auth/auth";
+import {Table} from "../table/table";
+import Loader from "react-loader-spinner";
 import ButtonBackground from "../buttonBackground/buttonBackground";
-import axios from "axios";
 import {toast} from "react-toastify";
-import "../table/style.css"
+import axios from "axios";
 
+export default class WarehouseTable<WarehouseTable> extends Table {
+	constructor(props: any) {
+		super(Table);
 
-export class Table extends React.PureComponent {
-	constructor(props) {
-		super(props);
 		this.state = {
 			rows: [],
 			columnsName: [],
 			error: null,
-			isLoaded: false,
+			isLoaded: false
 		};
-		this.user = new Auth();
-		this.authToken = this.user.getAuthToken();
 	}
 
 	/*
-	 * decreaseQty(counter?, columnIdx?, rowIdx?): void
+	 * increaseQty(counter?, columnIdx?, rowIdx?): void
 	 *
 	 * decrease counter of item quantities and write to state
 	 */
-	decreaseQty(counter, columnIdx, rowIdx) {
-		const newQty = counter > 0 ? counter - 1 : 0;
+	increaseQty(counter: number, columnIdx: number, rowIdx: number) {
+		const newQty = counter > 0 ? counter + 1 : 0;
 		let newArray = [...this.state.rows];
 		newArray[rowIdx].quantities[columnIdx] = newQty;
 		this.sendData(rowIdx, columnIdx)
@@ -50,52 +50,28 @@ export class Table extends React.PureComponent {
 		return void 0;
 	}
 
-	/*
-	 * Method sendData(rowIdx, columnIdx): AxiosPromise<any>
-	 *
-	 * send data to API
-	 */
-	async sendData(rowIdx, columnIdx) {
+	getData(counter: number, columnIdx: number, rowIdx: number): any {
+		return
+	}
+
+	getArray(columnsName: any, rows: any): any {
+		return;
+	}
+
+	async sendData(rowIdx: number, columnIdx: number): Promise<any> {
 		const row = rowIdx + 1;
 		const col = columnIdx + 1;
-		return axios(process.env.REACT_APP_ADD_TO_CARD + row + "/" + col + "/", {
+		const {REACT_APP_ADD_TO_PURCHASE}: any = process.env;
+		return axios(REACT_APP_ADD_TO_PURCHASE + row + "/" + col + "/", {
 			headers: {
 				"Authorization": "Token " + this.authToken
 			}
 		});
 	}
 
-	/*
-	 * getData(counter, columnIdx, rowIdx): void
-	 *
-	 * send data to parent component
-	 */
-	getData(counter, columnIdx, rowIdx) {
-		if (counter !== 0) {
-			/* eslint-disable react/no-direct-mutation-state */
-			this.props.getData((this.state.makePurchase = ([columnIdx, rowIdx]))); //maybe need to add id
-		}
-		return void 0;
-	}
-
-	/*
-	 * getArray(columnsName, rows): void
-	 *
-	 * send array to parent component
-	 */
-	getArray(columnsName, rows) {
-		/* eslint-disable react/no-direct-mutation-state */
-		this.props.getArray((this.state.getArray = ([columnsName, rows]))); //maybe need to add id
-		return void 0;
-	}
-
-	/*
-	 * componentDidMount(): void
-	 *
-	 * get data from backend => then mount component
-	 */
 	componentDidMount() {
-		axios(process.env.REACT_APP_TABLE_DATA, {
+		const {REACT_APP_WAREHOUSE_TABLE_DATA}: any = process.env;
+		axios(REACT_APP_WAREHOUSE_TABLE_DATA, {
 			headers: {
 				"Authorization": "Token " + this.authToken
 			}
@@ -118,12 +94,24 @@ export class Table extends React.PureComponent {
 		return void 0;
 	}
 
-	render() {
+	public render() {
 		const {error, isLoaded} = this.state;
 		if (error) {
 			return <div>Помилка: {error.message}</div>;
 		} else if (!isLoaded) {
-			return <div>Загрузка...</div>;
+			return (
+				<div className="loaderWrapper text-center mt-4">
+					<Loader
+						type="MutatingDots"
+						color="#007bff"
+						height={100}
+						width={100}
+						timeout={3000} //3 secs
+
+					/>
+					<h3 className="text-center text-muted">Завантаження...</h3>
+				</div>)
+				;
 		} else {
 			return (
 				<div className="row">
@@ -134,7 +122,7 @@ export class Table extends React.PureComponent {
 						<thead style={{position: "sticky"}} className="rc-table-thead text-center">
 						<tr>
 							<th className="rc-table-row-cell-break-word"/>
-							{this.state.columnsName.map((name, rowIdx) => (
+							{this.state.columnsName.map((name: string, rowIdx: number) => (
 								<th key={rowIdx} className="rc-table-row-cell-break-word">
 									{name}
 								</th>
@@ -142,13 +130,13 @@ export class Table extends React.PureComponent {
 						</tr>
 						</thead>
 						<tbody className="rc-table-tbody">
-						{this.state.rows.map((item, rowIdx) => (
+						{this.state.rows.map((item: { row: React.ReactNode; quantities: any[]; }, rowIdx: string | number | undefined) => (
 							<tr key={rowIdx}
-								className="rc-table-row rc-table-row-level-0"
-								data-row-key={1}>
+							    className="rc-table-row rc-table-row-level-0"
+							    data-row-key={1}>
 								<td className="rc-table-row-cell-break-word text-center">
 									<span className="rc-table-row-indent indent-level-0"
-										  style={{paddingLeft: 0}}>{item.row}</span>
+									      style={{paddingLeft: 0}}>{item.row}</span>
 								</td>
 								{item.quantities.map((counter, columnIdx) => (
 									<td
@@ -164,7 +152,7 @@ export class Table extends React.PureComponent {
 													style={{backgroundColor: "transparent"}}
 													className="btn btn-sm btn-light btn-block"
 													onClick={() =>
-														this.decreaseQty(counter, columnIdx, rowIdx)
+														this.increaseQty(counter, columnIdx, rowIdx as number)
 													}>
 													{counter}
 												</button>

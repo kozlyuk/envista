@@ -23,6 +23,7 @@ import Auth from "../auth/auth";
 import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import axios from "axios";
+import Warehouse from "../warehouse/warehouse";
 
 class Welcome extends React.Component {
 	constructor(props) {
@@ -117,9 +118,9 @@ class Welcome extends React.Component {
 
 											<Route path="/warehouse">
 												{this.state.user.is_staff ?
-													<div className="text-center">warehouse</div>
-													:
-													<h3 className="text-center text-muted">На жаль у Вас не має дозволу для
+													<Warehouse/> :
+													< h3 className="text-center text-muted"> На жаль у Вас не має дозволу
+														для
 														перегляду
 														сторінки</h3>
 												}
