@@ -12,6 +12,7 @@
 
 import React from "react";
 import {ListGroup} from "react-bootstrap";
+import ReactHtmlParser from 'react-html-parser';
 
 export default class InfoBlock extends React.Component<{ info: string }> {
 	render() {
@@ -24,7 +25,7 @@ export default class InfoBlock extends React.Component<{ info: string }> {
 				</ListGroup.Item>
 				<ListGroup.Item className="text-center">Інформація</ListGroup.Item>
 				<ListGroup.Item>
-					‍{info}
+					{ReactHtmlParser(info)}
 				</ListGroup.Item>
 			</ListGroup>
 		);
