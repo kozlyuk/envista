@@ -24,6 +24,7 @@ import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import axios from "axios";
 import Warehouse from "../warehouse/warehouse";
+import WarehouseConfirm from "../warehouseConfirm/warehouseConfirm";
 
 class Welcome extends React.Component {
 	constructor(props) {
@@ -114,6 +115,15 @@ class Welcome extends React.Component {
 										<Switch>
 											<Route path="/basket">
 												<Basket/>
+											</Route>
+											<Route path="/warehouse/confirm">
+												{this.state.user.is_staff ?
+													<WarehouseConfirm/> :
+													< h3 className="text-center text-muted"> На жаль у Вас не має дозволу
+														для
+														перегляду
+														сторінки</h3>
+												}
 											</Route>
 
 											<Route path="/warehouse">

@@ -112,7 +112,7 @@ export default class Content extends React.Component {
 								array={this.state.array}
 							/>
 							{this.state.purchase.length !== 0 && (
-								<Submit history={this.history} purchaseList={this.state.purchase}/>
+								<Submit history={this.history} title={"Перейти в корзину"} redirectTo={"/basket"}/>
 							)}
 						</div>
 					</div>

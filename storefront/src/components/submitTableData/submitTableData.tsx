@@ -14,9 +14,17 @@ import React from "react";
 import {Button} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
 
-class Submit extends React.Component {
-	send(purchase) {
-		this.props.history.push('/basket')
+interface SubmitProps {
+	title?: string
+	history?: any
+	redirectTo?: string
+}
+
+class Submit extends React.Component <SubmitProps, {}> {
+	send() {
+		const {history} = this.props;
+		const {push} = history;
+		push(this.props.redirectTo)
 	}
 
 	render() {
@@ -26,13 +34,14 @@ class Submit extends React.Component {
 					variant="outline-success"
 					size="sm"
 					onClick={() => {
-						this.send(this.props.purchaseList);
+						this.send();
 					}}>
-					Перейти в корзину
+					{this.props.title}
 				</Button>
 			</div>
 		);
 	}
 }
 
+// @ts-ignore
 export default withRouter(Submit)

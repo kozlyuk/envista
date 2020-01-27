@@ -17,7 +17,11 @@ import ButtonBackground from "../buttonBackground/buttonBackground";
 import {toast} from "react-toastify";
 import axios from "axios";
 
-export default class WarehouseTable<WarehouseTable> extends Table {
+interface WarehouseTableProps {
+	getData: any;
+}
+
+export default class WarehouseTable extends Table implements WarehouseTableProps {
 	constructor(props: any) {
 		super(Table);
 
@@ -36,7 +40,8 @@ export default class WarehouseTable<WarehouseTable> extends Table {
 	 */
 	increaseQty(counter: number, columnIdx: number, rowIdx: number) {
 		const newQty = counter > 0 ? counter + 1 : 0;
-		let newArray = [...this.state.rows];
+		let newArray: any[];
+		newArray = [...this.state.rows];
 		newArray[rowIdx].quantities[columnIdx] = newQty;
 		this.sendData(rowIdx, columnIdx)
 			.then(() => this.setState({rows: newArray}))
@@ -44,18 +49,12 @@ export default class WarehouseTable<WarehouseTable> extends Table {
 				const message = error.response.data;
 				toast.error(message);
 			});
-		// send get request to backend, then setstate with new quantity
-		this.getData(counter, columnIdx, rowIdx);
-		this.getArray(this.state.columnsName, this.state.rows);
 		return void 0;
 	}
 
-	getData(counter: number, columnIdx: number, rowIdx: number): any {
-		return
-	}
 
-	getArray(columnsName: any, rows: any): any {
-		return;
+	getArray(columnsName: any, rows: any) {
+		return void 0;
 	}
 
 	async sendData(rowIdx: number, columnIdx: number): Promise<any> {
@@ -107,7 +106,6 @@ export default class WarehouseTable<WarehouseTable> extends Table {
 						height={100}
 						width={100}
 						timeout={3000} //3 secs
-
 					/>
 					<h3 className="text-center text-muted">Завантаження...</h3>
 				</div>)
