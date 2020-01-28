@@ -196,9 +196,9 @@ class OrderAdmin(admin.ModelAdmin):
     """ Admin settings for Order table """
     form = OrderAdminForm
     list_display = [
-        "customer",
-        "status",
         "invoice_number",
+        "status",
+        "customer",
         "invoice_date",
         "value",
         "created_by",
@@ -228,17 +228,6 @@ class OrderAdmin(admin.ModelAdmin):
         if not obj.pk:
             # Only set created_by during the first save.
             obj.created_by = request.user
-        else:
-            #check if status changed and send email
-            if (obj.old_status == Order.NewOrder and obj.status == Order.Cancelled) or \
-               (obj.old_status == Order.NewOrder and obj.status == Order.Confirmed) or \
-               (obj.old_status == Order.NewOrder and obj.status == Order.Sent) or \
-               (obj.old_status == Order.Confirmed and obj.status == Order.Sent):
-                try:
-                    send_status_change_email.delay(obj.pk, obj.status)
-                except ConnectionError:
-                    pass
-        obj.old_status = obj.status
         super().save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):
@@ -276,6 +265,16 @@ class OrderAdmin(admin.ModelAdmin):
         super().save_related(request, form, formsets, change)
         form.instance.value = form.instance.value_total()
         form.instance.invoice_number = form.instance.invoice_number_generate()
+        #check if status changed and send email
+        if (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Cancelled) or \
+            (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Confirmed) or \
+            (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Sent) or \
+            (form.instance.old_status == Order.Confirmed and form.instance.status == Order.Sent):
+            try:
+                send_status_change_email(form.instance.pk)
+            except ConnectionError:
+                pass
+            form.instance.old_status = form.instance.status
         form.instance.save()
 
     def delete_model(self, request, obj):

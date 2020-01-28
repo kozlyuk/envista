@@ -61,7 +61,7 @@ def send_new_order_email(order_id):
 
 
 @app.task
-def send_status_change_email(order_id, status):
+def send_status_change_email(order_id):
     """ send email about changing order status to customer """
 
     try:
@@ -71,7 +71,7 @@ def send_status_change_email(order_id, status):
 
     context = {'customer': order.customer,
                'order': order,
-               'status': status,
+               'status': order.status,
                'orderlines': order.orderline_set.all(),
                'signature': settings.SIGNATURE}
 
