@@ -1,36 +1,15 @@
-from rest_framework import viewsets, permissions
-
-from product import serializers
-from product import models
-
-
-class ProductInstanceViewSet(viewsets.ModelViewSet):
-    """ViewSet for the ProductInstance class"""
-
-    queryset = models.ProductInstance.objects.all()
-    serializer_class = serializers.ProductInstanceSerializer
-    permission_classes = [permissions.IsAuthenticated]
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import RetrieveAPIView
+from product.serializers import ProductSerializer
+from product.models import Product
 
 
-class CylinderViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Cylinder class"""
+class ProductDetailsView(RetrieveAPIView):
+    """
+    Returns Product fields.
+    """
+    serializer_class = ProductSerializer
+    permission_classes = (IsAuthenticated,)
 
-    queryset = models.Cylinder.objects.all()
-    serializer_class = serializers.CylinderSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class ProductViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Product class"""
-
-    queryset = models.Product.objects.all()
-    serializer_class = serializers.ProductSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class DiopterPowerViewSet(viewsets.ModelViewSet):
-    """ViewSet for the DiopterPower class"""
-
-    queryset = models.DiopterPower.objects.all()
-    serializer_class = serializers.DiopterPowerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    def get_object(self):
+        return Product.objects.first()

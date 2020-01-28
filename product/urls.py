@@ -1,15 +1,8 @@
-from django.urls import path, include
-from rest_framework import routers
+from django.urls import path
 
-from . import api
+from product.api import ProductDetailsView
 
-
-router = routers.DefaultRouter()
-router.register("ProductInstance", api.ProductInstanceViewSet)
-router.register("Cylinder", api.CylinderViewSet)
-router.register("Product", api.ProductViewSet)
-router.register("DiopterPower", api.DiopterPowerViewSet)
 
 urlpatterns = (
-    path("api/v1/", include(router.urls)),
+    path("api/v1/get_product/", ProductDetailsView.as_view()),
 )
