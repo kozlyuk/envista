@@ -233,7 +233,7 @@ class OrderAdmin(admin.ModelAdmin):
                (obj.old_status == Order.NewOrder and obj.status == Order.Sent) or \
                (obj.old_status == Order.Confirmed and obj.status == Order.Sent):
                 try:
-                    send_status_change_email.delay(obj.pk)
+                    send_status_change_email.delay(obj.pk, obj.get_status_display)
                 except ConnectionError:
                     pass
         obj.old_status = obj.status
