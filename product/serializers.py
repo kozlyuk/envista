@@ -1,44 +1,18 @@
 from rest_framework import serializers
 
-from . import models
+from product.models import Product
 
-
-class ProductInstanceSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.ProductInstance
-        fields = [
-            "product",
-            "cylinder",
-            "diopter",
-            "price",
-            "quantity_in_hand",
-        ]
-
-class CylinderSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Cylinder
-        fields = [
-            "value",
-        ]
 
 class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.Product
+        model = Product
         fields = [
             "brand_name",
             "brand_image",
+            "title",
             "short_description",
             "product_image",
-            "title",
-        ]
-
-class DiopterPowerSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.DiopterPower
-        fields = [
-            "value",
+            "specifications_url",
+            "footer"
         ]
