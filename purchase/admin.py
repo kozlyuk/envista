@@ -205,12 +205,14 @@ class OrderAdmin(admin.ModelAdmin):
     ]
     fieldsets = [
         (None, {'fields': [('customer', 'status'),
-                           ('invoice_number', 'invoice_date'),
+                           ('invoice_date', 'invoice_number'),
                            ('comment', 'value'),
                            ]})
     ]
     readonly_fields = [
         "value",
+        "invoice_date",
+        "invoice_number"
     ]
     search_fields = ['invoice_number', 'value']
     date_hierarchy = 'invoice_date'
@@ -233,7 +235,7 @@ class OrderAdmin(admin.ModelAdmin):
                (obj.old_status == Order.NewOrder and obj.status == Order.Sent) or \
                (obj.old_status == Order.Confirmed and obj.status == Order.Sent):
                 try:
-                    send_status_change_email.delay(obj.pk, obj.get_status_display)
+                    send_status_change_email.delay(obj.pk, obj.status)
                 except ConnectionError:
                     pass
         obj.old_status = obj.status
@@ -273,6 +275,7 @@ class OrderAdmin(admin.ModelAdmin):
         # when orderlines saved - calculate order total value
         super().save_related(request, form, formsets, change)
         form.instance.value = form.instance.value_total()
+        form.instance.invoice_number = form.instance.invoice_number_generate()
         form.instance.save()
 
     def delete_model(self, request, obj):
