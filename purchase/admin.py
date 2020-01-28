@@ -271,7 +271,7 @@ class OrderAdmin(admin.ModelAdmin):
             (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Sent) or \
             (form.instance.old_status == Order.Confirmed and form.instance.status == Order.Sent):
             try:
-                send_status_change_email(form.instance.pk)
+                send_status_change_email.delay(form.instance.pk)
             except ConnectionError:
                 pass
             form.instance.old_status = form.instance.status
