@@ -267,20 +267,34 @@ class OrderAdmin(admin.ModelAdmin):
         form.instance.invoice_number = form.instance.invoice_number_generate()
         #check if status changed and send email
         if (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Cancelled) or \
-            (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Confirmed) or \
-            (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Sent) or \
-            (form.instance.old_status == Order.Confirmed and form.instance.status == Order.Sent):
+            (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Confirmed):
             try:
                 send_status_change_email.delay(form.instance.pk)
             except ConnectionError:
                 pass
-            form.instance.old_status = form.instance.status
+        #check if order become Cancelled or Returned and restore stocks
+        if form.instance.old_status in [Order.NewOrder, Order.Confirmed] and  \
+            form.instance.status in [Order.Cancelled, Order.Returned]:
+            for line in form.instance.orderline_set.all():
+                product = ProductInstance.objects.get(pk=line.product.pk)
+                product.quantity_in_hand += line.quantity
+                product.save()
+        #check if order become NewOrder or Confirmed and reduce stocks
+        if form.instance.old_status in [Order.Cancelled, Order.Returned] and  \
+            form.instance.status in [Order.NewOrder, Order.Confirmed]:
+            for line in form.instance.orderline_set.all():
+                product = ProductInstance.objects.get(pk=line.product.pk)
+                product.quantity_in_hand -= line.quantity
+                product.save()
+
+        form.instance.old_status = form.instance.status
         form.instance.save()
 
     def delete_model(self, request, obj):
         # if order was deleted add previous_quantity to all orderlines
-        for line in obj.orderline_set.all():
-            product = ProductInstance.objects.get(pk=line.product.pk)
-            product.quantity_in_hand += line.quantity
-            product.save()
+        if obj.status not in [Order.Cancelled, Order.Returned]:
+            for line in obj.orderline_set.all():
+                product = ProductInstance.objects.get(pk=line.product.pk)
+                product.quantity_in_hand += line.quantity
+                product.save()
         super().delete_model(request, obj)
