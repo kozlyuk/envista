@@ -2,10 +2,9 @@
 
 from datetime import date
 from django.utils.translation import gettext_lazy as _
-from rest_framework import viewsets, permissions, views, status
+from rest_framework import permissions, views, status
 from rest_framework.response import Response
 
-from purchase import serializers
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 from product.models import ProductInstance, Cylinder, DiopterPower
 from messaging.tasks import send_confirmation_email, send_new_order_email
@@ -337,35 +336,3 @@ class ConfirmPurchase(views.APIView):
 
         return Response(_('Order accepted. Wait for call from manager please!'),
                         status=status.HTTP_201_CREATED)
-
-
-class PurchaseLineViewSet(viewsets.ModelViewSet):
-    """ViewSet for the PurchaseLine class"""
-
-    queryset = PurchaseLine.objects.all()
-    serializer_class = serializers.PurchaseLineSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class OrderLineViewSet(viewsets.ModelViewSet):
-    """ViewSet for the OrderLine class"""
-
-    queryset = OrderLine.objects.all()
-    serializer_class = serializers.OrderLineSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class OrderViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Order class"""
-
-    queryset = Order.objects.all()
-    serializer_class = serializers.OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class PurchaseViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Purchase class"""
-
-    queryset = Purchase.objects.all()
-    serializer_class = serializers.PurchaseSerializer
-    permission_classes = [permissions.IsAuthenticated]
