@@ -8,7 +8,7 @@ User.objects.create_superuser('sergey.kozlyuk@gmail.com', 'password')
 
 
 # Create initial db for product app
-PRODUCT = Product.objects.create(title='ІНТРАОКУЛЯРНА ЛІНЗА ENVISTA® TORIC',
+PRODUCT = Product.objects.create(title='ENVISTA® TORIC',
                                  short_description="The Clear Choice for Exceptional Astigmatism Management. Exacting astigmatism correction. Dependable stability. Pristine visual clarity. It all comes together in the proven enVista platform to deliver:"
                                  "- Aberration-free, glistening-free performance"
                                  "- Proven rotational stability"
