@@ -14,13 +14,13 @@ import React from "react";
 import {ListGroup} from "react-bootstrap";
 import ReactHtmlParser from 'react-html-parser';
 
-export default class InfoBlock extends React.Component<{ info: string }> {
+export default class InfoBlock extends React.Component<{ info: string, pdfUrl: string }> {
 	render() {
 		let info: string;
 		({info} = this.props);
 		return (
 			<ListGroup className="ml-4 mr-4" variant="flush" defaultActiveKey="#link1">
-				<ListGroup.Item className="text-center" action href="#link1">
+				<ListGroup.Item className="text-center" action href={this.props.pdfUrl}>
 					Перегляд PDF
 				</ListGroup.Item>
 				<ListGroup.Item className="text-center">Інформація</ListGroup.Item>

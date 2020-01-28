@@ -82,9 +82,10 @@ class Welcome extends React.Component {
 	 * method initiator for child component
 	 * get from child props with brand logo and write to state
 	 */
-	getDataFromChild(data) {
+	getDataFromChild(brandLogo, footer) {
 		(this.setState({
-			brandLogo: data
+			brandLogo: brandLogo,
+			footer: footer
 		}));
 		return void 0
 	}
@@ -142,7 +143,7 @@ class Welcome extends React.Component {
 										</Switch>
 									</div>
 								</div>
-								<Footer/>
+								<Footer title={this.state.footer}/>
 							</Fragment>
 							: <Login/>}
 					</Router>
