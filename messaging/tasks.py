@@ -71,7 +71,7 @@ def send_status_change_email(order_id):
 
     context = {'customer': order.customer,
                'order': order,
-               'status': order.status,
+               'status': order.get_status_display,
                'orderlines': order.orderline_set.all(),
                'signature': settings.SIGNATURE}
 
