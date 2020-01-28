@@ -194,7 +194,33 @@ class ConfirmOrder(views.APIView):
                             status=status.HTTP_412_PRECONDITION_FAILED)
 
 
-class GetPurchase(views.APIView):
+class GetPurchaseTable(views.APIView):
+    """
+    Send JSON-coded list of stocks for product instances
+    Create new user cart or clear existing
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        # Creating user cart or clear existing on loading.
+        order, created = Order.objects.get_or_create(customer=self.request.user,
+                                                     status=Order.InCart,
+                                                     defaults={'invoice_number': 'InCart'})
+        if not created:
+            order.products.clear()
+
+        # Sending JSON list of stocks for product instances.
+        json_data = []
+        json_data.append({"columns": Cylinder.objects.values_list('value', flat=True)})
+        json_data.append({"rows": []})
+        for row in DiopterPower.objects.order_by('pk').values_list('value', flat=True):
+            quantity_list = ProductInstance.objects.filter(diopter__value=row).order_by('pk') \
+                                                   .values_list('quantity_in_hand', flat=True)
+            json_data[1]["rows"].append({"row": row, "quantities": quantity_list})
+        return Response(json_data, status=status.HTTP_200_OK)
+
+
+class GetPurchaseList(views.APIView):
     """
     Send JSON-coded list of stocks for product instances
     Create new user cart or clear existing
