@@ -67,6 +67,9 @@ else
   mkdir --verbose $BUILD_DIRECTORY
 fi
 
+# run install
+npm install || exit 0
+
 # run build
 npm run build || exit 0
 
