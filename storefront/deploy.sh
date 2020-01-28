@@ -76,5 +76,8 @@ chown $APACHE_OWNER $BUILD_DIRECTORY
 # restart apache
 sudo systemctl restart httpd || exit
 
+# restart celery
+sudo systemctl restart celeryd.service || exit
+
 printf '%s%s%s%s' "$(tput setaf 3)" "$(tput blink)" "${NAME} was deployed" "$(tput sgr0)"
 printf "\n"
