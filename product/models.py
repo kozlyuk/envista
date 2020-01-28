@@ -63,7 +63,7 @@ class ProductInstance(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return self.product.title + ' ' + str(self.cylinder) + '-' + str(self.diopter)
+        return self.product.title + ' ' + str(self.diopter) + '-' + str(self.cylinder)
 
     def get_price(self):
         """Return price with currency"""

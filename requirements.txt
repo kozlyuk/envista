@@ -10,3 +10,4 @@ django-admin-list-filter-dropdown==1.0.3
 celery==4.4.0
 redis==3.3.11
 django-celery-results==1.1.2
+django-summernote==0.8.11.6

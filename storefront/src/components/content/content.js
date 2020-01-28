@@ -52,9 +52,9 @@ export default class Content extends React.Component {
 			result => {
 				this.setState({
 					isLoaded: true,
-					product: result.data[0]
+					product: result.data
 				});
-				this.props.getData(this.state.product.brand_image);
+				this.props.getData(this.state.product.brand_image, this.state.product.footer);
 			},
 			error => {
 				this.setState({
@@ -102,7 +102,8 @@ export default class Content extends React.Component {
 								className="image-3"
 							/>
 
-							<InfoBlock info={this.state.product.short_description}/>
+							<InfoBlock info={this.state.product.short_description}
+									   pdfUrl={this.state.product.specifications_url}/>
 						</div>
 						<div className="mobile-first w-col w-col-6">
 							<h4 className="text-center">Таблиця наявності лінз на складі</h4>
