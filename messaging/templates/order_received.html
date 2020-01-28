@@ -360,7 +360,8 @@
                                                     <h1 style="Margin: 0; Margin-bottom: 10px; color: inherit; font-family: Helvetica, Arial, sans-serif; font-size: 34px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left; word-wrap: normal;">
                                                         Створено нове замовлення.</h1>
                                                     <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">
-                                                        Користувач створив нове замовлення
+                                                        Користувач створив нове замовлення з номером
+                                                        {{ order.invoice_number }}.
                                                     </p>
                                                     <table class="spacer"
                                                            style="border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%;">
@@ -404,8 +405,8 @@
                                                                                         </p>
                                                                                         <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">
                                                                                             <strong>Номер
-                                                                                                замовлення</strong><br>
-                                                                                            {{ order.invoice_number }}
+                                                                                                телефону</strong><br>
+                                                                                            {{ customer.mobile_number }}
                                                                                         </p>
                                                                                     </th>
                                                                                 </tr>
@@ -418,11 +419,20 @@
                                                                                 <tbody>
                                                                                 <tr style="padding: 0; text-align: left; vertical-align: top;">
                                                                                     <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left;">
+                                                                                        {% if customer.address %}
                                                                                         <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">
                                                                                             <strong>Адреса
                                                                                                 доставки</strong><br>
                                                                                             {{ customer.address }}
                                                                                         </p>
+                                                                                        {% endif %}
+                                                                                        {% if customer.comment %}
+                                                                                        <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">
+                                                                                            <strong>Коментар
+                                                                                            </strong><br>
+                                                                                            {{ customer.comment }}
+                                                                                        </p>
+                                                                                        {% endif %}
                                                                                     </th>
                                                                                 </tr>
                                                                                 </tbody>
@@ -478,8 +488,6 @@
                                                         </tbody>
                                                     </table>
                                                     <hr>
-                                                    <h4 style="Margin: 0; Margin-bottom: 10px; color: inherit; font-family: Helvetica, Arial, sans-serif; font-size: 24px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left; word-wrap: normal;">
-                                                        ІНТРАОКУЛЯРНА ЛІНЗА ENVISTA</h4>
                                                 </th>
                                             </tr>
                                             </tbody>
