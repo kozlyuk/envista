@@ -202,7 +202,16 @@ export class Table extends React.PureComponent<{}, TableProps> {
 								))}
 							</tr>
 						))}
+						<tr className="text-center">
+							<th className="rc-table-row-cell-break-word"/>
+							{this.state.columnsName.map((name: string, rowIdx: number) => (
+								<th key={rowIdx} className="rc-table-row-cell-break-word">
+									{name}
+								</th>
+							))}
+						</tr>
 						</tbody>
+
 					</table>
 				</div>
 			);

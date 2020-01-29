@@ -58,7 +58,7 @@ class GetCart(views.APIView):
         index = 0
         for line in order.orderline_set.all():
             index += 1
-            order_line = [index, line.product.title, line.diopter.value, line.cylinder.value,
+            order_line = [index, line.product.product.title, line.diopter.value, line.cylinder.value,
                 line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
             json_data[0]["lines"].append({"line": order_line})
         json_data.append({"value_total": order.value_total()})

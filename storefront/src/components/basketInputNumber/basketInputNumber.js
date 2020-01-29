@@ -20,7 +20,7 @@ export default class BasketInputNumber extends React.Component {
 		super(props);
 		this.state = {
 			array: this.props.array,
-			maxQuantity: this.props.array[this.props.rowIdx].line[5]
+			maxQuantity: this.props.array[this.props.rowIdx].line[7]
 		};
 		this.user = new Auth();
 		this.authToken = this.user.getAuthToken();
@@ -36,10 +36,10 @@ export default class BasketInputNumber extends React.Component {
 	changeValue(rowIdx, colIdx, counter, target) {
 		Number.parseInt(rowIdx);
 		Number.parseInt(colIdx);
-		const itemPk = this.state.array[rowIdx].line[4];
+		const itemPk = this.state.array[rowIdx].line[6];
 		const newQty = Number.parseInt(target.value);
 		let newArray = [...this.state.array];
-		newArray[rowIdx].line[2] = newQty;
+		newArray[rowIdx].line[4] = newQty;
 		const requestUrl = `${process.env.REACT_APP_CHANGE_QUANTITY}${itemPk}/${newQty}/`;
 		axios(requestUrl, {
 			headers: {
@@ -64,8 +64,8 @@ export default class BasketInputNumber extends React.Component {
 	 * return summary price from state
 	 */
 	calculcatePrice(colIdx, rowIdx) {
-		const quantity = this.props.array[rowIdx].line[2];
-		const pricePerUnit = this.props.array[rowIdx].line[3];
+		const quantity = this.props.array[rowIdx].line[4];
+		const pricePerUnit = this.props.array[rowIdx].line[5];
 		return quantity * pricePerUnit;
 	}
 

@@ -64,12 +64,12 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
 	 * Filter method for cell in table
 	 */
 	cell(colIdx: number, rowIdx: number, item: any) {
-		if (colIdx === 2) {
+		if (colIdx === 4) {
 			return (<BasketInputNumber colIdx={colIdx} rowIdx={rowIdx} item={item} array={this.state.array}
 			                           updateQuantity={this.updateQuantity}/>)
-		} else if (colIdx === 3) {
+		} else if (colIdx === 5) {
 			return void 0
-		} else if (colIdx === 4 || colIdx === 5) {
+		} else if (colIdx === 6 || colIdx === 7) {
 			return void 0
 		} else {
 			return (<td key={colIdx}>{item}</td>)
@@ -168,6 +168,8 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
 								<tr>
 									<th>#</th>
 									<th>Назва</th>
+									<th>Сфера</th>
+									<th>Циліндр</th>
 									<th className="text-center">Кількість</th>
 									<th>Вартість</th>
 								</tr>
