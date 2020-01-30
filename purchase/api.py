@@ -244,7 +244,7 @@ class GetPurchaseList(views.APIView):
         for line in purchase.purchaseline_set.all():
             index += 1
             purchase_line = [index, line.product.product.title, line.diopter.value,
-                             line.cylinder.value, line.quantity]
+                             line.cylinder.value, line.quantity, line.product.pk]
             json_data[0]["lines"].append({"line": purchase_line})
         return Response(json_data, status=status.HTTP_200_OK)
 
