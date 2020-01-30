@@ -72,7 +72,7 @@ class PurchaseLineInline(admin.TabularInline):
 
     model = PurchaseLine
     formset = PurchaseLineInlineFormSet
-    fields = ['cylinder', 'diopter', 'quantity']
+    fields = ['diopter', 'cylinder', 'quantity']
     autocomplete_fields = ['cylinder', 'diopter']
     extra = 0
     show_change_link = True
@@ -83,16 +83,21 @@ class PurchaseAdmin(admin.ModelAdmin):
     """ Admin settings for Purchase table """
     list_display = [
         "invoice_number",
-        "invoice_date",
+        "date_created",
         "created_by",
     ]
     fieldsets = [
-        (None, {'fields': [('invoice_number', 'invoice_date'),
+        (None, {'fields': [('invoice_number', 'date_created'),
                            'comment',
                            ]})
     ]
+    readonly_fields = [
+        "invoice_number",
+        "date_created",
+    ]
+
     search_fields = ['invoice_number']
-    date_hierarchy = 'invoice_date'
+    date_hierarchy = 'date_created'
     list_filter = ('created_by',)
     ordering = ('-date_created',)
     inlines = [PurchaseLineInline]
@@ -101,6 +106,8 @@ class PurchaseAdmin(admin.ModelAdmin):
         if not obj.pk:
             # Only set added_by during the first save.
             obj.created_by = request.user
+            obj.invoice_number = obj.invoice_number_generate()
+
         super().save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):
@@ -174,7 +181,7 @@ class OrderLineInlineFormSet(BaseInlineFormSet):
 class OrderLineInline(admin.TabularInline):
     model = OrderLine
     formset = OrderLineInlineFormSet
-    fields = ['cylinder', 'diopter', 'quantity', 'unit_price']
+    fields = ['diopter', 'cylinder', 'quantity', 'unit_price']
     readonly_fields = ['unit_price']
     autocomplete_fields = ['cylinder', 'diopter']
     extra = 0
