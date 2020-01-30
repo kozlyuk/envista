@@ -14,10 +14,12 @@
 NAME="Envista"
 APACHE_OWNER="apache:apache"
 DEFAULT_ROOT_USER_WITH_ROOT="arrathilar"
-PROJECT_OWNER_USERNAME="envista"
-PROJECT_ROOT_DIRECTORY="/home/envista/envista/"
-PROJECT_DIRECTORY="/home/envista/envista/storefront/"
-BUILD_DIRECTORY="build/"
+PROJECT_OWNER_USERNAME="envista"                          # default: envista
+PROJECT_ROOT_DIRECTORY="/home/envista/envista/"           # default: /home/envista/envista/
+PROJECT_DIRECTORY="/home/envista/envista/storefront/"     # default: /home/envista/envista/storefront/
+BUILD_DIRECTORY="/home/envista/envista/storefront/build/" # default: /home/envista/envista/storefront/build/
+APACHE_FRONTEND_FOLDER="/home/envista/frontend/"          # default: /home/envista/frontend/
+
 WELCOME_TEXT="4paI4paI4paI4paI4paI4paI4paI4pWX4paI4paI4paI4pWXICAg4paI4paI4pWX4paI4paI4pWXICAg4paI4paI4pWX4paI4paI4pWX4paI4paI4paI4paI4paI4paI4paI4pWX4paI4paI4paI4paI4paI4paI4paI4paI4pWXIOKWiOKWiOKWiOKWiOKWiOKVlyAK4paI4paI4pWU4pWQ4pWQ4pWQ4pWQ4pWd4paI4paI4paI4paI4pWXICDilojilojilZHilojilojilZEgICDilojilojilZHilojilojilZHilojilojilZTilZDilZDilZDilZDilZ3ilZrilZDilZDilojilojilZTilZDilZDilZ3ilojilojilZTilZDilZDilojilojilZcK4paI4paI4paI4paI4paI4pWXICDilojilojilZTilojilojilZcg4paI4paI4pWR4paI4paI4pWRICAg4paI4paI4pWR4paI4paI4pWR4paI4paI4paI4paI4paI4paI4paI4pWXICAg4paI4paI4pWRICAg4paI4paI4paI4paI4paI4paI4paI4pWRCuKWiOKWiOKVlOKVkOKVkOKVnSAg4paI4paI4pWR4pWa4paI4paI4pWX4paI4paI4pWR4pWa4paI4paI4pWXIOKWiOKWiOKVlOKVneKWiOKWiOKVkeKVmuKVkOKVkOKVkOKVkOKWiOKWiOKVkSAgIOKWiOKWiOKVkSAgIOKWiOKWiOKVlOKVkOKVkOKWiOKWiOKVkQrilojilojilojilojilojilojilojilZfilojilojilZEg4pWa4paI4paI4paI4paI4pWRIOKVmuKWiOKWiOKWiOKWiOKVlOKVnSDilojilojilZHilojilojilojilojilojilojilojilZEgICDilojilojilZEgICDilojilojilZEgIOKWiOKWiOKVkQrilZrilZDilZDilZDilZDilZDilZDilZ3ilZrilZDilZ0gIOKVmuKVkOKVkOKVkOKVnSAg4pWa4pWQ4pWQ4pWQ4pWdICDilZrilZDilZ3ilZrilZDilZDilZDilZDilZDilZDilZ0gICDilZrilZDilZ0gICDilZrilZDilZ0gIOKVmuKVkOKVnQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg"
 
 #color red - errors, default and yellow
@@ -73,8 +75,18 @@ npm install || exit 0
 # run build
 npm run build || exit 0
 
+# delete or create apache frontend dir
+if [ -d "$APACHE_FRONTEND_FOLDER" ]; then
+  sudo rm -rfv $APACHE_FRONTEND_FOLDER
+  mkdir --verbose $APACHE_FRONTEND_FOLDER
+else
+  mkdir --verbose $APACHE_FRONTEND_FOLDER
+fi
+
+# move build directory
+mv $BUILD_DIRECTORY/* $APACHE_FRONTEND_FOLDER/
 # change owner to apache
-chown -r $APACHE_OWNER $BUILD_DIRECTORY
+chown -R $APACHE_OWNER $APACHE_FRONTEND_FOLDER
 
 # restart apache
 sudo systemctl restart httpd || exit
