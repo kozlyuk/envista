@@ -15,6 +15,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import "../table/style.css"
 import Loader from "react-loader-spinner";
+import {Sticky, StickyContainer} from 'react-sticky';
 
 
 interface TableProps {
@@ -154,65 +155,79 @@ export class Table extends React.PureComponent<{}, TableProps> {
 				;
 		} else {
 			return (
-				<div className="row">
-					<table className="table-bordered col mb-4 header-fixed">
-						<colgroup>
-							<col style={{width: 50, minWidth: 50}}/>
-						</colgroup>
-						<thead style={{position: "sticky"}} className="rc-table-thead text-center">
-						<tr>
-							<th className="rc-table-row-cell-break-word"/>
-							{this.state.columnsName.map((name: string, rowIdx: number) => (
-								<th key={rowIdx} className="rc-table-row-cell-break-word">
-									{name}
-								</th>
-							))}
-						</tr>
-						</thead>
-						<tbody className="rc-table-tbody">
-						{this.state.rows.map((item: { row: React.ReactNode; quantities: any[]; }, rowIdx: string | number | undefined) => (
-							<tr key={rowIdx}
-							    className="rc-table-row rc-table-row-level-0"
-							    data-row-key={1}>
-								<td className="rc-table-row-cell-break-word text-center">
-									<span className="rc-table-row-indent indent-level-0"
+				<div className="col">
+
+
+					<div className="row">
+					</div>
+					<div className="row">
+						<table className="table-bordered col mb-4 header-fixed">
+							<StickyContainer>
+								<colgroup>
+									<col style={{width: 50, minWidth: 50}}/>
+								</colgroup>
+								<Sticky style={{zIndex: 1000}}>{({style}) =>
+									<thead style={style} className="rc-table-thead sticky">
+									<tr style={{width: "57px"}}>
+										<th style={{width: "57px"}}
+										    className="rc-table-row-cell-break-word"/>
+										{this.state.columnsName.map((name: string, rowIdx: number) => (
+											<th style={{width: "57px"}} key={rowIdx}
+											    className="rc-table-row-cell-break-word text-info text-center bg-light">
+												{name}
+											</th>
+										))}
+									</tr>
+									</thead>
+								}</Sticky>
+								<tbody style={{display: "inline-table", width: "100%"}} className="rc-table-tbody">
+								{this.state.rows.map((item: { row: React.ReactNode; quantities: any[]; }, rowIdx: string | number | undefined) => (
+									<tr key={rowIdx}
+									    className="rc-table-row rc-table-row-level-0"
+									    data-row-key={1}>
+										<td style={{width: "57px"}}
+										    className="rc-table-row-cell-break-word text-center">
+									<span className="rc-table-row-indent indent-level-0 font-weight-bold text-primary"
 									      style={{paddingLeft: 0}}>{item.row}</span>
-								</td>
-								{item.quantities.map((counter, columnIdx) => (
-									<td
-										key={columnIdx}
-										className="rc-table-row-cell-break-word">
+										</td>
+										{item.quantities.map((counter, columnIdx) => (
+											<td
+												style={{width: "57px"}}
+												key={columnIdx}
+												className="rc-table-row-cell-break-word">
 											<span
 												className="rc-table-row-indent indent-level-0"
 												style={{paddingLeft: 0}}
 											/>
-										<div>
-											<ButtonBackground>
-												<button
-													style={{backgroundColor: "transparent"}}
-													className="btn btn-sm btn-light btn-block"
-													onClick={() =>
-														this.decreaseQty(counter, columnIdx, rowIdx as number)
-													}>
-													{counter}
-												</button>
-											</ButtonBackground>
-										</div>
-									</td>
+												<div>
+													<ButtonBackground>
+														<button
+															style={{backgroundColor: "transparent"}}
+															className="btn btn-sm btn-light btn-block"
+															onClick={() =>
+																this.decreaseQty(counter, columnIdx, rowIdx as number)
+															}>
+															{counter}
+														</button>
+													</ButtonBackground>
+												</div>
+											</td>
+										))}
+									</tr>
 								))}
-							</tr>
-						))}
-						<tr className="text-center">
-							<th className="rc-table-row-cell-break-word"/>
-							{this.state.columnsName.map((name: string, rowIdx: number) => (
-								<th key={rowIdx} className="rc-table-row-cell-break-word">
-									{name}
-								</th>
-							))}
-						</tr>
-						</tbody>
+								<tr className="text-center">
+									<th className="rc-table-row-cell-break-word"/>
+									{this.state.columnsName.map((name: string, rowIdx: number) => (
+										<th key={rowIdx} className="rc-table-row-cell-break-word text-info">
+											{name}
+										</th>
+									))}
+								</tr>
+								</tbody>
+							</StickyContainer>
+						</table>
+					</div>
 
-					</table>
 				</div>
 			);
 		}
