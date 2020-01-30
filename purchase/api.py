@@ -175,7 +175,6 @@ class ConfirmOrder(views.APIView):
             # change order status to NewOrder and assign invoice number
             order.status = Order.NewOrder
             order.invoice_number = order.invoice_number_generate()
-            order.invoice_date = date.today()
             order.value = order.value_total()
             order.created_by = self.request.user
             order.save()
