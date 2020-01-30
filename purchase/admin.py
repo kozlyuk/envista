@@ -199,23 +199,23 @@ class OrderAdmin(admin.ModelAdmin):
         "invoice_number",
         "status",
         "customer",
-        "invoice_date",
+        "date_created",
         "value",
         "created_by",
     ]
     fieldsets = [
         (None, {'fields': [('customer', 'status'),
-                           ('invoice_date', 'invoice_number'),
+                           ('date_created', 'invoice_number'),
                            ('comment', 'value'),
                            ]})
     ]
     readonly_fields = [
         "value",
-        "invoice_date",
-        "invoice_number"
+        "invoice_number",
+        "date_created",
     ]
     search_fields = ['invoice_number', 'value']
-    date_hierarchy = 'invoice_date'
+    date_hierarchy = 'date_created'
     list_filter = (ActiveValueFilter, ('customer', RelatedDropdownFilter))
     ordering = ('-date_created',)
     inlines = [OrderLineInline]
@@ -228,6 +228,8 @@ class OrderAdmin(admin.ModelAdmin):
         if not obj.pk:
             # Only set created_by during the first save.
             obj.created_by = request.user
+            obj.invoice_number = obj.invoice_number_generate()
+
         super().save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):
@@ -264,7 +266,6 @@ class OrderAdmin(admin.ModelAdmin):
         # when orderlines saved - calculate order total value
         super().save_related(request, form, formsets, change)
         form.instance.value = form.instance.value_total()
-        form.instance.invoice_number = form.instance.invoice_number_generate()
         #check if status changed and send email
         if (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Cancelled) or \
             (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Confirmed):
