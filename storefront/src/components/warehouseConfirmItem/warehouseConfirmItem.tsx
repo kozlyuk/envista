@@ -13,7 +13,7 @@
 import React, {Fragment} from "react";
 import {Button, Col, Row, Table} from "react-bootstrap";
 import Auth from "../auth/auth";
-import BasketInputNumber from "../basketInputNumber/basketInputNumber";
+import WarehouseInputNumber from "../warehouseInputNumber/warehouseInputNumber";
 import axios from "axios";
 import {toast} from "react-toastify";
 
@@ -63,12 +63,10 @@ export default class WarehouseConfirmItem extends React.Component<{}, WarehouseI
      * Filter method for cell in table
      s*/
 	cell(colIdx: number, rowIdx: number, item: any) {
-		if (colIdx === 2) {
-			return (<BasketInputNumber colIdx={colIdx} rowIdx={rowIdx} item={item} array={this.state.array}
-			                           updateQuantity={this.updateQuantity}/>)
-		} else if (colIdx === 3) {
-			return void 0
-		} else if (colIdx === 4 || colIdx === 5) {
+		if (colIdx === 4) {
+			return (<WarehouseInputNumber colIdx={colIdx} rowIdx={rowIdx} item={item} array={this.state.array}
+			                              updateQuantity={this.updateQuantity}/>)
+		} else if (colIdx === 5 || colIdx === 6) {
 			return void 0
 		} else {
 			return (<td key={colIdx}>{item}</td>)
@@ -163,8 +161,9 @@ export default class WarehouseConfirmItem extends React.Component<{}, WarehouseI
 								<tr>
 									<th>#</th>
 									<th>Назва</th>
+									<th>Сфера</th>
+									<th>Циліндр</th>
 									<th className="text-center">Кількість</th>
-									<th>Вартість</th>
 								</tr>
 								</thead>
 								<tbody>
