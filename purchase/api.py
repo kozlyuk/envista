@@ -223,25 +223,31 @@ class GetPurchaseTable(views.APIView):
 
 class GetPurchaseList(views.APIView):
     """
-    Send JSON-coded list of product instances with quantities in purchase
-    Create new purchase cart or get existing
+    Send JSON-coded list of purchaselines in customer purchase
+    If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        # Creating purchase cart or get existing.
-        purchase, created = Purchase.objects.get_or_create(created_by=self.request.user,
-                                                           invoice_number='InProcess')
+        # get the existing customer purchase
+        try:
+            purchase = Purchase.objects.get(created_by=self.request.user, invoice_number='InProcess')
+        except Purchase.DoesNotExist:
+            return Response(_('Purchase does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        except Purchase.MultipleObjectsReturned:
+            return Response(_('Few purchases exists'), status=status.HTTP_400_BAD_REQUEST)
 
-        # Sending JSON list of stocks for product instances.
+        # send JSON-coded list of orderlines in customer cart
         json_data = []
-        json_data.append({"columns": Cylinder.objects.values_list('value', flat=True)})
-        json_data.append({"rows": []})
-        for row in DiopterPower.objects.order_by('pk').values_list('value', flat=True):
-            quantity_list = ProductInstance.objects.filter(diopter__value=row).order_by('pk') \
-                                                   .values_list('quantity_in_hand', flat=True)
-            json_data[1]["rows"].append({"row": row, "quantities": quantity_list})
+        json_data.append({"lines": []})
+        index = 0
+        for line in purchase.purchaseline_set.all():
+            index += 1
+            purchase_line = [index, line.product.product.title, line.diopter.value,
+                             line.cylinder.value, line.quantity]
+            json_data[0]["lines"].append({"line": purchase_line})
         return Response(json_data, status=status.HTTP_200_OK)
+
 
 
 class AddToPurchase(views.APIView):
@@ -283,11 +289,10 @@ class AddToPurchase(views.APIView):
 
 class UpdatePurchaseLine(views.APIView):
     """
-    This view update the product in cart
+    This view update the product in purchase
     If product updated return status HTTP_200_OK
     If product not found in ProductInstance's return HTTP_404_NOT_FOUND
-    If product not found in cart return status HTTP_404_NOT_FOUND
-    If product out of stock return status HTTP_409_CONFLICT
+    If product not found in purchase return status HTTP_404_NOT_FOUND
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
     permission_classes = (permissions.IsAuthenticated,)
@@ -297,26 +302,23 @@ class UpdatePurchaseLine(views.APIView):
         try:
             product = ProductInstance.objects.get(pk=product_pk)
         except ProductInstance.DoesNotExist:
-            return Response(_('Product does not exist'), status=status.HTTP_400_BAD_REQUEST)
+            return Response(_('Product does not exist'), status=status.HTTP_404_NOT_FOUND)
 
-        # get the existing customer cart
+        # get the existing customer purchase
         try:
-            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
-        except Order.DoesNotExist:
-            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
-        except Order.MultipleObjectsReturned:
-            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
+            purchase = Purchase.objects.get(created_by=self.request.user, invoice_number='InProcess')
+        except Purchase.DoesNotExist:
+            return Response(_('Purchase does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        except Purchase.MultipleObjectsReturned:
+            return Response(_('Few purchases exists'), status=status.HTTP_400_BAD_REQUEST)
 
-        # update the existing OrderLine or returm exception if it is not exists
+        # update the existing PurchaseLine or returm exception if it is not exists
         try:
-            order_line = OrderLine.objects.get(product=product, order=order)
-            if quantity <= product.quantity_in_hand:
-                order_line.quantity = quantity
-                order_line.save()
-                return Response(_('Product updated'), status=status.HTTP_200_OK)
-            else:
-                return Response(_('Product is not enough in stock'), status=status.HTTP_409_CONFLICT)
-        except OrderLine.DoesNotExist:
+            purchase_line = PurchaseLine.objects.get(product=product, purchase=purchase)
+            purchase_line.quantity = quantity
+            purchase_line.save()
+            return Response(_('Product updated'), status=status.HTTP_200_OK)
+        except PurchaseLine.DoesNotExist:
             return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
 
 
