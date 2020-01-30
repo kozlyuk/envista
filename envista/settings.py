@@ -119,6 +119,15 @@ LOGIN_REDIRECT_URL = '/'
 
 LANGUAGE_CODE = 'uk'
 
+LANGUAGES = (
+    ('uk', 'Ukrainian'),
+)
+
+LOCALE_PATHS = (
+    'locale',
+    # os.path.join(PROJECT_DIR, 'locale'),
+)
+
 TIME_ZONE = 'Europe/Kiev'
 
 DATE_FORMAT = "d.m.Y"

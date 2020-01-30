@@ -1,0 +1,294 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-01-30 21:52+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: accounts/forms.py:10
+msgid "Password"
+msgstr "Пароль"
+
+#: accounts/forms.py:11
+msgid "Password confirmation"
+msgstr "Підтвердження пароля"
+
+#: accounts/forms.py:26 accounts/forms.py:45 accounts/managers.py:23
+msgid "User with such email already exist"
+msgstr "Користувач з такою електронною адресою вже існує"
+
+#: accounts/managers.py:20
+msgid "Users must have an email address"
+msgstr "Користувач повинен мати електронну адресу"
+
+#: accounts/models.py:18
+#: venv/lib/python3.7/site-packages/django/db/models/fields/__init__.py:1646
+msgid "Email address"
+msgstr "Електронна адреса"
+
+#: accounts/models.py:19
+msgid "Mobile number"
+msgstr "Мобільний телефон"
+
+#: accounts/models.py:20
+msgid "Address"
+msgstr "Адреса"
+
+#: accounts/models.py:21 purchase/models.py:22 purchase/models.py:69
+msgid "Comment"
+msgstr "Коментар"
+
+#: product/models.py:10
+msgid "Product title"
+msgstr "Назва продукту"
+
+#: product/models.py:11
+msgid "Short description"
+msgstr "Опис продукту"
+
+#: product/models.py:12
+msgid "Product image"
+msgstr "Картинка продукту"
+
+#: product/models.py:13
+msgid "Brand name"
+msgstr "Назва бренду"
+
+#: product/models.py:14
+msgid "Brand Image"
+msgstr "Логотип бренду"
+
+#: product/models.py:15
+msgid "Specification"
+msgstr "Специфікація"
+
+#: product/models.py:16
+msgid "Site footer"
+msgstr "Футер сайту"
+
+#: product/models.py:19
+msgid "Product"
+msgstr "Продукт"
+
+#: product/models.py:20
+msgid "Products"
+msgstr "Продукти"
+
+#: product/models.py:28 product/models.py:41 purchase/models.py:72
+msgid "Value"
+msgstr "Значення"
+
+#: product/models.py:31
+msgid "Diopter Power"
+msgstr "Сфера"
+
+#: product/models.py:32
+msgid "Diopter Powers"
+msgstr "Сфери"
+
+#: product/models.py:44
+msgid "Cylinder"
+msgstr "Циліндер"
+
+#: product/models.py:45
+msgid "Cylinders"
+msgstr "Циліндри"
+
+#: product/models.py:57
+msgid "Product price"
+msgstr "Ціна продукту"
+
+#: product/models.py:58
+msgid "Quantity in hand"
+msgstr "Кількість на складі"
+
+#: product/models.py:61
+msgid "Product Instance"
+msgstr "Екземпляр продукту"
+
+#: product/models.py:62
+msgid "Product Instances"
+msgstr "Екземпляри продукту"
+
+#: purchase/admin.py:17 purchase/models.py:70
+msgid "Order status"
+msgstr "Статус замовлення"
+
+#: purchase/admin.py:62 purchase/admin.py:172
+msgid "Quantity must be more then 0"
+msgstr "Кількість має бути більша 0"
+
+#: purchase/admin.py:67 purchase/admin.py:177
+msgid "Product is not enough in stock. Available - {}"
+msgstr "Не достатня кількість на складі. Доступно - {}"
+
+#: purchase/admin.py:324 purchase/models.py:82
+msgid "Orders"
+msgstr "Замовлення"
+
+#: purchase/admin.py:324
+msgid "New"
+msgstr "Нові"
+
+#: purchase/api.py:53 purchase/api.py:91 purchase/api.py:133
+#: purchase/api.py:162
+msgid "Few carts exists"
+msgstr "Існує декілька кошиків"
+
+#: purchase/api.py:83 purchase/api.py:125 purchase/api.py:268
+#: purchase/api.py:306
+msgid "Product does not exist"
+msgstr "Такого продукту не існує"
+
+#: purchase/api.py:89 purchase/api.py:131 purchase/api.py:160
+msgid "Cart does not exist"
+msgstr "Корзина не існує"
+
+#: purchase/api.py:105
+msgid "Product added to the cart"
+msgstr "Продукт додано до кошика"
+
+#: purchase/api.py:106
+msgid "Product is out of stock"
+msgstr "Не достатня кількість товару на складі"
+
+#: purchase/api.py:141 purchase/api.py:321
+msgid "Product updated"
+msgstr "Кількість продукту оновлено"
+
+#: purchase/api.py:143
+msgid "Product is not enough in stock"
+msgstr "Не достатня кількість товару на складі"
+
+#: purchase/api.py:145 purchase/api.py:323
+msgid "Product not in cart"
+msgstr "Продукт відсутній в кошику"
+
+#: purchase/api.py:190
+msgid "Order accepted. Wait for call from manager please!"
+msgstr "Замовлення прийнято. Чекайте на дзвінок менеджера."
+
+#: purchase/api.py:193
+msgid "Order if empty! Please add products"
+msgstr "Кошик порожній. Додайте товари"
+
+#: purchase/api.py:237 purchase/api.py:274 purchase/api.py:312
+#: purchase/api.py:338
+msgid "Purchase does not exist"
+msgstr "Продукт не існує"
+
+#: purchase/api.py:239 purchase/api.py:276 purchase/api.py:314
+#: purchase/api.py:340
+msgid "Few purchases exists"
+msgstr "Існує декілька закупівель"
+
+#: purchase/api.py:288
+msgid "Product added to the purchase"
+msgstr "Продукт додано до закупівлі"
+
+#: purchase/api.py:357
+msgid "Purchase accepted."
+msgstr "Закупівлю збережено"
+
+#: purchase/api.py:360
+msgid "Purchase is empty! Please add products"
+msgstr "Закупівля порожня! Додайте товари"
+
+#: purchase/models.py:20 purchase/models.py:66 purchase/models.py:109
+#: purchase/models.py:126
+msgid "Goods"
+msgstr "Товари"
+
+#: purchase/models.py:21 purchase/models.py:68
+msgid "Invoice number"
+msgstr "Номер замовлення"
+
+#: purchase/models.py:24 purchase/models.py:75
+msgid "Created by"
+msgstr "Створив"
+
+#: purchase/models.py:26 purchase/models.py:77
+msgid "Date created"
+msgstr "Дата створення"
+
+#: purchase/models.py:27 purchase/models.py:78
+msgid "Date updated"
+msgstr "Дата оновлення"
+
+#: purchase/models.py:30 purchase/models.py:108
+msgid "Purchase"
+msgstr "Закупівля"
+
+#: purchase/models.py:31
+msgid "Purchases"
+msgstr "Закупівлі"
+
+#: purchase/models.py:45 purchase/models.py:103
+msgid "Generate invoice number"
+msgstr "Генерація номеру Замовлення"
+
+#: purchase/models.py:58
+msgid "Products in cart"
+msgstr "Продукт в кошику"
+
+#: purchase/models.py:59
+msgid "New order"
+msgstr "Нове замовлення"
+
+#: purchase/models.py:60
+msgid "Order canceled"
+msgstr "Замовлення скасовано"
+
+#: purchase/models.py:61
+msgid "Order confirmed"
+msgstr "Замовлення підтверджено"
+
+#: purchase/models.py:63
+msgid "Order returned"
+msgstr "Замовлення повернуто"
+
+#: purchase/models.py:67
+msgid "Customer"
+msgstr "Покупець"
+
+#: purchase/models.py:73
+msgid "Download Invoice"
+msgstr "Завантажити рахунок"
+
+#: purchase/models.py:81 purchase/models.py:125
+#: venv/lib/python3.7/site-packages/django/forms/formsets.py:371
+#: venv/lib/python3.7/site-packages/django/forms/formsets.py:373
+msgid "Order"
+msgstr "Замовлення"
+
+#: purchase/models.py:93
+msgid "Calculated invoice value"
+msgstr "Розрахунок вартості замовлення"
+
+#: purchase/models.py:112 purchase/models.py:129
+msgid "Quantity"
+msgstr "Кількість"
+
+#: purchase/models.py:131
+msgid "Unit price"
+msgstr "Ціна за одиницю"
+
+#: purchase/models.py:143
+msgid "Calculated invoice_line value"
+msgstr "Розрахунок вартості позиції"
