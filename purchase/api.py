@@ -195,44 +195,43 @@ class ConfirmOrder(views.APIView):
 
 class GetPurchaseTable(views.APIView):
     """
-    Send JSON-coded list of stocks for product instances
-    Create new user cart or clear existing
+    Creating purchase cart or get existing.
+    Send JSON-coded list of quantities in purchase cart.
     """
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        # Creating user cart or clear existing on loading.
-        order, created = Order.objects.get_or_create(customer=self.request.user,
-                                                     status=Order.InCart,
-                                                     defaults={'invoice_number': 'InCart'})
-        if not created:
-            order.products.clear()
+        # Creating purchase cart or get existing.
+        purchase, created = Purchase.objects.get_or_create(created_by=self.request.user,
+                                                           invoice_number='InProcess')
 
-        # Sending JSON list of stocks for product instances.
+        # Sending JSON list of quantities in purchase cart.
         json_data = []
         json_data.append({"columns": Cylinder.objects.values_list('value', flat=True)})
         json_data.append({"rows": []})
         for row in DiopterPower.objects.order_by('pk').values_list('value', flat=True):
-            quantity_list = ProductInstance.objects.filter(diopter__value=row).order_by('pk') \
-                                                   .values_list('quantity_in_hand', flat=True)
+            quantity_list = []
+            for column in Cylinder.objects.order_by('pk').values_list('value', flat=True):
+                if purchase.purchaseline_set.filter(cylinder__value=column, diopter__value=row).exists():
+                    quantity_list.append(purchase.purchaseline_set.get(cylinder__value=column, diopter__value=row) \
+                        .quantity)
+                else:
+                    quantity_list.append(0)
             json_data[1]["rows"].append({"row": row, "quantities": quantity_list})
         return Response(json_data, status=status.HTTP_200_OK)
 
 
 class GetPurchaseList(views.APIView):
     """
-    Send JSON-coded list of stocks for product instances
-    Create new user cart or clear existing
+    Send JSON-coded list of product instances with quantities in purchase
+    Create new purchase cart or get existing
     """
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        # Creating user cart or clear existing on loading.
-        order, created = Order.objects.get_or_create(customer=self.request.user,
-                                                     status=Order.InCart,
-                                                     defaults={'invoice_number': 'InCart'})
-        if not created:
-            order.products.clear()
+        # Creating purchase cart or get existing.
+        purchase, created = Purchase.objects.get_or_create(created_by=self.request.user,
+                                                           invoice_number='InProcess')
 
         # Sending JSON list of stocks for product instances.
         json_data = []
@@ -247,11 +246,10 @@ class GetPurchaseList(views.APIView):
 
 class AddToPurchase(views.APIView):
     """
-    This view add to cart the instance of product
+    This view add to purchase cart the instance of product
     If product added return status HTTP_201_CREATED
     If product not found in ProductInstance's return HTTP_404_NOT_FOUND
     If exists problems with cart return status HTTP_400_BAD_REQUEST
-    If product out of stock return status HTTP_409_CONFLICT
     """
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -262,28 +260,25 @@ class AddToPurchase(views.APIView):
         except ProductInstance.DoesNotExist:
             return Response(_('Product does not exist'), status=status.HTTP_404_NOT_FOUND)
 
-        # get the existing customer cart
+        # get the existing customer purchase
         try:
-            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
-        except Order.DoesNotExist:
-            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
-        except Order.MultipleObjectsReturned:
-            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
+            purchase = Purchase.objects.get(created_by=self.request.user, invoice_number='InProcess')
+        except Purchase.DoesNotExist:
+            return Response(_('Purchase does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        except Purchase.MultipleObjectsReturned:
+            return Response(_('Few purchases exists'), status=status.HTTP_400_BAD_REQUEST)
 
-        # get the existing OrderLine or create new one
-        if product.quantity_in_hand > 0:
-            cylinder = Cylinder.objects.get(pk=column)
-            diopter = DiopterPower.objects.get(pk=row)
-            order_line, created = OrderLine.objects.get_or_create(product=product,
-                                                                  order=order,
-                                                                  defaults={'unit_price': product.price,
-                                                                            'cylinder': cylinder,
-                                                                            'diopter': diopter})
-            if order_line.quantity + 1 <= product.quantity_in_hand:
-                order_line.quantity += 1
-                order_line.save()
-                return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
-        return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+        # get the existing PurchaseLine or create new one
+        cylinder = Cylinder.objects.get(pk=column)
+        diopter = DiopterPower.objects.get(pk=row)
+        purchase_line, created = PurchaseLine.objects.get_or_create(product=product,
+                                                                    purchase=purchase,
+                                                                    defaults={'cylinder': cylinder,
+                                                                              'diopter': diopter})
+
+        purchase_line.quantity += 1
+        purchase_line.save()
+        return Response(_('Product added to the purchase'), status=status.HTTP_201_CREATED)
 
 
 class UpdatePurchaseLine(views.APIView):

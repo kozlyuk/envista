@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from django.forms import ModelForm, ChoiceField
 from django.forms.models import BaseInlineFormSet
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
+from django.utils.html import format_html
 
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 from product.models import ProductInstance
@@ -71,7 +72,7 @@ class PurchaseLineInline(admin.TabularInline):
 
     model = PurchaseLine
     formset = PurchaseLineInlineFormSet
-    fields = ['cylinder', 'diopter', 'quantity']
+    fields = ['diopter', 'cylinder', 'quantity']
     autocomplete_fields = ['cylinder', 'diopter']
     extra = 0
     show_change_link = True
@@ -82,16 +83,21 @@ class PurchaseAdmin(admin.ModelAdmin):
     """ Admin settings for Purchase table """
     list_display = [
         "invoice_number",
-        "invoice_date",
+        "date_created",
         "created_by",
     ]
     fieldsets = [
-        (None, {'fields': [('invoice_number', 'invoice_date'),
+        (None, {'fields': [('invoice_number', 'date_created'),
                            'comment',
                            ]})
     ]
+    readonly_fields = [
+        "invoice_number",
+        "date_created",
+    ]
+
     search_fields = ['invoice_number']
-    date_hierarchy = 'invoice_date'
+    date_hierarchy = 'date_created'
     list_filter = ('created_by',)
     ordering = ('-date_created',)
     inlines = [PurchaseLineInline]
@@ -100,6 +106,8 @@ class PurchaseAdmin(admin.ModelAdmin):
         if not obj.pk:
             # Only set added_by during the first save.
             obj.created_by = request.user
+            obj.invoice_number = obj.invoice_number_generate()
+
         super().save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):
@@ -173,7 +181,7 @@ class OrderLineInlineFormSet(BaseInlineFormSet):
 class OrderLineInline(admin.TabularInline):
     model = OrderLine
     formset = OrderLineInlineFormSet
-    fields = ['cylinder', 'diopter', 'quantity', 'unit_price']
+    fields = ['diopter', 'cylinder', 'quantity', 'unit_price']
     readonly_fields = ['unit_price']
     autocomplete_fields = ['cylinder', 'diopter']
     extra = 0
@@ -194,12 +202,24 @@ class OrderAdminForm(ModelForm):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     """ Admin settings for Order table """
+
+    def status_mark(self, obj):
+        if obj.status == Order.NewOrder:
+            return format_html('<div style="color:red;">%s</div>' % obj.get_status_display())
+        elif obj.status == Order.Confirmed:
+            return format_html('<div style="color:blue;">%s</div>' % obj.get_status_display())
+        elif obj.status == Order.Returned:
+            return format_html('<div style="color:orange;">%s</div>' % obj.get_status_display())
+        return obj.get_status_display()
+    status_mark.allow_tags = True
+    status_mark.short_description = 'Статус'
+
     form = OrderAdminForm
     list_display = [
         "invoice_number",
-        "status",
         "customer",
         "date_created",
+        "status_mark",
         "value",
         "created_by",
     ]
