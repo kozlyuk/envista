@@ -1,6 +1,5 @@
 """ API for Purchase app"""
 
-from datetime import date
 from django.utils.translation import gettext_lazy as _
 from rest_framework import permissions, views, status
 from rest_framework.response import Response
@@ -59,7 +58,7 @@ class GetCart(views.APIView):
         for line in order.orderline_set.all():
             index += 1
             order_line = [index, line.product.product.title, line.diopter.value, line.cylinder.value,
-                line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
+                          line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
             json_data[0]["lines"].append({"line": order_line})
         json_data.append({"value_total": order.value_total()})
         return Response(json_data, status=status.HTTP_200_OK)
@@ -324,37 +323,28 @@ class UpdatePurchaseLine(views.APIView):
 
 class ConfirmPurchase(views.APIView):
     """
-    Change order status from InCart to NewOrder and assign invoice number
+    Save purchase and assign invoice number to it
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        # get the existing customer cart
+        # get the existing customer purchase
         try:
-            order = Order.objects.get(customer=self.request.user, status=Order.InCart)
-        except Order.DoesNotExist:
-            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
-        except Order.MultipleObjectsReturned:
-            return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
+            purchase = Purchase.objects.get(created_by=self.request.user, invoice_number='InProcess')
+        except Purchase.DoesNotExist:
+            return Response(_('Purchase does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        except Purchase.MultipleObjectsReturned:
+            return Response(_('Few purchases exists'), status=status.HTTP_400_BAD_REQUEST)
 
         # change order status to NewOrder and assign invoice number
-        order.status = Order.NewOrder
-        order.invoice_number = order.invoice_number_generate()
-        order.invoice_date = date.today()
-        order.value = order.value_total()
-        order.created_by = self.request.user
-        order.save()
+        purchase.invoice_number = purchase.invoice_number_generate()
+        purchase.save()
 
         # reduce stocks
-        for order_line in order.orderline_set.all():
-            order_line.product.quantity_in_hand -= order_line.quantity
-            order_line.product.save()
+        for purchase_line in purchase.purchaseline_set.all():
+            purchase_line.product.quantity_in_hand += purchase_line.quantity
+            purchase_line.product.save()
 
-        # send confirmation email
-        if not self.request.user.groups.filter(name='Менеджери').exists():
-            send_confirmation_email.delay(order.pk)
-        send_new_order_email.delay(order.pk)
-
-        return Response(_('Order accepted. Wait for call from manager please!'),
+        return Response(_('Purchase accepted.'),
                         status=status.HTTP_201_CREATED)
