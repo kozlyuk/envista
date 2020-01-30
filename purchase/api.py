@@ -48,7 +48,7 @@ class GetCart(views.APIView):
         try:
             order = Order.objects.get(customer=self.request.user, status=Order.InCart)
         except Order.DoesNotExist:
-            return Response(_('Cart does not exist'), status=status.HTTP_400_BAD_REQUEST)
+            return Response([{"lines":[]}], status=status.HTTP_200_OK)
         except Order.MultipleObjectsReturned:
             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
 
