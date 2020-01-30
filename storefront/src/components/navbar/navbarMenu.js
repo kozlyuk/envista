@@ -15,9 +15,37 @@ import {Link} from "react-router-dom";
 import Auth from "../auth/auth";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import axios from "axios";
 
 class NavbarMenu extends React.Component {
-	user = new Auth();
+	constructor(props) {
+		super(props);
+		this.state = {
+			brand_image: null
+		};
+		this.user = new Auth();
+		this.authToken = this.user.getAuthToken();
+	}
+
+	componentDidMount() {
+		axios(process.env.REACT_APP_INFO_CONTEXT, {
+			headers: {
+				Authorization: "Token " + this.authToken
+			}
+		}).then(
+			result => {
+				this.setState({
+					brand_image: result.data.brand_image
+				});
+			},
+			error => {
+				this.setState({
+					error
+				});
+			}
+		);
+		return void 0;
+	}
 
 	render() {
 		return (
@@ -27,7 +55,7 @@ class NavbarMenu extends React.Component {
 						<div className="container">
 							<Navbar.Brand href="#home"><Link to="/" className="mr-auto m-0 brand w-nav-brand p-0">
 								<img
-									src={this.props.brandLogo}
+									src={this.state.brand_image}
 									height={50}
 									alt="brand"
 									className="image-2"
