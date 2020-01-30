@@ -1,5 +1,6 @@
 """ API for Purchase app"""
 
+from datetime import datetime
 from django.utils.translation import gettext_lazy as _
 from rest_framework import permissions, views, status
 from rest_framework.response import Response
@@ -176,6 +177,7 @@ class ConfirmOrder(views.APIView):
             order.invoice_number = order.invoice_number_generate()
             order.value = order.value_total()
             order.created_by = self.request.user
+            order.date_created = datetime.now()
             order.save()
 
             # send confirmation email
@@ -350,6 +352,7 @@ class ConfirmPurchase(views.APIView):
         if purchase.purchaseline_set.exists():
             # assign invoice number to purchase and save it
             purchase.invoice_number = purchase.invoice_number_generate()
+            purchase.date_created = datetime.now()
             purchase.save()
             return Response(_('Purchase accepted.'),
                             status=status.HTTP_201_CREATED)

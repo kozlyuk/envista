@@ -2,10 +2,10 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext as _
+from django.utils.html import format_html
 from django.forms import ModelForm, ChoiceField
 from django.forms.models import BaseInlineFormSet
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
-from django.utils.html import format_html
 
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 from product.models import ProductInstance
