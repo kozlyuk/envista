@@ -45,7 +45,6 @@ export default class WarehouseTable extends Table implements WarehouseTableProps
 		newArray[rowIdx].quantities[columnIdx] = newQty;
 		this.sendData(rowIdx, columnIdx)
 			.then(() => {
-					console.log(newArray)
 					this.setState({rows: newArray}
 					)
 				}
