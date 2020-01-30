@@ -74,7 +74,7 @@ npm install || exit 0
 npm run build || exit 0
 
 # change owner to apache
-chown $APACHE_OWNER $BUILD_DIRECTORY
+chown -r $APACHE_OWNER $BUILD_DIRECTORY
 
 # restart apache
 sudo systemctl restart httpd || exit
