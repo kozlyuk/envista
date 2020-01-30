@@ -82,7 +82,12 @@ export default class Auth {
 			window.location.reload(false);
 		} else {
 			const error = await result.json();
-			toast.error(error.non_field_errors[0])
+			if (error.non_field_errors) {
+				toast.error(error.non_field_errors[0])
+			}
+			if (error.email) {
+				toast.error(error.email[0])
+			}
 		}
 	}
 
