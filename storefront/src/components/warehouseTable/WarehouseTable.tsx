@@ -23,7 +23,7 @@ interface WarehouseTableProps {
 
 export default class WarehouseTable extends Table implements WarehouseTableProps {
 	constructor(props: any) {
-		super(Table);
+		super(props);
 
 		this.state = {
 			rows: [],
@@ -39,12 +39,17 @@ export default class WarehouseTable extends Table implements WarehouseTableProps
 	 * decrease counter of item quantities and write to state
 	 */
 	increaseQty(counter: number, columnIdx: number, rowIdx: number) {
-		const newQty = counter > 0 ? counter + 1 : 0;
+		const newQty = counter >= 0 ? counter + 1 : 0;
 		let newArray: any[];
 		newArray = [...this.state.rows];
 		newArray[rowIdx].quantities[columnIdx] = newQty;
 		this.sendData(rowIdx, columnIdx)
-			.then(() => this.setState({rows: newArray}))
+			.then(() => {
+					console.log(newArray)
+					this.setState({rows: newArray}
+					)
+				}
+			)
 			.catch(error => {
 				const message = error.response.data;
 				toast.error(message);
