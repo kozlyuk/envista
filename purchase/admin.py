@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from django.forms import ModelForm, ChoiceField
 from django.forms.models import BaseInlineFormSet
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
+from django.utils.html import format_html
 
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 from product.models import ProductInstance
@@ -194,12 +195,24 @@ class OrderAdminForm(ModelForm):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     """ Admin settings for Order table """
+
+    def status_mark(self, obj):
+        if obj.status == Order.NewOrder:
+            return format_html('<div style="color:red;">%s</div>' % obj.get_status_display())
+        elif obj.status == Order.Confirmed:
+            return format_html('<div style="color:blue;">%s</div>' % obj.get_status_display())
+        elif obj.status == Order.Returned:
+            return format_html('<div style="color:orange;">%s</div>' % obj.get_status_display())
+        return obj.get_status_display()
+    status_mark.allow_tags = True
+    status_mark.short_description = 'Статус'
+
     form = OrderAdminForm
     list_display = [
         "invoice_number",
-        "status",
         "customer",
         "date_created",
+        "status_mark",
         "value",
         "created_by",
     ]
