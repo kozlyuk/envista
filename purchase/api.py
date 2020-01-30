@@ -323,7 +323,7 @@ class UpdatePurchaseLine(views.APIView):
 
 class ConfirmPurchase(views.APIView):
     """
-    Save purchase and assign invoice number to it
+    Assign invoice number to purchase and save it
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
     permission_classes = (permissions.IsAuthenticated,)
@@ -337,14 +337,22 @@ class ConfirmPurchase(views.APIView):
         except Purchase.MultipleObjectsReturned:
             return Response(_('Few purchases exists'), status=status.HTTP_400_BAD_REQUEST)
 
-        # change order status to NewOrder and assign invoice number
-        purchase.invoice_number = purchase.invoice_number_generate()
-        purchase.save()
-
-        # reduce stocks
+        # restock
         for purchase_line in purchase.purchaseline_set.all():
+            # delete purchaseline if its quantity is 0
+            if purchase_line.quantity == 0:
+                purchase_line.delete()
+                continue
             purchase_line.product.quantity_in_hand += purchase_line.quantity
             purchase_line.product.save()
 
-        return Response(_('Purchase accepted.'),
-                        status=status.HTTP_201_CREATED)
+        # check if order not empty
+        if purchase.purchaseline_set.exists():
+            # assign invoice number to purchase and save it
+            purchase.invoice_number = purchase.invoice_number_generate()
+            purchase.save()
+            return Response(_('Purchase accepted.'),
+                            status=status.HTTP_201_CREATED)
+        else:
+            return Response(_('Purchase is empty! Please add products'),
+                            status=status.HTTP_412_PRECONDITION_FAILED)
