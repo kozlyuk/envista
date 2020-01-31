@@ -6,8 +6,10 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from .models import User
 
 class CustomUserCreationForm(UserCreationForm):
-    password1 = forms.CharField(label=_("Password"), strip=False, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput(attrs={'class': 'form-control'}), strip=False)
+    password1 = forms.CharField(label=_("Password"), strip=False,
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label=_("Password confirmation"),
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}), strip=False)
 
     class Meta:
         model = User
@@ -44,7 +46,7 @@ class CustomUserChangeForm(forms.ModelForm):
             self.add_error('email', _("User with such email already exist"))
         return cleaned_data
 
-    password = ReadOnlyPasswordHashField(label= _("Password"),
-            help_text= _("Raw passwords are not stored, so there is no way to see "
-                        "this user's password, but you can change the password "
-                        "using <a href=\"../password/\">this form</a>."))
+    password = ReadOnlyPasswordHashField(label=_("Password"),
+        help_text=_("Raw passwords are not stored, so there is no way to see "
+                    "this user's password, but you can change the password "
+                    "using <a href=\"../password/\">this form</a>."))

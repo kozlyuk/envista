@@ -207,13 +207,14 @@ class GetPurchaseTable(views.APIView):
                                                            invoice_number='InProcess')
 
         # Sending JSON list of quantities in purchase cart.
+        purchase_lines = purchase.purchaseline_set.values_list('diopter__value', 'cylinder__value')
         json_data = []
         json_data.append({"columns": Cylinder.objects.values_list('value', flat=True)})
         json_data.append({"rows": []})
         for row in DiopterPower.objects.order_by('pk').values_list('value', flat=True):
             quantity_list = []
             for column in Cylinder.objects.order_by('pk').values_list('value', flat=True):
-                if purchase.purchaseline_set.filter(cylinder__value=column, diopter__value=row).exists():
+                if (row, column) in purchase_lines:
                     quantity_list.append(purchase.purchaseline_set.get(cylinder__value=column, diopter__value=row) \
                         .quantity)
                 else:
