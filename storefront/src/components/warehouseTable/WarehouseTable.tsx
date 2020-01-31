@@ -137,7 +137,7 @@ export default class WarehouseTable extends Table implements WarehouseTableProps
 								</tr>
 								</thead>
 							}</Sticky>
-							<tbody className="rc-table-tbody">
+							<tbody className="rc-table-tbody sticky">
 							{this.state.rows.map((item: { row: React.ReactNode; quantities: any[]; }, rowIdx: string | number | undefined) => (
 								<tr key={rowIdx}
 								    className="rc-table-row rc-table-row-level-0"
