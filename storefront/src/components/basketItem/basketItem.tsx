@@ -14,9 +14,9 @@ import React, {Fragment} from "react";
 import Auth from "../auth/auth";
 import BasketInputNumber from "../basketInputNumber/basketInputNumber";
 import axios from "axios";
-import {toast} from "react-toastify";
 import {Button, Col, Row, Table} from "react-bootstrap";
 import "../basketItem/style.css"
+import {toast} from "react-toastify";
 
 /*
  * State interface
@@ -97,7 +97,12 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
 			// toast.success(response.data)
 		}).catch((error: any) => {
 			const message: any = error.data;
-			toast.error(message);
+			if (error.response.status === 412) {
+				this.setState({
+					array: []  // if error status 412 clear data
+				})
+			}
+			toast.error(error.response);
 		})
 	}
 
