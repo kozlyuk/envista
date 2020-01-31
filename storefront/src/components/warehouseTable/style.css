@@ -1,0 +1,30 @@
+/*
+ *
+ *   Table styles.
+ *
+ *   @author                Andrey Perestyuk (Arrathilar)
+ *   @email-primary         a.perestyuk@itel.rv.ua
+ *   @email-secondary       arrathilar@blizzard.com, a.perestyuk@archlinux.org,
+ *   @copyright             2020 ITEL-Service
+ *
+ *
+ */
+.table {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.sticky {
+    display: table !important;
+    width: 100%
+}
+
+tbody {
+    width: 100%;
+    display: table;
+}
+
+td {
+    width: 80px;
+}
