@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('', admin.site.urls),
@@ -27,6 +28,9 @@ urlpatterns = [
 
     path('rest-auth/', include('rest_auth.urls')),
     path('summernote/', include('django_summernote.urls')),
+
+    path('favicon.ico', RedirectView.as_view(url='/media/favicon.ico'), name="favicon"),
+
 ]
 
 if settings.DEBUG:
