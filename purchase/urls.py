@@ -14,4 +14,5 @@ urlpatterns = (
     path("api/v1/add_to_purchase/<int:row>/<int:column>/", api.AddToPurchase.as_view()),
     path("api/v1/update_purchase_line/<int:product_pk>/<int:quantity>/", api.UpdatePurchaseLine.as_view()),
     path("api/v1/confirm_purchase/", api.ConfirmPurchase.as_view()),
+    path("api/v1/clear_purchase/", api.ClearPurchase.as_view()),
 )
