@@ -13,6 +13,7 @@
 import React from "react";
 import WarehouseTable from "../warehouseTable/WarehouseTable";
 import Submit from "../submitTableData/submitTableData";
+import ResetButton from "../warehouseResetButton/warehouseResetButton";
 
 export default class Warehouse extends React.Component<{}, {}> {
 	history: any;
@@ -28,6 +29,7 @@ export default class Warehouse extends React.Component<{}, {}> {
 					<h4 className="text-center">Таблиця поповнення складу</h4>
 					<WarehouseTable/>
 					<Submit history={this.history} title={"Підтвердити"} redirectTo={"/warehouse/confirm"}/>
+					<ResetButton/>
 				</div>
 			</div>
 		)

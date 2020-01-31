@@ -93,8 +93,15 @@ export default class WarehouseConfirmItem extends React.Component<{}, WarehouseI
 			});
 			// toast.success(response.data)
 		}).catch((error: any) => {
-			const message: any = error.data;
-			toast.error(message);
+			const message: any = error.response.data;
+			console.log(message)
+			if (error.response.status === 412) {
+				this.setState({
+					array: []  // if error status 412 clear data
+				})
+			} else {
+				toast.error(message);
+			}
 		})
 	}
 
@@ -145,6 +152,8 @@ export default class WarehouseConfirmItem extends React.Component<{}, WarehouseI
 					<h3 className="text-success text-center">Зміни внесено!</h3>
 				</div>
 			)
+		} else if (!this.state.array.length) {
+			return <h3 className="text-center">Елементи відсутні</h3>;
 		} else {
 			return (
 				<Fragment>

@@ -1,8 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.forms import AuthenticationForm
-from PIL import Image
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from .models import User
 
@@ -44,3 +43,8 @@ class CustomUserChangeForm(forms.ModelForm):
         if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
             self.add_error('email', _("User with such email already exist"))
         return cleaned_data
+
+    password = ReadOnlyPasswordHashField(label= _("Password"),
+            help_text= _("Raw passwords are not stored, so there is no way to see "
+                        "this user's password, but you can change the password "
+                        "using <a href=\"../password/\">this form</a>."))
