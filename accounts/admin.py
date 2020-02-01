@@ -18,9 +18,10 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'mobile_number', 'is_active', 'custom_group')
     list_filter = ('groups__name', 'is_active')
     fieldsets = (
-        (None, {'fields': ('first_name', 'last_name', 'mobile_number', 'email',
+        (None, {'fields': ('first_name', 'last_name', 'mobile_number',
                            'is_staff', 'is_active', 'address', 'comment', 'password')}),
     )
+    readonly_fields = ['password']
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
