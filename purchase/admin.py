@@ -188,7 +188,7 @@ class OrderLineInline(admin.TabularInline):
     show_change_link = True
 
 
-class OrderAdminForm(ModelForm):
+class OrderForm(ModelForm):
     """ Exclude Order.InCart from STATUS_CHOICES field """
     class Meta:
         model = Order
@@ -198,10 +198,34 @@ class OrderAdminForm(ModelForm):
         choices=Order.STATUS_CHOICES[1:]
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        status = cleaned_data.get("status")
+
+        if not self.current_user.is_superuser:
+
+            if self.instance.status == Order.NewOrder and \
+                status not in [Order.NewOrder, Order.Confirmed, Order.Cancelled]:
+                msg = _("New orders status can be changed to Confirmed or Canceled")
+                self._errors["status"] = self.error_class([msg])
+
+            if self.instance.status == Order.Cancelled and status != Order.Cancelled:
+                msg = _("Cancelled orders can't be changed")
+                self._errors["status"] = self.error_class([msg])
+
+            if self.instance.status == Order.Returned and status != Order.Returned:
+                msg = _("Returned orders can't be changed")
+                self._errors["status"] = self.error_class([msg])
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     """ Admin settings for Order table """
+
+    def get_form(self, request, *args, **kwargs):
+         form = super().get_form(request, *args, **kwargs)
+         form.current_user = request.user
+         return form
 
     def status_mark(self, obj):
         if obj.status == Order.NewOrder:
@@ -214,7 +238,7 @@ class OrderAdmin(admin.ModelAdmin):
     status_mark.allow_tags = True
     status_mark.short_description = 'Статус'
 
-    form = OrderAdminForm
+    form = OrderForm
     list_display = [
         "invoice_number",
         "customer",
