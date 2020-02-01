@@ -13,13 +13,23 @@
 import React from "react";
 import WarehouseTable from "../warehouseTable/WarehouseTable";
 import Submit from "../submitTableData/submitTableData";
-import ResetButton from "../warehouseResetButton/warehouseResetButton";
+import {ButtonGroup} from "react-bootstrap";
 
 export default class Warehouse extends React.Component<{}, {}> {
 	history: any;
 
 	constructor(props: any) {
 		super(props);
+		this.state = {
+			needUpdateneedUpdate: false
+		}
+	}
+
+	updateComponent = (value: boolean): any => {
+		this.setState({
+				needUpdate: value
+			}
+		)
 	}
 
 	render() {
@@ -27,9 +37,14 @@ export default class Warehouse extends React.Component<{}, {}> {
 			<div className="container">
 				<div className="mobile-first w-col w-col-12">
 					<h4 className="text-center">Таблиця поповнення складу</h4>
-					<WarehouseTable/>
-					<Submit history={this.history} title={"Підтвердити"} redirectTo={"/warehouse/confirm"}/>
-					<ResetButton/>
+					{/*
+					// @ts-ignore*/}
+					<WarehouseTable needUpdate={this.state.needUpdate}/>
+					<div className="text-center">
+						<ButtonGroup vertical>
+							<Submit history={this.history} title={"Підтвердити"} redirectTo={"/warehouse/confirm"}/>
+						</ButtonGroup>
+					</div>
 				</div>
 			</div>
 		)

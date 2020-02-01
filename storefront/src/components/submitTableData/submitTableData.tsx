@@ -29,7 +29,7 @@ class Submit extends React.Component <SubmitProps, {}> {
 
 	render() {
 		return (
-			<div className="text-center mb-4">
+			<div className="text-center mb-4 ml-auto mr-auto">
 				<Button
 					variant="outline-success"
 					size="sm"

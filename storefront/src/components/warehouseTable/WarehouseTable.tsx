@@ -10,7 +10,7 @@
  *
  */
 
-import React from "react";
+import React, {Fragment} from "react";
 import {Table} from "../table/table";
 import Loader from "react-loader-spinner";
 import ButtonBackground from "../buttonBackground/buttonBackground";
@@ -21,17 +21,18 @@ import "./style.css"
 
 interface WarehouseTableProps {
 	getData: any;
+	reset: any;
 }
 
 export default class WarehouseTable extends Table implements WarehouseTableProps {
+
 	constructor(props: any) {
 		super(props);
-
 		this.state = {
 			rows: [],
 			columnsName: [],
 			error: null,
-			isLoaded: false
+			isLoaded: false,
 		};
 	}
 
@@ -63,6 +64,24 @@ export default class WarehouseTable extends Table implements WarehouseTableProps
 		return void 0;
 	}
 
+	clickHandler() {
+		const {REACT_APP_PURCHASE_DATA_RESET}: any = process.env;
+		axios(REACT_APP_PURCHASE_DATA_RESET, {
+			headers: {
+				"Authorization": "Token " + this.authToken
+			}
+		}).then((result) => {
+			this.forceUpdate();
+			const {REACT_APP_WAREHOUSE_TABLE_DATA}: any = process.env;
+			this.loadData(REACT_APP_WAREHOUSE_TABLE_DATA);
+		})
+			.catch((error) => {
+				const message = error;
+				console.log(message)
+				// toast.error(message);
+			})
+	}
+
 	async sendData(rowIdx: number, columnIdx: number): Promise<any> {
 		const row = rowIdx + 1;
 		const col = columnIdx + 1;
@@ -74,9 +93,8 @@ export default class WarehouseTable extends Table implements WarehouseTableProps
 		});
 	}
 
-	componentDidMount() {
-		const {REACT_APP_WAREHOUSE_TABLE_DATA}: any = process.env;
-		axios(REACT_APP_WAREHOUSE_TABLE_DATA, {
+	loadData(url: string) {
+		axios(url, {
 			headers: {
 				"Authorization": "Token " + this.authToken
 			}
@@ -96,6 +114,11 @@ export default class WarehouseTable extends Table implements WarehouseTableProps
 					});
 				}
 			);
+	}
+
+	componentDidMount() {
+		const {REACT_APP_WAREHOUSE_TABLE_DATA}: any = process.env;
+		this.loadData(REACT_APP_WAREHOUSE_TABLE_DATA);
 		return void 0;
 	}
 
@@ -117,64 +140,75 @@ export default class WarehouseTable extends Table implements WarehouseTableProps
 				</div>)
 				;
 		} else {
+
 			return (
-				<div className="row">
-					<table className="table-bordered col mb-4 header-fixed">
-						<StickyContainer>
-							<colgroup>
-								<col style={{width: 50, minWidth: 50}}/>
-							</colgroup>
-							<Sticky style={{zIndex: 1000}}>{({style}) =>
-								<thead style={style} className="rc-table-thead sticky">
-								<tr>
-									<th style={{width: "57px"}} className="rc-table-row-cell-break-word"/>
-									{this.state.columnsName.map((name: string, rowIdx: number) => (
-										<th style={{width: "57px"}} key={rowIdx}
-										    className="rc-table-row-cell-break-word text-center bg-light">
-											{name}
-										</th>
-									))}
-								</tr>
-								</thead>
-							}</Sticky>
-							<tbody className="rc-table-tbody sticky">
-							{this.state.rows.map((item: { row: React.ReactNode; quantities: any[]; }, rowIdx: string | number | undefined) => (
-								<tr key={rowIdx}
-								    className="rc-table-row rc-table-row-level-0"
-								    data-row-key={1}>
-									<td className="rc-table-row-cell-break-word text-center">
+				<Fragment>
+					<div className="row">
+						<table className="table-bordered col mb-4 header-fixed">
+							<StickyContainer>
+								<colgroup>
+									<col style={{width: 50, minWidth: 50}}/>
+								</colgroup>
+								<Sticky style={{zIndex: 1000}}>{({style}) =>
+									<thead style={style} className="rc-table-thead sticky">
+									<tr>
+										<th style={{width: "57px"}} className="rc-table-row-cell-break-word"/>
+										{this.state.columnsName.map((name: string, rowIdx: number) => (
+											<th style={{width: "57px"}} key={rowIdx}
+											    className="rc-table-row-cell-break-word text-center bg-light">
+												{name}
+											</th>
+										))}
+									</tr>
+									</thead>
+								}</Sticky>
+								<tbody className="rc-table-tbody sticky">
+								{this.state.rows.map((item: { row: React.ReactNode; quantities: any[]; }, rowIdx: string | number | undefined) => (
+									<tr key={rowIdx}
+									    className="rc-table-row rc-table-row-level-0"
+									    data-row-key={1}>
+										<td className="rc-table-row-cell-break-word text-center">
 									<span className="rc-table-row-indent indent-level-0"
 									      style={{paddingLeft: 0}}>{item.row}</span>
-									</td>
-									{item.quantities.map((counter, columnIdx) => (
-										<td
-											key={columnIdx}
-											className="rc-table-row-cell-break-word">
+										</td>
+										{item.quantities.map((counter, columnIdx) => (
+											<td
+												key={columnIdx}
+												className="rc-table-row-cell-break-word">
 											<span
 												className="rc-table-row-indent indent-level-0"
 												style={{paddingLeft: 0}}
 											/>
-											<div>
-												<ButtonBackground>
-													<button
-														style={{backgroundColor: "transparent"}}
-														className="btn btn-sm btn-light btn-block"
-														onClick={() =>
-															this.increaseQty(counter, columnIdx, rowIdx as number)
-														}>
-														{counter}
-													</button>
-												</ButtonBackground>
-											</div>
-										</td>
-									))}
-								</tr>
-							))}
-							</tbody>
-						</StickyContainer>
-					</table>
-				</div>
+												<div>
+													<ButtonBackground>
+														<button
+															style={{backgroundColor: "transparent"}}
+															className="btn btn-sm btn-light btn-block"
+															onClick={() =>
+																this.increaseQty(counter, columnIdx, rowIdx as number)
+															}>
+															{counter}
+														</button>
+													</ButtonBackground>
+												</div>
+											</td>
+										))}
+									</tr>
+								))}
+								</tbody>
+							</StickyContainer>
+						</table>
+					</div>
+					<div className="row">
+						<button onClick={() => {
+							this.clickHandler()
+						}} className="btn btn-sm btn-outline-warning mb-3 ml-auto mr-auto">Очистити зміни
+						</button>
+					</div>
+				</Fragment>
 			);
 		}
 	}
+
+	reset: any;
 }
