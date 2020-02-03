@@ -13,7 +13,6 @@
 import React, {Fragment} from "react";
 import {Table} from "../table/table";
 import Loader from "react-loader-spinner";
-import ButtonBackground from "../buttonBackground/buttonBackground";
 import {toast} from "react-toastify";
 import axios from "axios";
 import {Sticky, StickyContainer} from "react-sticky";
@@ -180,16 +179,14 @@ export default class WarehouseTable extends Table implements WarehouseTableProps
 												style={{paddingLeft: 0}}
 											/>
 												<div>
-													<ButtonBackground>
-														<button
-															style={{backgroundColor: "transparent"}}
-															className="btn btn-sm btn-light btn-block"
-															onClick={() =>
-																this.increaseQty(counter, columnIdx, rowIdx as number)
-															}>
-															{counter}
-														</button>
-													</ButtonBackground>
+													<button
+														style={{backgroundColor: "transparent"}}
+														className="btn btn-sm btn-light btn-block"
+														onClick={() =>
+															this.increaseQty(counter, columnIdx, rowIdx as number)
+														}>
+														{counter}
+													</button>
 												</div>
 											</td>
 										))}
