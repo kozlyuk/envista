@@ -124,8 +124,7 @@ LANGUAGES = (
 )
 
 LOCALE_PATHS = (
-    'locale',
-    # os.path.join(PROJECT_DIR, 'locale'),
+    os.path.join(BASE_DIR, 'locale'),
 )
 
 TIME_ZONE = 'Europe/Kiev'
