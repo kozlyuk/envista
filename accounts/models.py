@@ -19,6 +19,7 @@ class User(AbstractUser):
     mobile_number = models.CharField(_('Mobile number'), max_length=10, blank=True)
     address = models.CharField(_('Address'), max_length=255, blank=True)
     comment = models.CharField(_('Comment'), max_length=255, blank=True)
+    telegram_id = models.PositiveIntegerField(blank=True, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

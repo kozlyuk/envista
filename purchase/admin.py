@@ -223,9 +223,9 @@ class OrderAdmin(admin.ModelAdmin):
     """ Admin settings for Order table """
 
     def get_form(self, request, *args, **kwargs):
-         form = super().get_form(request, *args, **kwargs)
-         form.current_user = request.user
-         return form
+        form = super().get_form(request, *args, **kwargs)
+        form.current_user = request.user
+        return form
 
     def status_mark(self, obj):
         if obj.status == Order.NewOrder:
@@ -343,7 +343,3 @@ class OrderAdmin(admin.ModelAdmin):
                 product.quantity_in_hand += line.quantity
                 product.save()
         super().delete_model(request, obj)
-
-
-Order._meta.verbose_name_plural = "{} ({} - {})".format(_('Orders'), _('New'),
-    Order.objects.filter(status=Order.NewOrder).count())

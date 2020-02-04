@@ -8,6 +8,7 @@ from envista.celery import app
 
 from accounts.models import User
 from purchase.models import Order
+from messaging.views import send_notice
 
 logger = get_task_logger(__name__)
 
@@ -51,13 +52,23 @@ def send_new_order_email(order_id):
                'orderlines': order.orderline_set.all(),
                'signature': settings.SIGNATURE}
 
-    title = "Отримано нове замовлення {}".format(order.invoice_number)
+    title = f'Отримано нове замовлення {order.invoice_number}'
     msg_plain = title
     msg_html = render_to_string('order_received.html', context)
 
     if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
         managers, html_message=msg_html):
         logger.info("Email about receiving a new order sent to all managers")
+
+    # send telegram notification
+    telegram_ids = User.objects.filter(groups__name='Менеджери', telegram_id__isnull=False) \
+                   .values_list('telegram_id', flat=True)
+    for orderline in order.orderline_set.all():
+        title += (f'\n{orderline.product.product.title} {orderline.product.diopter.value}-'
+                  f'{orderline.product.cylinder.value} - {orderline.quantity}шт.')
+    for chat_id in telegram_ids:
+        send_notice(chat_id, title)
+        logger.info("Telegram notification sent to chat_id '%s'", chat_id)
 
 
 @app.task
