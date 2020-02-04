@@ -11,3 +11,4 @@ celery==4.4.0
 redis==3.3.11
 django-celery-results==1.1.2
 django-summernote==0.8.11.6
+pyTelegramBotAPi==3.6.7
