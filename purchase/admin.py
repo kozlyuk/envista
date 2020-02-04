@@ -92,7 +92,6 @@ class PurchaseAdmin(admin.ModelAdmin):
                            ]})
     ]
     readonly_fields = [
-        "invoice_number",
         "date_created",
     ]
 

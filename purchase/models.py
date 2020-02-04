@@ -64,7 +64,7 @@ class Order(models.Model):
     )
     products = models.ManyToManyField(ProductInstance, through='OrderLine', related_name='orders',
                                       verbose_name=_('Goods'), blank=True)
-    customer = models.ForeignKey(User, verbose_name=_('Customer'), on_delete=models.PROTECT)
+    customer = models.ForeignKey(User, verbose_name=_('Customer'), on_delete=models.CASCADE)
     invoice_number = models.CharField(_('Invoice number'), max_length=45)
     comment = models.CharField(_('Comment'), max_length=255, blank=True)
     status = models.CharField(_('Order status'), max_length=2, choices=STATUS_CHOICES, default=InCart)
