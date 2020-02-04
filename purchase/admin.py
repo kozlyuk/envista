@@ -222,9 +222,9 @@ class OrderAdmin(admin.ModelAdmin):
     """ Admin settings for Order table """
 
     def get_form(self, request, *args, **kwargs):
-         form = super().get_form(request, *args, **kwargs)
-         form.current_user = request.user
-         return form
+        form = super().get_form(request, *args, **kwargs)
+        form.current_user = request.user
+        return form
 
     def status_mark(self, obj):
         if obj.status == Order.NewOrder:
