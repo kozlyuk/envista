@@ -47,6 +47,10 @@ class CustomUserChangeForm(forms.ModelForm):
         return cleaned_data
 
     password = ReadOnlyPasswordHashField(label=_("Password"),
-        help_text=_("Raw passwords are not stored, so there is no way to see "
-                    "this user's password, but you can change the password "
-                    "using <a href=\"../password/\">this form</a>."))
+        help_text=_("You can change the password using <a href=\"../password/\">this form</a>."))
+
+    def clean_password(self):
+        # Regardless of what the user provides, return the initial value.
+        # This is done here, rather than on the field, because the
+        # field does not have access to the initial value
+        return self.initial["password"]

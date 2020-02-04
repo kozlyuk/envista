@@ -21,9 +21,6 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': ('first_name', 'last_name', 'mobile_number',
                            'is_staff', 'is_active', 'address', 'comment', 'password')}),
     )
-    readonly_fields = (
-        "password",
-    )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
