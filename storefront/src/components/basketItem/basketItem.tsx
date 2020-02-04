@@ -150,7 +150,7 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
 						<div className="background"></div>
 						<div className="checkmark draw"></div>
 					</div>
-					<h3 className="text-success text-center">Зміни внесено!</h3>
+					<h3 className="text-success text-center">Дякуємо за покупку!</h3>
 				</div>
 			)
 		} else if (!this.state.array.length) {
