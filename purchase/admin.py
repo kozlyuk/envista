@@ -343,7 +343,3 @@ class OrderAdmin(admin.ModelAdmin):
                 product.quantity_in_hand += line.quantity
                 product.save()
         super().delete_model(request, obj)
-
-
-Order._meta.verbose_name_plural = "{} ({} - {})".format(_('Orders'), _('New'),
-    Order.objects.filter(status=Order.NewOrder).count())
