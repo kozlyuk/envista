@@ -63,6 +63,7 @@ def send_new_order_email(order_id):
     # send telegram notification
     telegram_ids = User.objects.filter(groups__name='Менеджери', telegram_id__isnull=False) \
                    .values_list('telegram_id', flat=True)
+    title += f'\nПокупець - {order.customer.first_name} {order.customer.last_name}'
     for orderline in order.orderline_set.all():
         title += (f'\n{orderline.product.product.title} {orderline.product.diopter.value}-'
                   f'{orderline.product.cylinder.value} - {orderline.quantity}шт.')
