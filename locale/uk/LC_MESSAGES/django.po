@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-30 21:52+0200\n"
+"POT-Creation-Date: 2020-02-08 18:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: accounts/forms.py:10
+#: accounts/forms.py:9 accounts/forms.py:49
 msgid "Password"
 msgstr "Пароль"
 
@@ -29,16 +29,22 @@ msgstr "Пароль"
 msgid "Password confirmation"
 msgstr "Підтвердження пароля"
 
-#: accounts/forms.py:26 accounts/forms.py:45 accounts/managers.py:23
+#: accounts/forms.py:27 accounts/forms.py:46 accounts/managers.py:23
 msgid "User with such email already exist"
 msgstr "Користувач з такою електронною адресою вже існує"
+
+#: accounts/forms.py:50
+msgid ""
+"You can change the password using <a href=\"../password/\">this form</a>."
+msgstr ""
+"Ви можете змінити пароль <a href=\"../password/\">за цим посиланням</a>."
 
 #: accounts/managers.py:20
 msgid "Users must have an email address"
 msgstr "Користувач повинен мати електронну адресу"
 
 #: accounts/models.py:18
-#: venv/lib/python3.7/site-packages/django/db/models/fields/__init__.py:1646
+#: venv/lib/python3.8/site-packages/django/db/models/fields/__init__.py:1646
 msgid "Email address"
 msgstr "Електронна адреса"
 
@@ -130,29 +136,33 @@ msgstr "Екземпляри продукту"
 msgid "Order status"
 msgstr "Статус замовлення"
 
-#: purchase/admin.py:62 purchase/admin.py:172
+#: purchase/admin.py:62 purchase/admin.py:171
 msgid "Quantity must be more then 0"
 msgstr "Кількість має бути більша 0"
 
-#: purchase/admin.py:67 purchase/admin.py:177
+#: purchase/admin.py:67 purchase/admin.py:176
 msgid "Product is not enough in stock. Available - {}"
 msgstr "Не достатня кількість на складі. Доступно - {}"
 
-#: purchase/admin.py:324 purchase/models.py:82
-msgid "Orders"
-msgstr "Замовлення"
+#: purchase/admin.py:208
+msgid "New orders status can be changed to Confirmed or Canceled"
+msgstr "Статус замовлення може бути змінений на Підтверджено або Скасовано"
 
-#: purchase/admin.py:324
-msgid "New"
-msgstr "Нові"
+#: purchase/admin.py:212
+msgid "Cancelled orders can't be changed"
+msgstr "Відмінені замовлення не можуть бути змінені"
+
+#: purchase/admin.py:216
+msgid "Returned orders can't be changed"
+msgstr "Повернені замовлення не можуть бути змінені"
 
 #: purchase/api.py:53 purchase/api.py:91 purchase/api.py:133
 #: purchase/api.py:162
 msgid "Few carts exists"
 msgstr "Існує декілька кошиків"
 
-#: purchase/api.py:83 purchase/api.py:125 purchase/api.py:268
-#: purchase/api.py:306
+#: purchase/api.py:83 purchase/api.py:125 purchase/api.py:269
+#: purchase/api.py:307
 msgid "Product does not exist"
 msgstr "Такого продукту не існує"
 
@@ -164,19 +174,15 @@ msgstr "Корзина не існує"
 msgid "Product added to the cart"
 msgstr "Продукт додано до кошика"
 
-#: purchase/api.py:106
+#: purchase/api.py:106 purchase/api.py:143
 msgid "Product is out of stock"
 msgstr "Не достатня кількість товару на складі"
 
-#: purchase/api.py:141 purchase/api.py:321
+#: purchase/api.py:141 purchase/api.py:322
 msgid "Product updated"
 msgstr "Кількість продукту оновлено"
 
-#: purchase/api.py:143
-msgid "Product is not enough in stock"
-msgstr "Не достатня кількість товару на складі"
-
-#: purchase/api.py:145 purchase/api.py:323
+#: purchase/api.py:145 purchase/api.py:324
 msgid "Product not in cart"
 msgstr "Продукт відсутній в кошику"
 
@@ -188,27 +194,31 @@ msgstr "Замовлення прийнято. Чекайте на дзвіно�
 msgid "Order if empty! Please add products"
 msgstr "Кошик порожній. Додайте товари"
 
-#: purchase/api.py:237 purchase/api.py:274 purchase/api.py:312
-#: purchase/api.py:338
+#: purchase/api.py:238 purchase/api.py:275 purchase/api.py:313
+#: purchase/api.py:339 purchase/api.py:377
 msgid "Purchase does not exist"
 msgstr "Продукт не існує"
 
-#: purchase/api.py:239 purchase/api.py:276 purchase/api.py:314
-#: purchase/api.py:340
+#: purchase/api.py:240 purchase/api.py:277 purchase/api.py:315
+#: purchase/api.py:341 purchase/api.py:379
 msgid "Few purchases exists"
 msgstr "Існує декілька закупівель"
 
-#: purchase/api.py:288
+#: purchase/api.py:289
 msgid "Product added to the purchase"
 msgstr "Продукт додано до закупівлі"
 
-#: purchase/api.py:357
+#: purchase/api.py:358
 msgid "Purchase accepted."
 msgstr "Закупівлю збережено"
 
-#: purchase/api.py:360
+#: purchase/api.py:361
 msgid "Purchase is empty! Please add products"
 msgstr "Закупівля порожня! Додайте товари"
+
+#: purchase/api.py:383
+msgid "Purchase cleared."
+msgstr "Закупівлю обнулено"
 
 #: purchase/models.py:20 purchase/models.py:66 purchase/models.py:109
 #: purchase/models.py:126
@@ -272,9 +282,11 @@ msgid "Download Invoice"
 msgstr "Завантажити рахунок"
 
 #: purchase/models.py:81 purchase/models.py:125
-#: venv/lib/python3.7/site-packages/django/forms/formsets.py:371
-#: venv/lib/python3.7/site-packages/django/forms/formsets.py:373
 msgid "Order"
+msgstr "Замовлення"
+
+#: purchase/models.py:82
+msgid "Orders"
 msgstr "Замовлення"
 
 #: purchase/models.py:93

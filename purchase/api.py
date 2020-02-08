@@ -140,7 +140,7 @@ class UpdateQuantity(views.APIView):
                 order_line.save()
                 return Response(_('Product updated'), status=status.HTTP_200_OK)
             else:
-                return Response(_('Product is not enough in stock'), status=status.HTTP_409_CONFLICT)
+                return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
         except OrderLine.DoesNotExist:
             return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
 
