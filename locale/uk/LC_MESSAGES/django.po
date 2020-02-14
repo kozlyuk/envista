@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-08 18:12+0200\n"
+"POT-Creation-Date: 2020-02-14 11:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -96,7 +96,7 @@ msgstr "Продукт"
 msgid "Products"
 msgstr "Продукти"
 
-#: product/models.py:28 product/models.py:41 purchase/models.py:72
+#: product/models.py:28 product/models.py:41
 msgid "Value"
 msgstr "Значення"
 
@@ -132,27 +132,27 @@ msgstr "Екземпляр продукту"
 msgid "Product Instances"
 msgstr "Екземпляри продукту"
 
-#: purchase/admin.py:17 purchase/models.py:70
+#: purchase/admin.py:19 purchase/models.py:70
 msgid "Order status"
 msgstr "Статус замовлення"
 
-#: purchase/admin.py:62 purchase/admin.py:171
+#: purchase/admin.py:64 purchase/admin.py:173
 msgid "Quantity must be more then 0"
 msgstr "Кількість має бути більша 0"
 
-#: purchase/admin.py:67 purchase/admin.py:176
+#: purchase/admin.py:69 purchase/admin.py:178
 msgid "Product is not enough in stock. Available - {}"
 msgstr "Не достатня кількість на складі. Доступно - {}"
 
-#: purchase/admin.py:208
+#: purchase/admin.py:210
 msgid "New orders status can be changed to Confirmed or Canceled"
 msgstr "Статус замовлення може бути змінений на Підтверджено або Скасовано"
 
-#: purchase/admin.py:212
+#: purchase/admin.py:214
 msgid "Cancelled orders can't be changed"
 msgstr "Відмінені замовлення не можуть бути змінені"
 
-#: purchase/admin.py:216
+#: purchase/admin.py:218
 msgid "Returned orders can't be changed"
 msgstr "Повернені замовлення не можуть бути змінені"
 
@@ -161,8 +161,8 @@ msgstr "Повернені замовлення не можуть бути зм�
 msgid "Few carts exists"
 msgstr "Існує декілька кошиків"
 
-#: purchase/api.py:83 purchase/api.py:125 purchase/api.py:269
-#: purchase/api.py:307
+#: purchase/api.py:83 purchase/api.py:125 purchase/api.py:270
+#: purchase/api.py:308
 msgid "Product does not exist"
 msgstr "Такого продукту не існує"
 
@@ -178,50 +178,50 @@ msgstr "Продукт додано до кошика"
 msgid "Product is out of stock"
 msgstr "Не достатня кількість товару на складі"
 
-#: purchase/api.py:141 purchase/api.py:322
+#: purchase/api.py:141 purchase/api.py:323
 msgid "Product updated"
 msgstr "Кількість продукту оновлено"
 
-#: purchase/api.py:145 purchase/api.py:324
+#: purchase/api.py:145 purchase/api.py:325
 msgid "Product not in cart"
 msgstr "Продукт відсутній в кошику"
 
-#: purchase/api.py:190
+#: purchase/api.py:191
 msgid "Order accepted. Wait for call from manager please!"
 msgstr "Замовлення прийнято. Чекайте на дзвінок менеджера."
 
-#: purchase/api.py:193
+#: purchase/api.py:194
 msgid "Order if empty! Please add products"
 msgstr "Кошик порожній. Додайте товари"
 
-#: purchase/api.py:238 purchase/api.py:275 purchase/api.py:313
-#: purchase/api.py:339 purchase/api.py:377
+#: purchase/api.py:239 purchase/api.py:276 purchase/api.py:314
+#: purchase/api.py:340 purchase/api.py:378
 msgid "Purchase does not exist"
 msgstr "Продукт не існує"
 
-#: purchase/api.py:240 purchase/api.py:277 purchase/api.py:315
-#: purchase/api.py:341 purchase/api.py:379
+#: purchase/api.py:241 purchase/api.py:278 purchase/api.py:316
+#: purchase/api.py:342 purchase/api.py:380
 msgid "Few purchases exists"
 msgstr "Існує декілька закупівель"
 
-#: purchase/api.py:289
+#: purchase/api.py:290
 msgid "Product added to the purchase"
 msgstr "Продукт додано до закупівлі"
 
-#: purchase/api.py:358
+#: purchase/api.py:359
 msgid "Purchase accepted."
 msgstr "Закупівлю збережено"
 
-#: purchase/api.py:361
+#: purchase/api.py:362
 msgid "Purchase is empty! Please add products"
 msgstr "Закупівля порожня! Додайте товари"
 
-#: purchase/api.py:383
+#: purchase/api.py:384
 msgid "Purchase cleared."
 msgstr "Закупівлю обнулено"
 
-#: purchase/models.py:20 purchase/models.py:66 purchase/models.py:109
-#: purchase/models.py:126
+#: purchase/models.py:20 purchase/models.py:66 purchase/models.py:116
+#: purchase/models.py:133
 msgid "Goods"
 msgstr "Товари"
 
@@ -229,19 +229,19 @@ msgstr "Товари"
 msgid "Invoice number"
 msgstr "Номер замовлення"
 
-#: purchase/models.py:24 purchase/models.py:75
+#: purchase/models.py:24 purchase/models.py:76
 msgid "Created by"
 msgstr "Створив"
 
-#: purchase/models.py:26 purchase/models.py:77
+#: purchase/models.py:26 purchase/models.py:78
 msgid "Date created"
 msgstr "Дата створення"
 
-#: purchase/models.py:27 purchase/models.py:78
+#: purchase/models.py:27 purchase/models.py:79
 msgid "Date updated"
 msgstr "Дата оновлення"
 
-#: purchase/models.py:30 purchase/models.py:108
+#: purchase/models.py:30 purchase/models.py:115
 msgid "Purchase"
 msgstr "Закупівля"
 
@@ -249,7 +249,7 @@ msgstr "Закупівля"
 msgid "Purchases"
 msgstr "Закупівлі"
 
-#: purchase/models.py:45 purchase/models.py:103
+#: purchase/models.py:45 purchase/models.py:110
 msgid "Generate invoice number"
 msgstr "Генерація номеру Замовлення"
 
@@ -277,30 +277,44 @@ msgstr "Замовлення повернуто"
 msgid "Customer"
 msgstr "Покупець"
 
+#: purchase/models.py:72
+msgid "Price"
+msgstr "Ціна"
+
 #: purchase/models.py:73
 msgid "Download Invoice"
 msgstr "Завантажити рахунок"
 
-#: purchase/models.py:81 purchase/models.py:125
+#: purchase/models.py:74
+msgid "Sum"
+msgstr "Кількість"
+
+#: purchase/models.py:82 purchase/models.py:132
+#: venv/lib/python3.8/site-packages/django/forms/formsets.py:371
+#: venv/lib/python3.8/site-packages/django/forms/formsets.py:373
 msgid "Order"
 msgstr "Замовлення"
 
-#: purchase/models.py:82
+#: purchase/models.py:83
 msgid "Orders"
 msgstr "Замовлення"
 
-#: purchase/models.py:93
+#: purchase/models.py:94
 msgid "Calculated invoice value"
 msgstr "Розрахунок вартості замовлення"
 
-#: purchase/models.py:112 purchase/models.py:129
+#: purchase/models.py:100
+msgid "Total lenses count in order"
+msgstr "Кількість товарів в замовлені"
+
+#: purchase/models.py:119 purchase/models.py:136
 msgid "Quantity"
 msgstr "Кількість"
 
-#: purchase/models.py:131
+#: purchase/models.py:138
 msgid "Unit price"
 msgstr "Ціна за одиницю"
 
-#: purchase/models.py:143
+#: purchase/models.py:150
 msgid "Calculated invoice_line value"
 msgstr "Розрахунок вартості позиції"

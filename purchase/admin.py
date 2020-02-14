@@ -6,10 +6,12 @@ from django.utils.html import format_html
 from django.forms import ModelForm, ChoiceField
 from django.forms.models import BaseInlineFormSet
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
+from admin_totals.admin import ModelAdminTotals
+from django.db.models import Sum
 
+from messaging.tasks import send_status_change_email
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 from product.models import ProductInstance
-from messaging.tasks import send_status_change_email
 
 
 class ActiveValueFilter(admin.SimpleListFilter):
@@ -218,7 +220,7 @@ class OrderForm(ModelForm):
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(ModelAdminTotals):
     """ Admin settings for Order table """
 
     def get_form(self, request, *args, **kwargs):
@@ -244,8 +246,10 @@ class OrderAdmin(admin.ModelAdmin):
         "date_created",
         "status_mark",
         "value",
+        "lenses_sum",
         "created_by",
     ]
+    list_totals = [('value', Sum), ('lenses_sum', Sum)]
     fieldsets = [
         (None, {'fields': [('customer', 'status'),
                            ('date_created', 'invoice_number'),
@@ -262,6 +266,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = (ActiveValueFilter, ('customer', RelatedDropdownFilter))
     ordering = ('-date_created',)
     inlines = [OrderLineInline]
+
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -309,6 +314,7 @@ class OrderAdmin(admin.ModelAdmin):
         # when orderlines saved - calculate order total value
         super().save_related(request, form, formsets, change)
         form.instance.value = form.instance.value_total()
+        form.instance.lenses_sum = form.instance.lenses_count()
         #check if status changed and send email
         if (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Cancelled) or \
             (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Confirmed):

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'messaging.apps.MessagingConfig',
     'django_celery_results',
     'django_summernote',
+    'admin_totals',
 ]
 
 MIDDLEWARE = [

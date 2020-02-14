@@ -69,8 +69,9 @@ class Order(models.Model):
     comment = models.CharField(_('Comment'), max_length=255, blank=True)
     status = models.CharField(_('Order status'), max_length=2, choices=STATUS_CHOICES, default=InCart)
     old_status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=NewOrder)
-    value = models.DecimalField(_('Value'), max_digits=8, decimal_places=2, default=0)
+    value = models.DecimalField(_('Price'), max_digits=8, decimal_places=2, default=0)
     invoice_file = models.FileField(_('Download Invoice'), upload_to=docs_directory_path, blank=True, null=True)
+    lenses_sum = models.PositiveSmallIntegerField(_('Sum'))
     # Creator and Date information
     created_by = models.ForeignKey(User, verbose_name=_('Created by'), related_name='creator_orders',
                                    blank=True, null=True, on_delete=models.CASCADE)
@@ -91,6 +92,12 @@ class Order(models.Model):
                                                             output_field=FloatField())) \
                                             ['total_value'] or 0
     value_total.short_description = _('Calculated invoice value')
+
+    def lenses_count(self):
+        """ return total count of lences in order """
+        return self.orderline_set.aggregate(total_value=Sum('quantity')) \
+                                           ['total_value'] or 0
+    lenses_count.short_description = _('Total lenses count in order')
 
     @classmethod
     def invoice_number_generate(cls):

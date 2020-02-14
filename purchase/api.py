@@ -176,6 +176,7 @@ class ConfirmOrder(views.APIView):
             order.status = Order.NewOrder
             order.invoice_number = order.invoice_number_generate()
             order.value = order.value_total()
+            order.lenses_sum = order.lenses_count()
             order.created_by = self.request.user
             order.date_created = datetime.now()
             order.save()
