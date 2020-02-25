@@ -71,7 +71,7 @@ class Order(models.Model):
     old_status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=NewOrder)
     value = models.DecimalField(_('Price'), max_digits=8, decimal_places=2, default=0)
     invoice_file = models.FileField(_('Download Invoice'), upload_to=docs_directory_path, blank=True, null=True)
-    lenses_sum = models.PositiveSmallIntegerField(_('Sum'))
+    lenses_sum = models.PositiveSmallIntegerField(_('Sum'), blank=True, null=True)
     # Creator and Date information
     created_by = models.ForeignKey(User, verbose_name=_('Created by'), related_name='creator_orders',
                                    blank=True, null=True, on_delete=models.CASCADE)
