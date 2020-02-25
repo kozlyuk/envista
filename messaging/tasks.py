@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
+from smtplib import SMTPException
 from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -30,9 +31,12 @@ def send_confirmation_email(order_id):
     msg_plain = title
     msg_html = render_to_string('order_confirmation.html', context)
 
-    if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
-        [order.customer.email], html_message=msg_html):
+    try:
+        send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
+                  [order.customer.email], html_message=msg_html)
         logger.info("Confirmation email to %s sent", order.customer)
+    except SMTPException:
+        logger.info("Connection error while send email to %s", order.customer)
 
 
 @app.task
@@ -56,9 +60,12 @@ def send_new_order_email(order_id):
     msg_plain = title
     msg_html = render_to_string('order_received.html', context)
 
-    if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
-        managers, html_message=msg_html):
+    try:
+        send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
+                  managers, html_message=msg_html)
         logger.info("Email about receiving a new order sent to all managers")
+    except SMTPException:
+        logger.info("Connection error while send email to managers")
 
     # send telegram notification
     telegram_ids = User.objects.filter(groups__name='Менеджери', telegram_id__isnull=False) \
@@ -91,6 +98,9 @@ def send_status_change_email(order_id):
     msg_plain = title
     msg_html = render_to_string('status_change.html', context)
 
-    if send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
-        [order.customer.email], html_message=msg_html):
+    try:
+        send_mail(title, msg_plain, settings.DEFAULT_FROM_EMAIL,
+                  [order.customer.email], html_message=msg_html)
         logger.info("Changing status email to %s sent", order.customer)
+    except SMTPException:
+        logger.info("Connection error while send email to %s", order.customer)

@@ -182,12 +182,9 @@ class ConfirmOrder(views.APIView):
             order.save()
 
             # send confirmation email
-            try:
-                if not self.request.user.groups.filter(name='Менеджери').exists():
-                    send_confirmation_email.delay(order.pk)
-                send_new_order_email.delay(order.pk)
-            except ConnectionError:
-                pass
+            if not self.request.user.groups.filter(name='Менеджери').exists():
+                send_confirmation_email.delay(order.pk)
+            send_new_order_email.delay(order.pk)
             return Response(_('Order accepted. Wait for call from manager please!'),
                             status=status.HTTP_201_CREATED)
         else:

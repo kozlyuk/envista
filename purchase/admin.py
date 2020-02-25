@@ -318,10 +318,7 @@ class OrderAdmin(ModelAdminTotals):
         #check if status changed and send email
         if (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Cancelled) or \
             (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Confirmed):
-            try:
-                send_status_change_email.delay(form.instance.pk)
-            except ConnectionError:
-                pass
+            send_status_change_email.delay(form.instance.pk)
         #check if order become Cancelled or Returned and restore stocks
         if form.instance.old_status in [Order.NewOrder, Order.Confirmed] and  \
             form.instance.status in [Order.Cancelled, Order.Returned]:
