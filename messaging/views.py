@@ -37,15 +37,15 @@ def register(message):
 def process_email_step(message):
     try:
         email = message.text.lower()
-        if User.objects.filter(groups__name='Менеджери', email=email).exists():
-            user = User.objects.get(groups__name='Менеджери', email=email)
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
             user.telegram_id = message.from_user.id
             user.save()
             envista_bot.reply_to(message, "Дякую. Ви зареєстровані на сповіщення")
         else:
-            envista_bot.reply_to(message, "Менеджера з такою електронною поштою не існує")
+            envista_bot.reply_to(message, "Користувача з такою електронною поштою не існує")
     except Exception:
-        envista_bot.reply_to(message, 'Упс..')
+        envista_bot.reply_to(message, 'Що сі стало..?')
 
 
 def send_notice(chat_id: int, msg: str):

@@ -27,7 +27,7 @@ def send_confirmation_email(order_id):
                'orderlines': order.orderline_set.all(),
                'signature': settings.SIGNATURE}
 
-    title = "Підтвердження замовлення {}".format(order.invoice_number)
+    title = f"Підтвердження замовлення {order.invoice_number}"
     msg_plain = title
     msg_html = render_to_string('order_confirmation.html', context)
 
@@ -37,6 +37,15 @@ def send_confirmation_email(order_id):
         logger.info("Confirmation email to %s sent", order.customer)
     except SMTPException:
         logger.info("Connection error while send email to %s", order.customer)
+
+    # send telegram notification
+    telegram_id = order.customer.telegram_id
+    if telegram_id:
+        for orderline in order.orderline_set.all():
+            title += (f'\n{orderline.product.product.title} {orderline.product.diopter.value}-'
+                      f'{orderline.product.cylinder.value} - {orderline.quantity}шт.')
+        send_notice(telegram_id, title)
+        logger.info("Telegram notification sent to chat_id '%s'", telegram_id)
 
 
 @app.task
@@ -94,7 +103,7 @@ def send_status_change_email(order_id):
                'orderlines': order.orderline_set.all(),
                'signature': settings.SIGNATURE}
 
-    title = "Статус Вашого замовлення {} змінено".format(order.invoice_number)
+    title = f"Статус Вашого замовлення {order.invoice_number} змінено на {order.get_status_display()}"
     msg_plain = title
     msg_html = render_to_string('status_change.html', context)
 
@@ -104,3 +113,12 @@ def send_status_change_email(order_id):
         logger.info("Changing status email to %s sent", order.customer)
     except SMTPException:
         logger.info("Connection error while send email to %s", order.customer)
+
+    # send telegram notification
+    telegram_id = order.customer.telegram_id
+    if telegram_id:
+        for orderline in order.orderline_set.all():
+            title += (f'\n{orderline.product.product.title} {orderline.product.diopter.value}-'
+                      f'{orderline.product.cylinder.value} - {orderline.quantity}шт.')
+        send_notice(telegram_id, title)
+        logger.info("Telegram notification sent to chat_id '%s'", telegram_id)
