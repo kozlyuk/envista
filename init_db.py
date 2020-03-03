@@ -17,6 +17,7 @@ PRODUCT = Product.objects.create(title='ENVISTA® TORIC',
                                  product_image='product/enVista_920x632.png',
                                  brand_name='Bausch&Lomb',
                                  brand_image='brand/BL_logo.png',
+                                 telegram_bot_url='https://t.me/envista_bot',
                                  footer="© 2020 ТОВ «Оптдіея». Усі права захищені."
                                  )
 print("Initial Product created")

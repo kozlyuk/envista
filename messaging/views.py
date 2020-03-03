@@ -48,5 +48,10 @@ def process_email_step(message):
         envista_bot.reply_to(message, 'Що сі стало..?')
 
 
+@envista_bot.message_handler(func=lambda message: True)
+def echo_all(message):
+	bot.reply_to(message, "Даруйте, не зрозумів")
+
+
 def send_notice(chat_id: int, msg: str):
     envista_bot.send_message(chat_id, msg)
