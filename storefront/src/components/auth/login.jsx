@@ -49,13 +49,13 @@ export default class Login extends Component {
 							<input name="email" className="inputMaterial" type="email" required/>
 							<span className="highlight"/>
 							<span className="bar"/>
-							<label>Email</label>
+							<label style={{top: "-20px"}}>Email</label>
 						</div>
 						<div className="group">
 							<input name="password" className="inputMaterial" type="password" required/>
 							<span className="highlight"/>
 							<span className="bar"/>
-							<label>Пароль</label>
+							<label style={{top: "-20px"}}>Пароль</label>
 						</div>
 						<button id="buttonlogintoregister">Вхід</button>
 					</form>

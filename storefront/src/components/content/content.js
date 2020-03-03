@@ -103,7 +103,9 @@ export default class Content extends React.Component {
 							/>
 
 							<InfoBlock info={this.state.product.short_description}
-									   pdfUrl={this.state.product.specifications_url}/>
+												 pdfUrl={this.state.product.specifications_url}
+												 telegram_bot_url={this.state.product.telegram_bot_url}
+							/>
 						</div>
 						<div className="mobile-first w-col w-col-6">
 							<h4 className="text-center">Таблиця наявності лінз на складі</h4>
