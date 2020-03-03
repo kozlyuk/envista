@@ -14,5 +14,6 @@ class ProductSerializer(serializers.ModelSerializer):
             "short_description",
             "product_image",
             "specifications_url",
+            "telegram_bot_url",
             "footer"
         ]
