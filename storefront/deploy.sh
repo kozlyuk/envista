@@ -84,7 +84,7 @@ else
 fi
 
 # move build directory
-mv $BUILD_DIRECTORY/* $APACHE_FRONTEND_FOLDER/ -T
+mv $BUILD_DIRECTORY/* $APACHE_FRONTEND_FOLDER/
 # change owner to apache
 chown -R $APACHE_OWNER $APACHE_FRONTEND_FOLDER
 
