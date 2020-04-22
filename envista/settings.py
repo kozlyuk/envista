@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'purchase.context_processor.new_orders_count',
+                'accounts.context_processor.new_users_count',
             ],
         },
     },

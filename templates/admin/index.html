@@ -36,6 +36,27 @@
                     padding-left: .6em;">
                     {% trans 'New' %} - {{ new_orders_count }}</div>
                 {% endif %}
+                {% if model.admin_url == "/accounts/user/"%}
+                <div style="
+                    display: inline-block;
+                    font-size: 10px;
+                    font-weight: 300;
+                    height: 16px;
+                    color: #fff;
+                    background-color: #dc3545;
+                    padding: 3px 6px;
+                    -webkit-border-radius: 12px!important;
+                    -moz-border-radius: 12px!important;
+                    border-radius: 12px!important;
+                    text-shadow: none!important;
+                    text-align: center;
+                    padding-right: .6em;
+                    border-radius: 12px!important;
+                    width: fit-content;
+                    font-weight: 600;
+                    padding-left: .6em;">
+                    {% trans 'New' %} - {{ new_users_count }}</div>
+                {% endif %}
                 </th>
             {% else %}
                 <th scope="row">{{ model.name }}</th>
