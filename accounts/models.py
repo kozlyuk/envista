@@ -20,6 +20,8 @@ class User(AbstractUser):
     address = models.CharField(_('Address'), max_length=255, blank=True)
     comment = models.CharField(_('Comment'), max_length=255, blank=True)
     telegram_id = models.PositiveIntegerField(blank=True, null=True)
+    is_registered = models.BooleanField(_('Registered'), default=False,
+        help_text=_('Designates whether this user aprooved by administrator.'))
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
