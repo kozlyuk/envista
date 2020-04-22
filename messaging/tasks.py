@@ -13,6 +13,19 @@ from messaging.views import send_notice
 
 logger = get_task_logger(__name__)
 
+
+@app.task
+def send_email(mail_subject, message, to):
+    """ sends email to emails list """
+
+    # filter active apartments
+    try:
+        send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, to)
+        logger.info("Email %s sent to %s", mail_subject, to[0])
+    except SMTPException as error:
+        logger.info("Connection error while send email to %s", error)
+
+
 @app.task
 def send_confirmation_email(order_id):
     """ send email to client about order confirmation """
