@@ -16,17 +16,16 @@ class User(AbstractUser):
     #  Fields
     username = None
     email = models.EmailField(_('Email address'), unique=True)
-    mobile_number = models.CharField(_('Mobile number'), max_length=10, blank=True)
+    mobile_number = models.CharField(_('Mobile number'), max_length=10)
     address = models.CharField(_('Address'), max_length=255, blank=True)
     comment = models.CharField(_('Comment'), max_length=255, blank=True)
     telegram_id = models.PositiveIntegerField(blank=True, null=True)
-    is_registered = models.BooleanField(_('Registered'), default=False,
-        help_text=_('Designates whether this user aprooved by administrator.'))
+    email_confirmed = models.BooleanField(_('Email confirmed'), default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['mobile_number']
 
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
+        return f"{self.first_name} {self.last_name}"

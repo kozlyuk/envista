@@ -18,8 +18,8 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'mobile_number', 'is_active', 'custom_group')
     list_filter = ('groups__name', 'is_active')
     fieldsets = (
-        (None, {'fields': ('first_name', 'last_name', 'mobile_number',
-                           'is_staff', 'is_active', 'is_registered', 'address', 'comment', 'password')}),
+        (None, {'fields': ('first_name', 'last_name', 'mobile_number', 'is_staff', 'is_active',
+                           'email_confirmed', 'address', 'comment', 'password')}),
     )
     add_fieldsets = (
         (None, {
@@ -42,7 +42,7 @@ class CustomUserAdmin(UserAdmin):
             obj.groups.clear()
             if obj.is_staff:
                 group = Group.objects.get(name='Менеджери')
-            else:
+            elif obj.is_active:
                 group = Group.objects.get(name='Клієнти')
             obj.groups.add(group)
         super().save_model(request, obj, form, change)

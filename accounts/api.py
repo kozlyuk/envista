@@ -26,38 +26,21 @@ class UserDetailsView(RetrieveAPIView):
 
 class Register(views.APIView):
     """
-    Check if resident mobile number exists in DB.
-    If post_data valid - updates user data and
-    sends confirmation email with token.
-    If resident don`t exists return status HTTP_404_NOT_FOUND.
+    If post_data valid - updates user data,
+    sends confirmation email with token and return HTTP_200_OK.
     If post_data not valid return status HTTP_400_BAD_REQUEST.
-    If user data  updated return status HTTP_200_OK.
     """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        # check if number is valid
-        mobile_number = request.POST.get('mobile_number')
-        if not mobile_number:
-            message = _("POST data doesn`t contain mobile_number")
-            return Response(message, status=status.HTTP_404_NOT_FOUND)
-        email = request.POST.get('email')
-        if not email:
-            message = _("POST data doesn`t contain email")
-            return Response(message, status=status.HTTP_404_NOT_FOUND)
-        # try if Resident with such mobile number exists or already registered
-        try:
-            user = User.objects.get(mobile_number=mobile_number, is_registered=False)
-        # except return status.HTTP_404_NOT_FOUND
-        except User.DoesNotExist:
-            message = _("Resident with such mobile number doesn`t exist or already registered")
-            return Response(message, status=status.HTTP_404_NOT_FOUND)
-        serializer = UserDetailsSerializer(user, data=request.data, partial=True)
+        serializer = UserDetailsSerializer(data=request.data)
         # check if serializer is valid
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
+            user.is_active = False
+            user.save()
             current_site = get_current_site(request)
-            mail_subject = _('Activate your DimOnline account.')
+            mail_subject = _('Activate your Envista account.')
             message = render_to_string('acc_active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -72,24 +55,25 @@ class Register(views.APIView):
 
 class Activate(views.APIView):
     """
-    Check actvation url and makes user active.
+    Check actvation url and mark user email confirmed.
     If token is valid send HTTP_200_OK and make user active.
     If token is not valid send HTTP_400_BAD_REQUEST.
     """
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, uidb64, token):
-        # check if number is valid
+        # check if token is valid
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
         if user is not None and account_activation_token.check_token(user, token):
-            user.is_registered = True
-            user.is_active = True
+            user.email_confirmed = True
             user.save()
-            return Response(_('Thank you for your email confirmation. Now you can login your account.'),
+            return Response(_('Thank you for your email confirmation. '
+                              'You will be able to log in to your account '
+                              'after being activated by administrator.'),
                             status=status.HTTP_200_OK)
         else:
             return Response(_('Activation link is invalid!'),
