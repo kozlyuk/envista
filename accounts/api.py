@@ -4,13 +4,15 @@ from django.utils.encoding import force_bytes, force_text
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from rest_framework import views, permissions, status
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.response import Response
 from messaging.tasks import send_email
 
 from accounts.serializers import UserDetailsSerializer
 from accounts.models import User
 from accounts.services import account_activation_token
+from purchase.serializers import OrderSerializer
+from purchase.models import Order
 
 
 class UserDetailsView(RetrieveAPIView):
@@ -22,6 +24,32 @@ class UserDetailsView(RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class GetOrders(ListAPIView):
+    """
+    List all orders of customer.
+    * Requires parameters: customer.
+    * Only customer has permission to his orders.
+    * Return error HTTP_400_BAD_REQUEST if customer does not exist
+    """
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        customer_pk = self.kwargs['customer']
+        # get the customer
+        try:
+            customer = User.objects.get(pk=customer_pk)
+        # return error HTTP_400_BAD_REQUEST if apartment does not exist
+        except User.DoesNotExist:
+            return Response(_('Customer with such id does not exist'),
+                            status=status.HTTP_400_BAD_REQUEST)
+        # get bills for apartment
+        queryset = customer.order_set.exclude(status=Order.InCart)
+
+        # Set up eager loading to avoid N+1 selects
+        # queryset = self.get_serializer_class().setup_eager_loading(queryset)
+        return queryset
 
 
 class Register(views.APIView):
