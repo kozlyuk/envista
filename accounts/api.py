@@ -65,8 +65,6 @@ class Register(views.APIView):
         # check if serializer is valid
         if serializer.is_valid():
             user = serializer.save()
-            user.is_active = False
-            user.save()
             current_site = get_current_site(request)
             mail_subject = _('Activate your Envista account.')
             message = render_to_string('acc_active_email.html', {
