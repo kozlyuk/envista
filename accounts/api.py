@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
-from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
 from django.template.loader import render_to_string
 from rest_framework import views, permissions, status
 from rest_framework.generics import RetrieveAPIView, ListAPIView
@@ -65,11 +65,11 @@ class Register(views.APIView):
         # check if serializer is valid
         if serializer.is_valid():
             user = serializer.save()
-            current_site = get_current_site(request)
+            current_site = settings.SITE_URL
             mail_subject = _('Activate your Envista account.')
             message = render_to_string('acc_active_email.html', {
                 'user': user,
-                'domain': current_site.domain,
+                'domain': settings.SITE_URL,
                 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
                 'token':account_activation_token.make_token(user),
             })
