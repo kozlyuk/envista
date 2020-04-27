@@ -1,50 +1,34 @@
 from rest_framework import serializers
 
-from . import models
+from envista.utils import ChoicesField
+from purchase.models import Order, OrderLine
 
-
-class PurchaseLineSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.PurchaseLine
-        fields = [
-            "quantity",
-            "unit_price",
-        ]
 
 class OrderLineSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.OrderLine
+        model = OrderLine
         fields = [
-            "unit_price",
+            "diopter",
+            "cylinder",
             "quantity",
+            "unit_price",
         ]
 
 class OrderSerializer(serializers.ModelSerializer):
+    order_lines = OrderLineSerializer(source='orderline_set', many=True)
+    status = ChoicesField(choices=Order.STATUS_CHOICES)
 
     class Meta:
-        model = models.Order
+        model = Order
         fields = [
-            "invoice_date",
-            "date_created",
-            "date_updated",
-            "invoice_file",
-            "comment",
-            "pay_status",
-            "value",
+            "pk",
             "invoice_number",
             "status",
-        ]
-
-class PurchaseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Purchase
-        fields = [
-            "comment",
-            "invoice_number",
-            "invoice_date",
+            "value",
+            "lenses_sum",
             "date_created",
             "date_updated",
+            "comment",
+            "order_lines"
         ]

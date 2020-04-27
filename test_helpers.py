@@ -127,7 +127,6 @@ def create_purchase_Order(**kwargs):
     defaults["invoice_date"] = datetime.now()
     defaults["date_created"] = datetime.now()
     defaults["date_updated"] = datetime.now()
-    defaults["invoice_file"] = ""
     defaults["comment"] = ""
     defaults["pay_status"] = ""
     defaults["value"] = ""
