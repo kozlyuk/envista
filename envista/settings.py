@@ -92,8 +92,13 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication', # TODO disable on production
-
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DATE_FORMAT': "%d.%m.%Y",
+    'DATETIME_FORMAT': "%d.%m.%Y",
+
 }
 
 AUTH_PASSWORD_VALIDATORS = [

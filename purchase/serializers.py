@@ -17,7 +17,7 @@ class OrderLineSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     order_lines = OrderLineSerializer(source='orderline_set', many=True)
-    status = ChoicesField(choices=Order.STATUS_CHOICES)
+    status_display = serializers.CharField(source='get_status_display')
 
     class Meta:
         model = Order
@@ -25,6 +25,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "pk",
             "invoice_number",
             "status",
+            "status_display",
             "value",
             "lenses_sum",
             "date_created",
