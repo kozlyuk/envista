@@ -26,6 +26,7 @@ import axios from "axios";
 import Warehouse from "../warehouse/warehouse";
 import WarehouseConfirm from "../warehouseConfirm/warehouseConfirm";
 import {Redirect} from "react-router";
+import Registration from "../auth/registration";
 
 class Welcome extends React.Component {
   constructor(props) {
@@ -158,8 +159,9 @@ class Welcome extends React.Component {
             <Route exact path="/">
               <Login/>
             </Route>
-            <Route exact path="/registration">
-              <div>test</div>
+            <Route exact path="/registration" component={props => (
+              <Registration {...props}/>
+            )}>
             </Route>
             <Route exact path="/not_found" render={() => {
               window.location.href = "404.html"
