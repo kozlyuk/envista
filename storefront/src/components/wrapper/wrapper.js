@@ -27,6 +27,8 @@ import Warehouse from "../warehouse/warehouse";
 import WarehouseConfirm from "../warehouseConfirm/warehouseConfirm";
 import {Redirect} from "react-router";
 import Registration from "../auth/registration";
+import Cabinet from "../cabinet/Cabinet";
+import Activation from "../auth/Activation";
 
 class Welcome extends React.Component {
   constructor(props) {
@@ -119,6 +121,9 @@ class Welcome extends React.Component {
                     <Route exact path="/basket">
                       <Basket/>
                     </Route>
+                    <Route exact path="/cabinet">
+                      <Cabinet userPk={this.state.user.pk}/>
+                    </Route>
                     <Route exact path="/warehouse/confirm">
                       {this.state.user.is_staff ?
                         <WarehouseConfirm/> :
@@ -161,6 +166,10 @@ class Welcome extends React.Component {
             </Route>
             <Route exact path="/registration" component={props => (
               <Registration {...props}/>
+            )}>
+            </Route>
+            <Route exact path="/activation/:uidb64/:token" component={props => (
+              <Activation {...props}/>
             )}>
             </Route>
             <Route exact path="/not_found" render={() => {
