@@ -67,14 +67,6 @@ class NavbarMenu extends React.Component {
                   <Link style={{color: "#222222", padding: "20px"}} to="/">
                     Головна
                   </Link>
-                  <a
-                    href="https://envista.toriccalculator.com/(S(3p54nq0ludca5hrzdtsqdtfl))/UserAgreement.aspx"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className=""
-                    style={{maxWidth: 940, color: "#222222", padding: "20px"}}>
-                    Калькулятор
-                  </a>
                   {this.props.userIsStaff ? <Link
                     style={{
                       maxWidth: 940,
@@ -94,6 +86,16 @@ class NavbarMenu extends React.Component {
                     }}
                     to="/basket">
                     Корзина
+                  </Link>
+                  <Link
+                    style={{
+                      maxWidth: 940,
+                      color: "#222222",
+                      display: "inline-block",
+                      padding: "20px"
+                    }}
+                    to="/cabinet">
+                    Особистий кабінет
                   </Link>
                   <Link
                     style={{
