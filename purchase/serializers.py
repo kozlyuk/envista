@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from envista.utils import ChoicesField
 from purchase.models import Order, OrderLine
 
 
@@ -37,3 +36,11 @@ class OrderSerializer(serializers.ModelSerializer):
             "comment",
             "order_lines"
         ]
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        """ optimizing "to-many" relationships with prefetch_related """
+        queryset = queryset.prefetch_related(
+            'orderline_set__diopter',
+            'orderline_set__cylinder')
+        return queryset

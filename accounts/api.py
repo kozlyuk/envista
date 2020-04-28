@@ -3,6 +3,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.core.exceptions import ValidationError
 from rest_framework import views, permissions, status
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.response import Response
@@ -42,13 +43,12 @@ class GetOrders(ListAPIView):
             customer = User.objects.get(pk=customer_pk)
         # return error HTTP_400_BAD_REQUEST if apartment does not exist
         except User.DoesNotExist:
-            return Response(_('Customer with such id does not exist'),
-                            status=status.HTTP_400_BAD_REQUEST)
+            raise ValidationError({_('error'): [_('Customer with such id does not exist')]})
         # get bills for apartment
         queryset = customer.order_set.exclude(status=Order.InCart)
 
         # Set up eager loading to avoid N+1 selects
-        # queryset = self.get_serializer_class().setup_eager_loading(queryset)
+        queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
 
 
