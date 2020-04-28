@@ -37,19 +37,36 @@ class GetOrders(ListAPIView):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
-        customer_pk = self.kwargs['customer']
         # get the customer
-        try:
-            customer = User.objects.get(pk=customer_pk)
-        # return error HTTP_400_BAD_REQUEST if apartment does not exist
-        except User.DoesNotExist:
-            raise ValidationError({_('error'): [_('Customer with such id does not exist')]})
-        # get bills for apartment
+        customer = User.objects.get(pk=self.request.user.pk)
+
+        # get orders of customer
         queryset = customer.order_set.exclude(status=Order.InCart)
 
         # Set up eager loading to avoid N+1 selects
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
+
+
+# class CancelOrder(views.APIView):
+#     """
+#     Clear all purchase_lines in Purchase
+#     If exists problems with cart return status HTTP_400_BAD_REQUEST
+#     """
+#     permission_classes = (permissions.IsAuthenticated,)
+
+#     def get(self, request):
+#         # get the existing customer purchase
+#         try:
+#             purchase = Order.objects.get(created_by=self.request.user, invoice_number='InProcess')
+#         except Order.DoesNotExist:
+#             return Response(_('Purchase does not exist'), status=status.HTTP_400_BAD_REQUEST)
+#         except Order.MultipleObjectsReturned:
+#             return Response(_('Few purchases exists'), status=status.HTTP_400_BAD_REQUEST)
+
+#         # clear
+#         purchase.products.clear()
+#         return Response(_('Purchase cleared.'), status=status.HTTP_200_OK)
 
 
 class Register(views.APIView):
