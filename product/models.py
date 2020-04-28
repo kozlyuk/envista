@@ -65,7 +65,3 @@ class ProductInstance(models.Model):
 
     def __str__(self):
         return self.product.title + ' ' + str(self.diopter) + '-' + str(self.cylinder)
-
-    def get_price(self):
-        """Return price with currency"""
-        return str(self.price) + ' ' + settings.DEFAULT_CURRENCY

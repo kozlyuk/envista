@@ -5,15 +5,19 @@ from purchase.models import Order, OrderLine
 
 
 class OrderLineSerializer(serializers.ModelSerializer):
+    product = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderLine
         fields = [
-            "diopter",
-            "cylinder",
+            "product",
             "quantity",
             "unit_price",
         ]
+
+    def get_product(self, obj):
+        return f"ENVISTA® TORIC {obj.diopter}-{obj.cylinder}"
+
 
 class OrderSerializer(serializers.ModelSerializer):
     order_lines = OrderLineSerializer(source='orderline_set', many=True)
