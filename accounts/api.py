@@ -3,7 +3,6 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.conf import settings
 from django.template.loader import render_to_string
-from django.core.exceptions import ValidationError
 from rest_framework import views, permissions, status
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.response import Response
@@ -63,8 +62,9 @@ class CancelOrder(views.APIView):
         except Order.DoesNotExist:
             return Response(_('Order does not exist'), status=status.HTTP_400_BAD_REQUEST)
         # clear
-        # purchase.products.clear()
-        return Response(_('Purchase cleared.'), status=status.HTTP_200_OK)
+        order.status = Order.Cancelled
+        order.save()
+        return Response(_('Order cancelled.'), status=status.HTTP_200_OK)
 
 
 class Register(views.APIView):
@@ -80,7 +80,6 @@ class Register(views.APIView):
         # check if serializer is valid
         if serializer.is_valid():
             user = serializer.save()
-            current_site = settings.SITE_URL
             mail_subject = _('Activate your Envista account.')
             message = render_to_string('acc_active_email.html', {
                 'user': user,
