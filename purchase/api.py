@@ -257,7 +257,6 @@ class AddToPurchase(views.APIView):
     If product not found in ProductInstance's return HTTP_404_NOT_FOUND
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, row: int, column: int):
         # get the existing object of ProductInstance
@@ -295,7 +294,6 @@ class UpdatePurchaseLine(views.APIView):
     If product not found in purchase return status HTTP_404_NOT_FOUND
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, product_pk: int, quantity: int):
         # get the existing object of ProductInstance
@@ -327,7 +325,6 @@ class ConfirmPurchase(views.APIView):
     Assign invoice number to purchase and save it
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         # get the existing customer purchase

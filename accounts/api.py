@@ -48,25 +48,23 @@ class GetOrders(ListAPIView):
         return queryset
 
 
-# class CancelOrder(views.APIView):
-#     """
-#     Clear all purchase_lines in Purchase
-#     If exists problems with cart return status HTTP_400_BAD_REQUEST
-#     """
-#     permission_classes = (permissions.IsAuthenticated,)
+class CancelOrder(views.APIView):
+    """
+    Change order status from NewOrder to Cancelled
+    If success return status HTTP_200_OK
+    If order pk does not exist or status not NewOrder
+    return status HTTP_400_BAD_REQUEST
+    """
 
-#     def get(self, request):
-#         # get the existing customer purchase
-#         try:
-#             purchase = Order.objects.get(created_by=self.request.user, invoice_number='InProcess')
-#         except Order.DoesNotExist:
-#             return Response(_('Purchase does not exist'), status=status.HTTP_400_BAD_REQUEST)
-#         except Order.MultipleObjectsReturned:
-#             return Response(_('Few purchases exists'), status=status.HTTP_400_BAD_REQUEST)
-
-#         # clear
-#         purchase.products.clear()
-#         return Response(_('Purchase cleared.'), status=status.HTTP_200_OK)
+    def get(self, request, order: int):
+        # get the existing customer purchase
+        try:
+            order = Order.objects.get(pk=order)
+        except Order.DoesNotExist:
+            return Response(_('Order does not exist'), status=status.HTTP_400_BAD_REQUEST)
+        # clear
+        # purchase.products.clear()
+        return Response(_('Purchase cleared.'), status=status.HTTP_200_OK)
 
 
 class Register(views.APIView):
