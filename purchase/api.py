@@ -119,7 +119,8 @@ class AddToCart(views.APIView):
                                                               order_type=OrderLine.PreOrder,
                                                               defaults={'unit_price': product.price,
                                                                         'cylinder': cylinder,
-                                                                        'diopter': diopter})
+                                                                        'diopter': diopter,
+                                                                        'quantity': 1})
         return Response(_('Preorder added to the cart'), status=status.HTTP_201_CREATED)
 
 

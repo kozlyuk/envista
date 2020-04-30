@@ -143,9 +143,6 @@ class OrderLine(models.Model):
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
     order_type = models.CharField(_('Order type'), max_length=2, choices=ORDER_CHOICES, default=AvailableOrder)
 
-    class Meta:
-        unique_together = ['order', 'product']
-
     def save(self, *args, **kwargs):
         self.last_quantity = self.quantity
         super().save(*args, **kwargs) # Call the real save() method
