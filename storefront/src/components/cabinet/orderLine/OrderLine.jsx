@@ -6,6 +6,7 @@
 import React from "react";
 import {Button, Collapse, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {GoPrimitiveDot} from "react-icons/go";
+import {MdCancel} from "react-icons/md";
 import {Table} from "react-bootstrap";
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -67,11 +68,7 @@ export default class OrderLine extends React.Component {
       <>
         <tr style={{cursor: 'pointer'}} onClick={this.toggle}>
           <td className="text-center pt-1 pb-1">
-            {this.props.data.invoice_number} {this.props.data.status === "NO" &&
-          <a href="" onClick={this.toggleModal}>
-            Відмінити
-          </a>
-          }
+            {this.props.data.invoice_number}
           </td>
           <td className="text-center pt-1 pb-1">
             {this.props.data.status === "NO" && <GoPrimitiveDot size={"1.5em"} color="orange"/>}
@@ -89,6 +86,11 @@ export default class OrderLine extends React.Component {
           <td className="text-center pt-1 pb-1">
             {this.props.data.value} {process.env.REACT_APP_CURRENCY}
           </td>
+          <td className="text-center pt-1 pb-1">{this.props.data.status === "NO" &&
+          <a href="" onClick={this.toggleModal}>
+            <MdCancel color="red"/>
+          </a>
+          }</td>
         </tr>
 
         <div>
@@ -150,7 +152,6 @@ export default class OrderLine extends React.Component {
                   {index === 0 &&
                   <>
                     <td></td>
-                    <td></td>
                     <td className="text-center pt-1 pb-1">
                       {item}
                     </td>
@@ -164,9 +165,13 @@ export default class OrderLine extends React.Component {
                   </>
                   }
                   {index === 2 &&
-                  <td colSpan={2} className="text-center pt-1 pb-1">
-                    {item}
-                  </td>
+                  <>
+                    <td></td>
+                    <td className="text-center pt-1 pb-1">
+                      {item}{process.env.REACT_APP_CURRENCY}
+                    </td>
+                    <td width="2%"></td>
+                  </>
                   }
                 </>
               ))}
