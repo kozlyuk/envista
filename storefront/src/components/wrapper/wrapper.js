@@ -1,13 +1,6 @@
-/*
- *
- *   Main wrapper.
- *
- *   @author           Andrey Perestyuk (Arrathilar)
- *   @email-primary    a.perestyuk@itel.rv.ua
- *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
- *   @copyright        2020 ITEL-Service
- *
- *
+/**
+ * @author    Andrey Perestyuk (Arrathilar) a.perestyuk@itel.rv.ua
+ * @copyright 2020 ITEL-Service
  */
 
 import React, {Fragment} from "react";
@@ -17,17 +10,16 @@ import Footer from "../footer/footer";
 
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Basket from "../basket/basket";
-import Login from "../auth/login";
 import Auth from "../auth/auth";
-
-import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import axios from "axios";
 import Warehouse from "../warehouse/warehouse";
 import WarehouseConfirm from "../warehouseConfirm/warehouseConfirm";
 import {Redirect} from "react-router";
-import Registration from "../auth/registration";
 import Cabinet from "../cabinet/Cabinet";
+import Loader from "react-loader-spinner";
+import Login from "../auth/login";
+import Registration from "../auth/registration";
 import Activation from "../auth/Activation";
 
 class Welcome extends React.Component {

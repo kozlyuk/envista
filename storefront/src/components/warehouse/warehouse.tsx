@@ -1,13 +1,6 @@
-/*
- *
- *   Warehouse component.
- *
- *   @author                  Andrey Perestyuk (Arrathilar)
- *   @email-primary           a.perestyuk@itel.rv.ua
- *   @email-secondary         arrathilar@blizzard.com, a.perestyuk@archlinux.org,
- *   @copyright               2020 ITEL-Service
- *
- *
+/**
+ * @author    Andrey Perestyuk (Arrathilar) a.perestyuk@itel.rv.ua
+ * @copyright 2020 ITEL-Service
  */
 
 import React from "react";
@@ -16,37 +9,37 @@ import Submit from "../submitTableData/submitTableData";
 import {ButtonGroup} from "react-bootstrap";
 
 export default class Warehouse extends React.Component<{}, {}> {
-	history: any;
+  history: any;
 
-	constructor(props: any) {
-		super(props);
-		this.state = {
-			needUpdateneedUpdate: false
-		}
-	}
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      needUpdateneedUpdate: false
+    }
+  }
 
-	updateComponent = (value: boolean): any => {
-		this.setState({
-				needUpdate: value
-			}
-		)
-	}
+  updateComponent = (value: boolean): any => {
+    this.setState({
+        needUpdate: value
+      }
+    )
+  }
 
-	render() {
-		return (
-			<div className="container">
-				<div className="mobile-first w-col w-col-12">
-					<h4 className="text-center">Таблиця поповнення складу</h4>
-					{/*
+  render() {
+    return (
+      <div className="container">
+        <div className="mobile-first w-col w-col-12">
+          <h4 className="text-center">Таблиця поповнення складу</h4>
+          {/*
 					// @ts-ignore*/}
-					<WarehouseTable needUpdate={this.state.needUpdate}/>
-					<div className="text-center">
-						<ButtonGroup vertical>
-							<Submit history={this.history} title={"Підтвердити"} redirectTo={"/warehouse/confirm"}/>
-						</ButtonGroup>
-					</div>
-				</div>
-			</div>
-		)
-	}
+          <WarehouseTable needUpdate={this.state.needUpdate}/>
+          <div className="text-center">
+            <ButtonGroup vertical>
+              <Submit history={this.history} title={"Підтвердити"} redirectTo={"/warehouse/confirm"}/>
+            </ButtonGroup>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
