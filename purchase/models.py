@@ -52,14 +52,14 @@ class Order(models.Model):
     NewOrder = 'NO'
     Cancelled = 'CN'
     Confirmed = 'CF'
-    # PreOrder = 'PO'
+    PreOrder = 'PO'
     Returned = 'RT'
     STATUS_CHOICES = (
         (InCart, _('Products in cart')),
         (NewOrder, _('New order')),
         (Cancelled, _('Order canceled')),
         (Confirmed, _('Order confirmed')),
-        # (PreOrder, _('Pre-order')),
+        (PreOrder, _('Pre-order')),
         (Returned, _('Order returned')),
     )
     products = models.ManyToManyField(ProductInstance, through='OrderLine', related_name='orders',
@@ -128,6 +128,12 @@ class PurchaseLine(models.Model):
 
 class OrderLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
+    AvailableOrder = 'AO'
+    PreOrder = 'PO'
+    ORDER_CHOICES = (
+        (AvailableOrder, _('Order')),
+        (PreOrder, _('Pre-order')),
+    )
     order = models.ForeignKey(Order, verbose_name=_('Order'), on_delete=models.CASCADE)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
     diopter = models.ForeignKey(DiopterPower, on_delete=models.PROTECT)
@@ -135,6 +141,7 @@ class OrderLine(models.Model):
     quantity = models.PositiveSmallIntegerField(_('Quantity'), default=0)
     last_quantity = models.PositiveSmallIntegerField(default=0)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
+    order_type = models.CharField(_('Order type'), max_length=2, choices=ORDER_CHOICES, default=AvailableOrder)
 
     class Meta:
         unique_together = ['order', 'product']
