@@ -151,12 +151,11 @@ class UpdateQuantity(views.APIView):
         # update the existing OrderLine or returm exception if it is not exists
         try:
             order_line = OrderLine.objects.get(product=product, order=order)
-            if quantity <= product.quantity_in_hand:
-                order_line.quantity = quantity
-                order_line.save()
-                return Response(_('Product updated'), status=status.HTTP_200_OK)
-            else:
+            if order_line.order_type == OrderLine.AvailableOrder and quantity > product.quantity_in_hand:
                 return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+            order_line.quantity = quantity
+            order_line.save()
+            return Response(_('Product updated'), status=status.HTTP_200_OK)
         except OrderLine.DoesNotExist:
             return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
 
