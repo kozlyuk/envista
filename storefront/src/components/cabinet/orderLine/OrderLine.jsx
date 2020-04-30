@@ -168,7 +168,7 @@ export default class OrderLine extends React.Component {
                   <>
                     <td></td>
                     <td className="text-center pt-1 pb-1">
-                      {item}{process.env.REACT_APP_CURRENCY}
+                      {item} {process.env.REACT_APP_CURRENCY}
                     </td>
                     <td width="2%"></td>
                   </>
