@@ -53,24 +53,24 @@ class GetCart(views.APIView):
 
         # send JSON-coded list of orderlines in customer cart
         json_data = []
-        json_data.append({"lines": []})
+        json_data.append({"availableorders": []})
         index = 0
-        for line in order.orderline_set.all():
+        for line in order.orderline_set.filter(order_type=OrderLine.AvailableOrder):
             index += 1
             order_line = [index, line.product.product.title, line.diopter.value, line.cylinder.value,
                           line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
-            json_data[0]["lines"].append({"line": order_line})
-        json_data.append({"value_total": order.value_total()})
+            json_data[0]["availableorders"].append({"line": order_line})
+        json_data.append({"orders_total": order.value_total()})
 
-        # # add JSON-coded list of orderlines in preorder
-        # json_data.append({"preorder": []})
-        # index = 0
-        # for line in order.orderline_set.all():
-        #     index += 1
-        #     order_line = [index, line.product.product.title, line.diopter.value, line.cylinder.value,
-        #                   line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
-        #     json_data[0]["preorder"].append({"line": order_line})
-        # json_data.append({"value_total": order.value_total()})
+        # add JSON-coded list of orderlines in preorder
+        json_data.append({"preorders": []})
+        index = 0
+        for line in order.orderline_set.filter(order_type=OrderLine.PreOrder):
+            index += 1
+            order_line = [index, line.product.product.title, line.diopter.value, line.cylinder.value,
+                          line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
+            json_data[2]["preorders"].append({"line": order_line})
+        json_data.append({"preorders_total": order.value_total()})
         return Response(json_data, status=status.HTTP_200_OK)
 
 
@@ -98,10 +98,10 @@ class AddToCart(views.APIView):
         except Order.MultipleObjectsReturned:
             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
 
+        cylinder = Cylinder.objects.get(pk=column)
+        diopter = DiopterPower.objects.get(pk=row)
         # Check availability of orderline
         if product.quantity_in_hand > 0:
-            cylinder = Cylinder.objects.get(pk=column)
-            diopter = DiopterPower.objects.get(pk=row)
             # get the existing Avaible OrderLine or create new one
             order_line, created = OrderLine.objects.get_or_create(product=product,
                                                                   order=order,
