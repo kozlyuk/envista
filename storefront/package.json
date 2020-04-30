@@ -16,6 +16,7 @@
     "@types/react-sticky": "^6.0.3",
     "axios": "^0.19.1",
     "bootstrap": "^4.4.1",
+    "docdash": "^1.2.0",
     "env-cmd": "^10.0.1",
     "history": "^4.10.1",
     "rc-table": "^6.10.10",
@@ -38,7 +39,8 @@
     "build": "react-scripts build",
     "debug": "react-scripts start --no-cache",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate-docs": "node_modules/.bin/jsdoc -c jsdoc.json"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -58,6 +60,7 @@
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.19.1",
+    "jsdoc": "^3.6.4",
     "json-server": "^0.15.1",
     "source-map-loader": "^0.2.4",
     "stickybits": "^3.7.3",
