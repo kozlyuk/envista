@@ -1,9 +1,6 @@
 /**
- * @author          Andrey Perestyuk (Arrathilar)
- * @email-primary   a.perestyuk@itel.rv.ua
- * @email-secondary arrathilar@blizzard.com, a.perestyuk@archlinux.org,
- * @copyright       2020 ITEL-Service
- *
+ * @author    Andrey Perestyuk (Arrathilar) a.perestyuk@itel.rv.ua
+ * @copyright 2020 ITEL-Service
  */
 
 import React, {Fragment} from "react";
@@ -26,8 +23,8 @@ export default class Cabinet extends React.Component {
     this.user = new Auth();
   }
 
-  componentDidMount() {
-    axios(`${process.env.REACT_APP_GET_ORDERS_LIST}${this.props.userPk}/`, {
+  loadData = () => {
+    axios(`${process.env.REACT_APP_GET_ORDERS_LIST}`, {
       headers: {
         "Authorization": "Token " + this.user.getAuthToken(),
       }
@@ -40,6 +37,14 @@ export default class Cabinet extends React.Component {
       .catch((error) => {
         console.warn(error.response.data)
       })
+  }
+
+  componentDidMount() {
+    this.loadData()
+  }
+
+  refreshData = () => {
+    this.loadData()
   }
 
   render() {
@@ -70,7 +75,7 @@ export default class Cabinet extends React.Component {
                   </thead>
                   <tbody>
                   {this.state.data.map((orderLine) => (
-                    <OrderLine data={orderLine}/>
+                    <OrderLine refresh={this.refreshData} data={orderLine}/>
                   ))}
                   </tbody>
                 </Table>
