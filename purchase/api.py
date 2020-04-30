@@ -41,7 +41,6 @@ class GetCart(views.APIView):
     Send JSON-coded list of orderlines in customer cart
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         # get the existing customer cart
@@ -62,6 +61,16 @@ class GetCart(views.APIView):
                           line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
             json_data[0]["lines"].append({"line": order_line})
         json_data.append({"value_total": order.value_total()})
+
+        # # add JSON-coded list of orderlines in preorder
+        # json_data.append({"preorder": []})
+        # index = 0
+        # for line in order.orderline_set.all():
+        #     index += 1
+        #     order_line = [index, line.product.product.title, line.diopter.value, line.cylinder.value,
+        #                   line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
+        #     json_data[0]["preorder"].append({"line": order_line})
+        # json_data.append({"value_total": order.value_total()})
         return Response(json_data, status=status.HTTP_200_OK)
 
 
@@ -73,7 +82,6 @@ class AddToCart(views.APIView):
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     If product out of stock return status HTTP_409_CONFLICT
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, row: int, column: int):
         # get the existing object of ProductInstance
@@ -90,12 +98,14 @@ class AddToCart(views.APIView):
         except Order.MultipleObjectsReturned:
             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
 
-        # get the existing OrderLine or create new one
+        # Check availability of orderline
         if product.quantity_in_hand > 0:
             cylinder = Cylinder.objects.get(pk=column)
             diopter = DiopterPower.objects.get(pk=row)
+            # get the existing Avaible OrderLine or create new one
             order_line, created = OrderLine.objects.get_or_create(product=product,
                                                                   order=order,
+                                                                  order_type=OrderLine.AvailableOrder,
                                                                   defaults={'unit_price': product.price,
                                                                             'cylinder': cylinder,
                                                                             'diopter': diopter})
@@ -103,7 +113,14 @@ class AddToCart(views.APIView):
                 order_line.quantity += 1
                 order_line.save()
                 return Response(_('Product added to the cart'), status=status.HTTP_201_CREATED)
-        return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+        # get the existing Preorder OrderLine or create new one
+        order_line, created = OrderLine.objects.get_or_create(product=product,
+                                                              order=order,
+                                                              order_type=OrderLine.PreOrder,
+                                                              defaults={'unit_price': product.price,
+                                                                        'cylinder': cylinder,
+                                                                        'diopter': diopter})
+        return Response(_('Preorder added to the cart'), status=status.HTTP_201_CREATED)
 
 
 class UpdateQuantity(views.APIView):
@@ -115,7 +132,6 @@ class UpdateQuantity(views.APIView):
     If product out of stock return status HTTP_409_CONFLICT
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, product_pk: int, quantity: int):
         # get the existing object of ProductInstance
@@ -150,7 +166,6 @@ class ConfirmOrder(views.APIView):
     Change order status from InCart to NewOrder and assign invoice number
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         # get the existing customer cart
@@ -197,7 +212,6 @@ class GetPurchaseTable(views.APIView):
     Creating purchase cart or get existing.
     Send JSON-coded list of quantities in purchase cart.
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         # Creating purchase cart or get existing.
@@ -226,7 +240,6 @@ class GetPurchaseList(views.APIView):
     Send JSON-coded list of purchaselines in customer purchase
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         # get the existing customer purchase
@@ -362,7 +375,6 @@ class ClearPurchase(views.APIView):
     Clear all purchase_lines in Purchase
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
         # get the existing customer purchase
