@@ -177,17 +177,41 @@ class ConfirmOrder(views.APIView):
         except Order.MultipleObjectsReturned:
             return Response(_('Few carts exists'), status=status.HTTP_400_BAD_REQUEST)
 
-        # reduce stocks
-        for order_line in order.orderline_set.all():
-            # delete orderline if its quantity is 0
+        # get all orderlines
+        orderlines = order.orderline_set.all()
+
+        # delete orderlines if its quantity is 0
+        for order_line in orderlines:
             if order_line.quantity == 0:
                 order_line.delete()
                 continue
-            order_line.product.quantity_in_hand -= order_line.quantity
-            order_line.product.save()
 
+        # Create PreOrder from not alailable Orderlines
+        preorder_lines = orderlines.filter(order_type=OrderLine.PreOrder)
         # check if order not empty
-        if order.orderline_set.exists():
+        if preorder_lines.exists():
+            # Creating user cart or clear existing on loading.
+            order = Order.objects.create(customer=self.request.user,
+                                         status=Order.PreOrder,
+                                         created_by=self.request.user,
+                                         date_created=datetime.now()
+                                         )
+            for order_line in preorder_lines:
+                order_line.order = order
+                order_line.save()
+            order.invoice_number = order.invoice_number_generate()
+            order.value = order.value_total()
+            order.lenses_sum = order.lenses_count()
+            order.save()
+
+        # Create NewOrder from alailable Orderlines
+        available_lines = orderlines.filter(order_type=OrderLine.AvailableOrder)
+        # check if order not empty
+        if available_lines.exists():
+            # reduce stocks
+            for order_line in available_lines:
+                order_line.product.quantity_in_hand -= order_line.quantity
+                order_line.product.save()
             # change order status to NewOrder and assign invoice number
             order.status = Order.NewOrder
             order.invoice_number = order.invoice_number_generate()
@@ -197,15 +221,16 @@ class ConfirmOrder(views.APIView):
             order.date_created = datetime.now()
             order.save()
 
-            # send confirmation email
+        # send confirmation email
+        if available_lines.exists() or preorder_lines.exists():
             if not self.request.user.groups.filter(name='Менеджери').exists():
                 send_confirmation_email.delay(order.pk)
-            send_new_order_email.delay(order.pk)
+            send_new_order_email(order.pk) # TODO add delay on production
             return Response(_('Order accepted. Wait for call from manager please!'),
                             status=status.HTTP_201_CREATED)
-        else:
-            return Response(_('Order if empty! Please add products'),
-                            status=status.HTTP_412_PRECONDITION_FAILED)
+
+        return Response(_('Order if empty! Please add products'),
+                        status=status.HTTP_412_PRECONDITION_FAILED)
 
 
 class GetPurchaseTable(views.APIView):
@@ -366,8 +391,7 @@ class ConfirmPurchase(views.APIView):
             purchase.save()
             return Response(_('Purchase accepted.'),
                             status=status.HTTP_201_CREATED)
-        else:
-            return Response(_('Purchase is empty! Please add products'),
+        return Response(_('Purchase is empty! Please add products'),
                             status=status.HTTP_412_PRECONDITION_FAILED)
 
 
