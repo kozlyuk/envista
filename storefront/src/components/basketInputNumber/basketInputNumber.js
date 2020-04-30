@@ -86,7 +86,7 @@ export default class BasketInputNumber extends React.Component {
         />
         </td>
         <td key={this.props.colIdx}>
-          {this.calculcatePrice(this.props.colIdx, this.props.rowIdx)} грн.
+          {this.calculcatePrice(this.props.colIdx, this.props.rowIdx)} {process.env.REACT_APP_CURRENCY}
         </td>
       </Fragment>
     )

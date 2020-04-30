@@ -200,9 +200,10 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
           <h3 className="text-success text-center">Дякуємо за покупку!</h3>
         </div>
       )
-    } else if (!this.state.availableorders && !this.state.preorders) {
+    } else if (!this.state.orders_total && !this.state.preorders_total) {
       return <h3 className="text-center">У вас не має замовлень в корзині</h3>;
     } else {
+      console.log(this.state.orders_total && this.state.preorders_total)
       return (
         <Fragment>
           <Row>
@@ -234,13 +235,7 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
                   </tr>
                 ))
                 }
-                {this.state.availableorders &&
-                <tr>
-                  <td colSpan={5}></td>
-                  <td>{this.state.orders_total} {process.env.REACT_APP_CURRENCY}</td>
-                </tr>
-                }
-                {this.state.availableorders &&
+                {this.state.preorders &&
                 (
                   <th className="text-center" colSpan={6}>Попереднє замовлення</th>
                 )}
@@ -251,12 +246,6 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
                     ))}
                   </tr>
                 ))}
-                {this.state.preorders &&
-                <tr>
-                  <td colSpan={5}></td>
-                  <td>{this.state.preorders_total} {process.env.REACT_APP_CURRENCY}</td>
-                </tr>
-                }
                 </tbody>
               </Table>
               <div className="text-center mt-4">
@@ -274,71 +263,5 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
         </Fragment>
       )
     }
-
-    //   const {error, isLoaded}: any = this.state;
-    //   if (error) {
-    //     return <h3 className="text-center">Помилка: {error.message}</h3>;
-    //   } else if (!isLoaded) {
-    //     return <h3 className="text-center">Завантаження...</h3>;
-    //   } else if (!this.state.isBasketActive) {
-    //     return (
-    //       <div className="mt-4">
-    //         <div className="checkmark-circle ml-auto mr-auto">
-    //           <div className="background"></div>
-    //           <div className="checkmark draw"></div>
-    //         </div>
-    //         <h3 className="text-success text-center">Дякуємо за покупку!</h3>
-    //       </div>
-    //     )
-    //   } else if (!this.state.array.length) {
-    //     return <h3 className="text-center">У вас не має замовлень в корзині</h3>;
-    //   } else {
-    //     return (
-    //       <Fragment>
-    //         <Row>
-    //           <Col className="text-center">
-    //             <h2 className="text-muted">Корзина</h2>
-    //           </Col>
-    //         </Row>
-    //         <Row>
-    //           <Col>
-    //             <h4 className="text-center">Ваші замовлення</h4>
-    //             <Table responsive striped bordered hover className="mb-0">
-    //               <thead>
-    //               <tr>
-    //                 <th>#</th>
-    //                 <th>Назва</th>
-    //                 <th>Сфера</th>
-    //                 <th>Циліндр</th>
-    //                 <th className="text-center">Кількість</th>
-    //                 <th>Вартість</th>
-    //               </tr>
-    //               </thead>
-    //               <tbody>
-    //               {this.state.array.map((items: { line: any[]; }, rowIdx: number) => (
-    //                 <tr key={rowIdx}>
-    //                   {items.line.map((item, colIdx) => (
-    //                     this.cell(colIdx, rowIdx, item)
-    //                   ))}
-    //                 </tr>
-    //               ))}
-    //               </tbody>
-    //             </Table>
-    //             <div className="text-center mt-4">
-    //               <Button
-    //                 variant="outline-success"
-    //                 size="sm"
-    //                 onClick={() => {
-    //                   this.handleClick();
-    //                 }}>
-    //                 Підтвердити замовлення
-    //               </Button>
-    //             </div>
-    //           </Col>
-    //         </Row>
-    //       </Fragment>
-    //     )
-    //
-    //   }
   }
 }
