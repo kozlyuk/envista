@@ -7,7 +7,7 @@ import React from "react";
 import {Button, Collapse, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {GoPrimitiveDot} from "react-icons/go";
 import {MdCancel} from "react-icons/md";
-import {Table} from "react-bootstrap";
+import {Fade, Table} from "react-bootstrap";
 import axios from "axios";
 import {toast} from "react-toastify";
 import Auth from "../../auth/auth";
@@ -145,37 +145,39 @@ export default class OrderLine extends React.Component {
 
         {this.props.data.order_lines.map((orderItem) => (
           <>
-            <Collapse tag="tr" className="bg-light" style={{backgroundColor: "#dddddd"}} colSpan={5}
-                      isOpen={this.state.isOpen}>
-              {Object.values(orderItem).map((item, index) => (
-                <>
-                  {index === 0 &&
+            <Fade top cascade>
+              <Collapse tag="tr" className="bg-light" style={{backgroundColor: "#dddddd"}} colSpan={5}
+                        isOpen={this.state.isOpen}>
+                {Object.values(orderItem).map((item, index) => (
                   <>
-                    <td></td>
-                    <td className="text-center pt-1 pb-1">
-                      {item}
-                    </td>
+                    {index === 0 &&
+                    <>
+                      <td></td>
+                      <td className="text-center pt-1 pb-1">
+                        {item}
+                      </td>
+                    </>
+                    }
+                    {index === 1 &&
+                    <>
+                      <td className="text-center pt-1 pb-1">
+                        {item}
+                      </td>
+                    </>
+                    }
+                    {index === 2 &&
+                    <>
+                      <td></td>
+                      <td className="text-center pt-1 pb-1">
+                        {item} {process.env.REACT_APP_CURRENCY}
+                      </td>
+                      <td width="2%"></td>
+                    </>
+                    }
                   </>
-                  }
-                  {index === 1 &&
-                  <>
-                    <td className="text-center pt-1 pb-1">
-                      {item}
-                    </td>
-                  </>
-                  }
-                  {index === 2 &&
-                  <>
-                    <td></td>
-                    <td className="text-center pt-1 pb-1">
-                      {item} {process.env.REACT_APP_CURRENCY}
-                    </td>
-                    <td width="2%"></td>
-                  </>
-                  }
-                </>
-              ))}
-            </Collapse>
+                ))}
+              </Collapse>
+            </Fade>
           </>
 
           // <ListGroup>
