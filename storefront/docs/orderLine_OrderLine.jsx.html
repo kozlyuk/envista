@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>orderLine/OrderLine.jsx - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports_module.exports.html">exports</a></li><li></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">orderLine/OrderLine.jsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author    Andrey Perestyuk (Arrathilar) a.perestyuk@itel.rv.ua
+ * @copyright 2020 ITEL-Service
+ */
+
+import React from "react";
+import {Button, Collapse, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {GoPrimitiveDot} from "react-icons/go";
+import {Table} from "react-bootstrap";
+import axios from "axios";
+import {toast} from "react-toastify";
+import Auth from "../../auth/auth";
+
+export default class OrderLine extends React.Component {
+  /**
+   * OrderLine constructor
+   *
+   * @param props
+   */
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpen: false,
+      modal: false
+    }
+    this.user = new Auth()
+  }
+
+  /**
+   * Collapse toggler
+   */
+  toggle = () => {
+    const {isOpen} = this.state;
+    this.setState({
+      isOpen: !isOpen
+    });
+  };
+
+  toggleModal = (event) => {
+    event.preventDefault();
+    const {modal} = this.state;
+    this.setState({
+      modal: !modal
+    });
+  }
+
+  deleteOrder = () => {
+    axios(`${process.env.REACT_APP_CANCEL_ORDER}${this.props.data.pk}/`, {
+      headers: {
+        "Authorization": "Token " + this.user.getAuthToken(),
+      }
+    }).then((response) => {
+      toast.success(response.data)
+    })
+      .catch((error) => {
+        toast.error(error.response.data)
+      })
+  }
+
+
+  render() {
+    return (
+      &lt;>
+        &lt;tr style={{cursor: 'pointer'}} onClick={this.toggle}>
+          &lt;td className="text-center pt-1 pb-1">
+            {this.props.data.invoice_number} {this.props.data.status === "NO" &amp;&amp;
+          &lt;a href="" onClick={this.toggleModal}>
+            Відмінити
+          &lt;/a>
+          }
+          &lt;/td>
+          &lt;td className="text-center pt-1 pb-1">
+            {this.props.data.status === "NO" &amp;&amp; &lt;GoPrimitiveDot size={"1.5em"} color="orange"/>}
+            {this.props.data.status === "CF" &amp;&amp; &lt;GoPrimitiveDot size={"1.5em"} color="green"/>}
+            {this.props.data.status === "CN" &amp;&amp; &lt;GoPrimitiveDot size={"1.5em"} color="red"/>}
+            {this.props.data.status === "RT" &amp;&amp; &lt;GoPrimitiveDot size={"1.5em"} color="grey"/>}
+            {this.props.data.status_display}
+          &lt;/td>
+          &lt;td className="text-center pt-1 pb-1">
+            {this.props.data.date_created}
+          &lt;/td>
+          &lt;td className="text-center pt-1 pb-1">
+            {this.props.data.lenses_sum}
+          &lt;/td>
+          &lt;td className="text-center pt-1 pb-1">
+            {this.props.data.value} {process.env.REACT_APP_CURRENCY}
+          &lt;/td>
+        &lt;/tr>
+
+        &lt;div>
+          &lt;Modal isOpen={this.state.modal} toggle={this.toggleModal} className="modal-lg">
+            &lt;ModalHeader toggle={this.toggleModal}>Видалити замовлення?&lt;/ModalHeader>
+            &lt;ModalBody>
+              &lt;h4>Деталі замовлення:&lt;/h4>
+              &lt;Table responsive bordered hover className="mb-0">
+                &lt;thead>
+                &lt;tr>
+                  &lt;th className="text-center">Номер замовлення&lt;/th>
+                  &lt;th className="text-center">Дата замовлення&lt;/th>
+                  &lt;th className="text-center">Кількість лінз&lt;/th>
+                  &lt;th className="text-center">Вартість&lt;/th>
+                &lt;/tr>
+                &lt;/thead>
+                &lt;tbody>
+                &lt;tr>
+                  &lt;td className="text-center">{this.props.data.invoice_number}&lt;/td>
+                  &lt;td className="text-center">{this.props.data.date_created}&lt;/td>
+                  &lt;td className="text-center">{this.props.data.lenses_sum}&lt;/td>
+                  &lt;td className="text-center">{this.props.data.value}&lt;/td>
+                &lt;/tr>
+                &lt;/tbody>
+              &lt;/Table>
+              &lt;h4>Вміст замовлення:&lt;/h4>
+              &lt;Table responsive bordered hover className="mb-0">
+                &lt;thead>
+                &lt;tr>
+                  &lt;th className="text-center">Назва&lt;/th>
+                  &lt;th className="text-center">Кількість лінз&lt;/th>
+                  &lt;th className="text-center">Ціна за одиницю&lt;/th>
+                &lt;/tr>
+                &lt;/thead>
+                &lt;tbody>
+                {this.props.data.order_lines.map((orderItem) => (
+                  &lt;tr>
+                    &lt;td className="text-center">{orderItem.product}&lt;/td>
+                    &lt;td className="text-center">{orderItem.quantity}&lt;/td>
+                    &lt;td className="text-center">{orderItem.unit_price}&lt;/td>
+                  &lt;/tr>
+                ))}
+                &lt;/tbody>
+              &lt;/Table>
+            &lt;/ModalBody>
+            &lt;ModalFooter>
+              &lt;Button color="primary" onClick={this.deleteOrder}>Гаразд&lt;/Button>{' '}
+              &lt;Button color="secondary" onClick={this.toggleModal}>Відміна&lt;/Button>
+            &lt;/ModalFooter>
+          &lt;/Modal>
+        &lt;/div>
+
+        {this.props.data.order_lines.map((orderItem) => (
+          &lt;>
+            &lt;Collapse tag="tr" className="bg-light" style={{backgroundColor: "#dddddd"}} colSpan={5}
+                      isOpen={this.state.isOpen}>
+              {Object.values(orderItem).map((item, index) => (
+                &lt;>
+                  {index === 0 &amp;&amp;
+                  &lt;>
+                    &lt;td>&lt;/td>
+                    &lt;td>&lt;/td>
+                    &lt;td className="text-center pt-1 pb-1">
+                      {item}
+                    &lt;/td>
+                  &lt;/>
+                  }
+                  {index === 1 &amp;&amp;
+                  &lt;>
+                    &lt;td className="text-center pt-1 pb-1">
+                      {item}
+                    &lt;/td>
+                  &lt;/>
+                  }
+                  {index === 2 &amp;&amp;
+                  &lt;td colSpan={2} className="text-center pt-1 pb-1">
+                    {item}
+                  &lt;/td>
+                  }
+                &lt;/>
+              ))}
+            &lt;/Collapse>
+          &lt;/>
+
+          // &lt;ListGroup>
+          //   &lt;ListGroupItem style={{border: 'none'}} className="justify-content-between border-bottom text-center">
+          //     Назва продукту &lt;Badge color={'secondary'} pill className="mr-4">{orderItem.product}&lt;/Badge>
+          //     Кількість &lt;Badge color={'secondary'} pill className="mr-4">{orderItem.quantity}&lt;/Badge>
+          //     Ціна за одиницю &lt;Badge color={'secondary'} pill
+          //                            className="mr-4">{orderItem.unit_price} {process.env.REACT_APP_CURRENCY}&lt;/Badge>
+          //   &lt;/ListGroupItem>
+          // &lt;/ListGroup>
+        ))}
+
+
+      &lt;/>
+    )
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Wed Apr 29 2020 12:47:53 GMT+0300 (Eastern European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -1,13 +1,6 @@
-/*
- *
- *   Warehouse confirm component.
- *
- *   @author           1Andrey Perestyuk (Arrathilar)
- *   @email-primary a.perestyuk@itel.rv.ua
- *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
- *   @copyright 2020 ITEL-Service
- *
- *
+/**
+ * @author    Andrey Perestyuk (Arrathilar) a.perestyuk@itel.rv.ua
+ * @copyright 2020 ITEL-Service
  */
 
 import React from "react";
@@ -18,19 +11,19 @@ import WarehouseConfirmItem from "../warehouseConfirmItem/warehouseConfirmItem";
 
 export default class WarehouseConfirm extends React.Component {
 
-	/*
-	 * browser history object
-	 */
-	history = createBrowserHistory();
+  /*
+   * browser history object
+   */
+  history = createBrowserHistory();
 
-	render() {
-		return (
-			<Container>
+  render() {
+    return (
+      <Container>
 
-				<WarehouseConfirmItem/>
+        <WarehouseConfirmItem/>
 
-			</Container>
-		);
-	}
+      </Container>
+    );
+  }
 }
 

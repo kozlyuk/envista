@@ -1,3 +1,8 @@
+/**
+ * @author    Andrey Perestyuk (Arrathilar) a.perestyuk@itel.rv.ua
+ * @copyright 2020 ITEL-Service
+ */
+
 import React, {Component} from "react";
 import {Container} from "react-bootstrap";
 import Auth from "../auth/auth";

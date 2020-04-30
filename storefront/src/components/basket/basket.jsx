@@ -1,13 +1,6 @@
-/*
- *
- *   Basket component.
- *
- *   @author    Andrey Perestyuk (Arrathilar)
- *   @email-primary a.perestyuk@itel.rv.ua
- *   @email-secondary  arrathilar@blizzard.com, a.perestyuk@archlinux.org,
- *   @copyright 2020 ITEL-Service
- *
- *
+/**
+ * @author    Andrey Perestyuk (Arrathilar) a.perestyuk@itel.rv.ua
+ * @copyright 2020 ITEL-Service
  */
 
 import React from "react";
@@ -18,19 +11,19 @@ import BasketItem from "../basketItem/basketItem.tsx";
 
 export default class Basket extends React.Component {
 
-	/*
-	 * browser history object
-	 */
-	history = createBrowserHistory();
+  /*
+   * browser history object
+   */
+  history = createBrowserHistory();
 
-	render() {
-		return (
-			<Container>
+  render() {
+    return (
+      <Container>
 
-				<BasketItem/>
+        <BasketItem/>
 
-			</Container>
-		);
-	}
+      </Container>
+    );
+  }
 }
 
