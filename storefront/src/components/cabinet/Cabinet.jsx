@@ -71,6 +71,7 @@ export default class Cabinet extends React.Component {
                     <th className="text-center">Дата замовлення</th>
                     <th className="text-center">Кількість лінз</th>
                     <th className="text-center">Вартість</th>
+                    <th width="2%" className="text-center">Дії</th>
                   </tr>
                   </thead>
                   <tbody>

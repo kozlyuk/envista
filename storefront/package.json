@@ -62,6 +62,7 @@
     "eslint-plugin-import": "^2.19.1",
     "jsdoc": "^3.6.4",
     "json-server": "^0.15.1",
+    "react-reveal": "^1.2.2",
     "source-map-loader": "^0.2.4",
     "stickybits": "^3.7.3",
     "ts-loader": "^6.2.1",

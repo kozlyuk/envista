@@ -6,7 +6,8 @@
 import React from "react";
 import {Button, Collapse, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {GoPrimitiveDot} from "react-icons/go";
-import {Table} from "react-bootstrap";
+import {MdCancel} from "react-icons/md";
+import {Fade, Table} from "react-bootstrap";
 import axios from "axios";
 import {toast} from "react-toastify";
 import Auth from "../../auth/auth";
@@ -67,11 +68,7 @@ export default class OrderLine extends React.Component {
       <>
         <tr style={{cursor: 'pointer'}} onClick={this.toggle}>
           <td className="text-center pt-1 pb-1">
-            {this.props.data.invoice_number} {this.props.data.status === "NO" &&
-          <a href="" onClick={this.toggleModal}>
-            Відмінити
-          </a>
-          }
+            {this.props.data.invoice_number}
           </td>
           <td className="text-center pt-1 pb-1">
             {this.props.data.status === "NO" && <GoPrimitiveDot size={"1.5em"} color="orange"/>}
@@ -89,6 +86,11 @@ export default class OrderLine extends React.Component {
           <td className="text-center pt-1 pb-1">
             {this.props.data.value} {process.env.REACT_APP_CURRENCY}
           </td>
+          <td className="text-center pt-1 pb-1">{this.props.data.status === "NO" &&
+          <a href="" onClick={this.toggleModal}>
+            <MdCancel color="red"/>
+          </a>
+          }</td>
         </tr>
 
         <div>
@@ -143,34 +145,39 @@ export default class OrderLine extends React.Component {
 
         {this.props.data.order_lines.map((orderItem) => (
           <>
-            <Collapse tag="tr" className="bg-light" style={{backgroundColor: "#dddddd"}} colSpan={5}
-                      isOpen={this.state.isOpen}>
-              {Object.values(orderItem).map((item, index) => (
-                <>
-                  {index === 0 &&
+            <Fade top cascade>
+              <Collapse tag="tr" className="bg-light" style={{backgroundColor: "#dddddd"}} colSpan={5}
+                        isOpen={this.state.isOpen}>
+                {Object.values(orderItem).map((item, index) => (
                   <>
-                    <td></td>
-                    <td></td>
-                    <td className="text-center pt-1 pb-1">
-                      {item}
-                    </td>
+                    {index === 0 &&
+                    <>
+                      <td></td>
+                      <td className="text-center pt-1 pb-1">
+                        {item}
+                      </td>
+                    </>
+                    }
+                    {index === 1 &&
+                    <>
+                      <td className="text-center pt-1 pb-1">
+                        {item}
+                      </td>
+                    </>
+                    }
+                    {index === 2 &&
+                    <>
+                      <td></td>
+                      <td className="text-center pt-1 pb-1">
+                        {item} {process.env.REACT_APP_CURRENCY}
+                      </td>
+                      <td width="2%"></td>
+                    </>
+                    }
                   </>
-                  }
-                  {index === 1 &&
-                  <>
-                    <td className="text-center pt-1 pb-1">
-                      {item}
-                    </td>
-                  </>
-                  }
-                  {index === 2 &&
-                  <td colSpan={2} className="text-center pt-1 pb-1">
-                    {item}
-                  </td>
-                  }
-                </>
-              ))}
-            </Collapse>
+                ))}
+              </Collapse>
+            </Fade>
           </>
 
           // <ListGroup>

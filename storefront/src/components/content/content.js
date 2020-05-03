@@ -133,9 +133,9 @@ export default class Content extends React.Component {
                 preOrderList={this.state.preOrder}
                 array={this.state.array}
               />
-              {this.state.purchase.length !== 0 && (
+              {this.state.purchase.length !== 0 || this.state.preOrder.length ? (
                 <Submit history={this.history} title={"Перейти в корзину"} redirectTo={"/basket"}/>
-              )}
+              ) : ''}
             </div>
           </div>
         </Container>
