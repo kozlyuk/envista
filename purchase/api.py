@@ -70,7 +70,7 @@ class GetCart(views.APIView):
             order_line = [index, line.product.product.title, line.diopter.value, line.cylinder.value,
                           line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
             json_data[2]["preorders"].append({"line": order_line})
-        json_data.append({"preorders_total": order.value_total()})
+        json_data.append({"preorders_total": order.preorder_total()})
         return Response(json_data, status=status.HTTP_200_OK)
 
 
@@ -392,7 +392,7 @@ class ConfirmPurchase(views.APIView):
             return Response(_('Purchase accepted.'),
                             status=status.HTTP_201_CREATED)
         return Response(_('Purchase is empty! Please add products'),
-                            status=status.HTTP_412_PRECONDITION_FAILED)
+                        status=status.HTTP_412_PRECONDITION_FAILED)
 
 
 class ClearPurchase(views.APIView):

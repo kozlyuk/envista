@@ -86,11 +86,20 @@ class Order(models.Model):
         return self.invoice_number
 
     def value_total(self):
-        """ return calculated from invoice_lines purchase value"""
-        return self.orderline_set.aggregate(total_value=Sum(F('quantity')*F('unit_price'),
+        """ return total order value"""
+        return self.orderline_set.filter(order_type=OrderLine.AvailableOrder) \
+                                 .aggregate(total_value=Sum(F('quantity')*F('unit_price'),
                                                             output_field=FloatField())) \
                                             ['total_value'] or 0
-    value_total.short_description = _('Calculated invoice value')
+    value_total.short_description = _('Total order value')
+
+    def preorder_total(self):
+        """ return total preorder value"""
+        return self.orderline_set.filter(order_type=OrderLine.PreOrder) \
+                                 .aggregate(total_value=Sum(F('quantity')*F('unit_price'),
+                                                            output_field=FloatField())) \
+                                            ['total_value'] or 0
+    preorder_total.short_description = _('Total preorder value')
 
     def lenses_count(self):
         """ return total count of lences in order """
