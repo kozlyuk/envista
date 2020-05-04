@@ -5,9 +5,10 @@ from django.utils.translation import ugettext as _
 from django.utils.html import format_html
 from django.forms import ModelForm, ChoiceField
 from django.forms.models import BaseInlineFormSet
+from django.db.models import Sum
+from django.core.exceptions import ValidationError
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from admin_totals.admin import ModelAdminTotals
-from django.db.models import Sum
 
 from messaging.tasks import send_status_change_email
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
@@ -150,6 +151,40 @@ class PurchaseAdmin(admin.ModelAdmin):
         super().delete_model(request, obj)
 
 
+class OrderForm(ModelForm):
+    """ Exclude Order.InCart from STATUS_CHOICES field """
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+    status = ChoiceField(
+        choices=Order.STATUS_CHOICES[1:]
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        status = cleaned_data.get("status")
+
+        if not self.current_user.is_superuser:
+
+            if self.instance.status == Order.NewOrder and \
+                status not in [Order.NewOrder, Order.Confirmed, Order.Cancelled]:
+                msg = _("New orders status can be changed to Confirmed or Canceled")
+                self._errors["status"] = self.error_class([msg])
+
+            if self.instance.status == Order.Cancelled and status != Order.Cancelled:
+                msg = _("Cancelled orders can't be changed")
+                self._errors["status"] = self.error_class([msg])
+
+            if self.instance.status == Order.Returned and status != Order.Returned:
+                msg = _("Returned orders can't be changed")
+                self._errors["status"] = self.error_class([msg])
+
+        if self.instance.status in [Order.Cancelled, Order.Returned, Order.PreOrder] and  \
+            status in [Order.NewOrder, Order.Confirmed]:
+                self.instance.__reduce_status__ = True
+
+
 class OrderLineInlineFormSet(BaseInlineFormSet):
 
     def clean(self):
@@ -189,36 +224,6 @@ class OrderLineInline(admin.TabularInline):
     show_change_link = True
 
 
-class OrderForm(ModelForm):
-    """ Exclude Order.InCart from STATUS_CHOICES field """
-    class Meta:
-        model = Order
-        fields = "__all__"
-
-    status = ChoiceField(
-        choices=Order.STATUS_CHOICES[1:]
-    )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        status = cleaned_data.get("status")
-
-        if not self.current_user.is_superuser:
-
-            if self.instance.status == Order.NewOrder and \
-                status not in [Order.NewOrder, Order.Confirmed, Order.Cancelled]:
-                msg = _("New orders status can be changed to Confirmed or Canceled")
-                self._errors["status"] = self.error_class([msg])
-
-            if self.instance.status == Order.Cancelled and status != Order.Cancelled:
-                msg = _("Cancelled orders can't be changed")
-                self._errors["status"] = self.error_class([msg])
-
-            if self.instance.status == Order.Returned and status != Order.Returned:
-                msg = _("Returned orders can't be changed")
-                self._errors["status"] = self.error_class([msg])
-
-
 @admin.register(Order)
 class OrderAdmin(ModelAdminTotals):
     """ Admin settings for Order table """
@@ -235,6 +240,8 @@ class OrderAdmin(ModelAdminTotals):
             return format_html('<div style="color:blue;">%s</div>' % obj.get_status_display())
         elif obj.status == Order.Returned:
             return format_html('<div style="color:orange;">%s</div>' % obj.get_status_display())
+        elif obj.status == Order.PreOrder:
+            return format_html('<div style="color:brown;">%s</div>' % obj.get_status_display())
         return obj.get_status_display()
     status_mark.allow_tags = True
     status_mark.short_description = 'Статус'
@@ -315,24 +322,29 @@ class OrderAdmin(ModelAdminTotals):
         super().save_related(request, form, formsets, change)
         form.instance.value = form.instance.value_total()
         form.instance.lenses_sum = form.instance.lenses_count()
-        #check if status changed and send email
-        if (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Cancelled) or \
-            (form.instance.old_status == Order.NewOrder and form.instance.status == Order.Confirmed):
-            send_status_change_email.delay(form.instance.pk)
         #check if order become Cancelled or Returned and restore stocks
         if form.instance.old_status in [Order.NewOrder, Order.Confirmed] and  \
-            form.instance.status in [Order.Cancelled, Order.Returned]:
+            form.instance.status in [Order.Cancelled, Order.Returned, Order.PreOrder]:
             for line in form.instance.orderline_set.all():
                 product = ProductInstance.objects.get(pk=line.product.pk)
                 product.quantity_in_hand += line.quantity
                 product.save()
-        #check if order become NewOrder or Confirmed and reduce stocks
-        if form.instance.old_status in [Order.Cancelled, Order.Returned] and  \
+        #check if order become NewOrder or Confirmed reduce stocks
+        if form.instance.old_status in [Order.Cancelled, Order.Returned, Order.PreOrder] and  \
             form.instance.status in [Order.NewOrder, Order.Confirmed]:
             for line in form.instance.orderline_set.all():
                 product = ProductInstance.objects.get(pk=line.product.pk)
-                product.quantity_in_hand -= line.quantity
-                product.save()
+                if product.quantity_in_hand >= line.quantity:
+                    product.quantity_in_hand -= line.quantity
+                    product.save()
+                else:
+                    raise ValidationError('Product not enough in stock')
+        #check if status changed and send email
+        if (form.instance.old_status == Order.NewOrder and \
+                form.instance.status in [Order.Cancelled, Order.Confirmed]) or \
+                (form.instance.old_status == Order.PreOrder and \
+                form.instance.status in [Order.NewOrder, Order.Confirmed, Order.Cancelled]):
+            send_status_change_email(form.instance.pk) # TODO add delay
 
         form.instance.old_status = form.instance.status
         form.instance.save()
