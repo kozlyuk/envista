@@ -26,7 +26,7 @@ export default class BasketInputNumber extends React.Component {
    * When success - update state
    * When error - drop error in toast
    */
-  changeValue(rowIdx, colIdx, counter, target) {
+  changeValue(rowIdx, colIdx, counter, orderType, target) {
     Number.parseInt(rowIdx);
     Number.parseInt(colIdx);
     const itemPk = this.props.orderArray[this.props.rowIdx][1].line[6];
@@ -34,7 +34,7 @@ export default class BasketInputNumber extends React.Component {
     console.log(this.state.array)
     let newArray = [...this.state.array];
     newArray[rowIdx][1].line[4] = newQty;
-    const requestUrl = `${process.env.REACT_APP_CHANGE_QUANTITY}${itemPk}/${newQty}/`;
+    const requestUrl = `${process.env.REACT_APP_CHANGE_QUANTITY}${itemPk}/${orderType}/${newQty}/`;
     axios(requestUrl, {
       headers: {
         "Authorization": "Token " + this.authToken
@@ -69,7 +69,7 @@ export default class BasketInputNumber extends React.Component {
         <td key={this.props.colIdx}><input className="form-control"
                                            type="number"
                                            onChange={(event) => {
-                                             this.changeValue(this.props.rowIdx, this.props.colIdx, this.props.item, event.target)
+                                             this.changeValue(this.props.rowIdx, this.props.colIdx, this.props.item, this.props.orderType, event.target)
                                            }}
                                            defaultValue={this.props.item}
                                            min="0"

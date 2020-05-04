@@ -67,8 +67,10 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
    */
   orderCell(colIdx: number, rowIdx: number, item: any) {
     if (colIdx === 4) {
-      return (<BasketInputNumber colIdx={colIdx} rowIdx={rowIdx} item={item} orderArray={this.state.availableorders}
-                                 updateQuantity={this.updateQuantity}/>)
+      return (<BasketInputNumber colIdx={colIdx} rowIdx={rowIdx}
+                                 item={item} orderArray={this.state.availableorders}
+                                 updateQuantity={this.updateQuantity}
+                                 orderType={process.env.REACT_APP_NEW_ORDER_STATUS}/>)
     } else if (colIdx === 5) {
       return void 0
     } else if (colIdx === 6 || colIdx === 7) {
@@ -85,8 +87,10 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
    */
   preOrderCell(colIdx: number, rowIdx: number, item: any) {
     if (colIdx === 4) {
-      return (<BasketInputNumber colIdx={colIdx} rowIdx={rowIdx} item={item} orderArray={this.state.preorders}
-                                 updateQuantity={this.updateQuantity} preOrder/>)
+      return (<BasketInputNumber colIdx={colIdx} rowIdx={rowIdx}
+                                 item={item} orderArray={this.state.preorders}
+                                 updateQuantity={this.updateQuantity} preOrder
+                                 orderType={process.env.REACT_APP_PRE_ORDER_STATUS}/>)
     } else if (colIdx === 5) {
       return void 0
     } else if (colIdx === 6 || colIdx === 7) {
