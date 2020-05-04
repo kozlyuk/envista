@@ -239,3 +239,13 @@ input[type='text'] {
     width: 100% !important;
   }
 }
+
+.checkbox-group {
+  position: relative;
+  margin-bottom: 35px;
+  margin-left: 40px;
+}
+
+.checkbox-wrapper > label {
+  display: inline-block;
+}
