@@ -140,11 +140,11 @@ export default class Registration extends React.Component {
 
   render() {
     return (
-      <Container className="auth-container">
+      <Container className="auth-container sm-container">
         <div style={{height: "100%"}} className="box">
           <form id="registration" onSubmit={this.handleSubmit}>
             <h1>Реєстрація</h1>
-            <div className="group">
+            <div className="group sm-group">
               <input onChange={this.handleChange} id="first_name" name="first_name" className="inputMaterial"
                      type="text" required/>
               {this.state.fieldError.first_name &&
@@ -157,7 +157,7 @@ export default class Registration extends React.Component {
               <span className="bar"/>
               <label style={{top: "-20px"}}>Ім'я</label>
             </div>
-            <div className="group">
+            <div className="group sm-group">
               <input onChange={this.handleChange} id="last_name" name="last_name" className="inputMaterial" type="text"
                      required/>
               {this.state.fieldError.last_name &&
@@ -170,7 +170,7 @@ export default class Registration extends React.Component {
               <span className="bar"/>
               <label style={{top: "-20px"}}>Прізвище</label>
             </div>
-            <div className="group">
+            <div className="group sm-group">
               <input onChange={this.handleChange} id="email" name="email" className="inputMaterial" type="email"
                      required/>
               {this.state.fieldError.email &&
@@ -183,7 +183,7 @@ export default class Registration extends React.Component {
               <span className="bar"/>
               <label style={{top: "-20px"}}>Пошта</label>
             </div>
-            <div className="group">
+            <div className="group sm-group">
               <input onChange={this.handleChange} id="mobile_number" name="mobile_number" className="inputMaterial"
                      type="phone" required/>
               {this.state.fieldError.mobile_number &&
@@ -196,7 +196,7 @@ export default class Registration extends React.Component {
               <span className="bar"/>
               <label style={{top: "-20px"}}>Номер телефону</label>
             </div>
-            <div className="group">
+            <div className="group sm-group">
               <input onChange={this.handleChange} id="password" name="password" className="inputMaterial"
                      type="password" required/>
               {this.state.fieldError.password &&
@@ -209,7 +209,7 @@ export default class Registration extends React.Component {
               <span className="bar"/>
               <label style={{top: "-20px"}}>Пароль</label>
             </div>
-            <div className="group">
+            <div className="group sm-group">
               <input onChange={this.handleChange} id="password2" name="password2" className="inputMaterial"
                      type="password" required/>
               {this.state.fieldError.password2 &&
