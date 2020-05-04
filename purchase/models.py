@@ -45,7 +45,6 @@ class Purchase(models.Model):
     invoice_number_generate.short_description = _('Generate invoice number')
 
 
-
 class Order(models.Model):
     """ Model contains Sales, Carts """
     InCart = 'IC'
@@ -113,8 +112,8 @@ class Order(models.Model):
         today_str = date.today().strftime('%Y%m%d')
         today_orders_count = cls.objects.filter(date_created__contains=date.today()) \
                                         .exclude(status=Order.InCart) \
-                                        .count()
-        return today_str + '-' + str(today_orders_count + 1)
+                                        .count() + 1
+        return f"{today_str}-{today_orders_count}"
     invoice_number_generate.short_description = _('Generate invoice number')
 
 
