@@ -28,10 +28,27 @@ class Welcome extends React.Component {
     this.state = {
       isLoading: true,
       isAuthenticate: false,
-      user: null
+      user: null,
+      permission: null
     };
     this.user = new Auth();
     this.getDataFromChild = this.getDataFromChild.bind(this)
+  }
+
+  /**
+   * Collect permisions
+   *
+   * @param permissions
+   * @private
+   */
+  _collectPermissions(permissions) {
+    let permission = []
+    permissions.map((perm) => {
+      permission.push(perm.name)
+    })
+    this.setState({
+      permission: permission
+    })
   }
 
   /*
@@ -63,6 +80,7 @@ class Welcome extends React.Component {
               isAuthenticate: true,
               user: response.data
             })
+            this._collectPermissions(response.data.groups)
           }
         });
     setTimeout(() => {
@@ -101,12 +119,13 @@ class Welcome extends React.Component {
           <h3 className="text-center text-muted">Завантаження...</h3>
         </div>);
     } else if (this.state.isAuthenticate) {
+      console.log(this.state.permission.includes('Менеджери'))
       return (
         <div>
           <Router>
             <Fragment>
               <NavbarMenu brandLogo={this.state.brandLogo} userEmail={this.state.user.email}
-                          userIsStaff={this.state.user.is_staff}/>
+                          permission={this.state.permission}/>
               <div className="section">
                 <div>
                   <Switch>
@@ -117,7 +136,7 @@ class Welcome extends React.Component {
                       <Cabinet userPk={this.state.user.pk}/>
                     </Route>
                     <Route exact path="/warehouse/confirm">
-                      {this.state.user.is_staff ?
+                      {this.state.permission.includes('Менеджери') ?
                         <WarehouseConfirm/> :
                         <h3 className="text-center text-muted"> На жаль у Вас не має дозволу
                           для
@@ -127,7 +146,7 @@ class Welcome extends React.Component {
                     </Route>
 
                     <Route exact path="/warehouse">
-                      {this.state.user.is_staff ?
+                      {this.state.permission.includes('Менеджери') ?
                         <Warehouse/> :
                         < h3 className="text-center text-muted"> На жаль у Вас не має дозволу
                           для

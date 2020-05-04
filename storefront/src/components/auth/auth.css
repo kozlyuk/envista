@@ -208,3 +208,34 @@ input[type='text'] {
     background: transparent;
   }
 }
+
+@media (max-width: 479px) {
+  .box {
+    position: relative;
+    height: 365px;
+    top: 40px;
+    z-index: 200;
+    right: 0;
+    width: 100vw;
+    color: #666;
+    padding: 10px 0px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 1);
+    border-top: 2px solid #C0C0C0;
+    border-bottom: 2px solid #3898EC;
+    margin: auto auto 100px;
+  }
+
+  .sm-container {
+    padding-left: 0 !important;
+  }
+
+  .sm-group {
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+  }
+
+  .sm-group > input, .box button {
+    width: 100% !important;
+  }
+}

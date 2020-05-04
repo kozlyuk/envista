@@ -47,17 +47,17 @@ export default class Login extends Component {
 
   render() {
     return (
-      <Container className="auth-container">
+      <Container className="auth-container sm-container">
         <div className="box">
           <form onSubmit={this.handleSubmit}>
             <h1>Вхід</h1>
-            <div className="group">
+            <div className="group sm-group">
               <input name="email" className="inputMaterial" type="email" required/>
               <span className="highlight"/>
               <span className="bar"/>
               <label style={{top: "-20px"}}>Email</label>
             </div>
-            <div className="group">
+            <div className="group sm-group">
               <input name="password" className="inputMaterial" type="password" required/>
               <span className="highlight"/>
               <span className="bar"/>

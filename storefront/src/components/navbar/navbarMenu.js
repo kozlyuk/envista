@@ -20,6 +20,10 @@ class NavbarMenu extends React.Component {
     this.authToken = this.user.getAuthToken();
   }
 
+
+  /**
+   * @return {*}
+   */
   componentDidMount() {
     axios(process.env.REACT_APP_INFO_CONTEXT, {
       headers: {
@@ -60,7 +64,7 @@ class NavbarMenu extends React.Component {
                   <Link style={{color: "#222222", padding: "20px"}} to="/">
                     Головна
                   </Link>
-                  {this.props.userIsStaff ? <Link
+                  {this.props.permission.includes('Менеджери') ? <Link
                     style={{
                       maxWidth: 940,
                       color: "#222222",
@@ -112,7 +116,7 @@ class NavbarMenu extends React.Component {
         </div>
 
       </Fragment>
-    );
+    )
   }
 }
 

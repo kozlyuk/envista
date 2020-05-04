@@ -142,12 +142,12 @@ export default class WarehouseTable extends Table implements WarehouseTableProps
                   <col style={{width: 50, minWidth: 50}}/>
                 </colgroup>
                 <Sticky style={{zIndex: 1000}}>{({style}) =>
-                  <thead style={style} className="rc-table-thead sticky">
-                  <tr>
-                    <th style={{width: "57px"}} className="rc-table-row-cell-break-word"/>
+                  <thead style={style} className="rc-table-thead sticky border-0">
+                  <tr className="border-0">
+                    <th style={{width: "57px"}} className="rc-table-row-cell-break-word bg-white border-bottom-0"/>
                     {this.state.columnsName.map((name: string, rowIdx: number) => (
                       <th style={{width: "57px"}} key={rowIdx}
-                          className="rc-table-row-cell-break-word text-center bg-light">
+                          className="rc-table-row-cell-break-word text-center bg-white border-bottom-0">
                         {name}
                       </th>
                     ))}
