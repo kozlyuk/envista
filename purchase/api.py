@@ -135,7 +135,7 @@ class UpdateQuantity(views.APIView):
     If exists problems with cart return status HTTP_400_BAD_REQUEST
     """
 
-    def get(self, request, product_pk: int, quantity: int):
+    def get(self, request, product_pk: int, order_type: str, quantity: int):
         # get the existing object of ProductInstance
         try:
             product = ProductInstance.objects.get(pk=product_pk)
@@ -152,12 +152,26 @@ class UpdateQuantity(views.APIView):
 
         # update the existing OrderLine or returm exception if it is not exists
         try:
-            order_line = OrderLine.objects.get(product=product, order=order)
-            if order_line.order_type == OrderLine.AvailableOrder and quantity > product.quantity_in_hand:
+            # get OrderLine
+            if order_type == OrderLine.AvailableOrder:
+                order_line = OrderLine.objects.get(product=product, order=order,
+                                                   order_type=OrderLine.AvailableOrder)
+            elif order_type == OrderLine.PreOrder:
+                order_line = OrderLine.objects.get(product=product, order=order,
+                                                   order_type=OrderLine.PreOrder)
+            else:
+                return Response(_('Order type does not exist'), status=status.HTTP_400_BAD_REQUEST)
+
+            # check if quantity of product enough in stocks
+            if order_type == OrderLine.AvailableOrder and quantity > product.quantity_in_hand:
                 return Response(_('Product is out of stock'), status=status.HTTP_409_CONFLICT)
+
+            # update quantity
             order_line.quantity = quantity
             order_line.save()
             return Response(_('Product updated'), status=status.HTTP_200_OK)
+
+        # except if product not in cart
         except OrderLine.DoesNotExist:
             return Response(_('Product not in cart'), status=status.HTTP_404_NOT_FOUND)
 
@@ -191,18 +205,19 @@ class ConfirmOrder(views.APIView):
         # check if order not empty
         if preorder_lines.exists():
             # Creating user cart or clear existing on loading.
-            order = Order.objects.create(customer=self.request.user,
-                                         status=Order.PreOrder,
-                                         created_by=self.request.user,
-                                         date_created=datetime.now()
-                                         )
+            invoice_number = order.invoice_number_generate()
+            preorder = Order.objects.create(customer=self.request.user,
+                                            status=Order.PreOrder,
+                                            created_by=self.request.user,
+                                            date_created=datetime.now()
+                                            )
             for order_line in preorder_lines:
-                order_line.order = order
+                order_line.order = preorder
                 order_line.save()
-            order.invoice_number = order.invoice_number_generate()
-            order.value = order.value_total()
-            order.lenses_sum = order.lenses_count()
-            order.save()
+            preorder.invoice_number = invoice_number
+            preorder.value = preorder.preorder_total()
+            preorder.lenses_sum = preorder.lenses_count()
+            preorder.save()
 
         # Create NewOrder from alailable Orderlines
         available_lines = orderlines.filter(order_type=OrderLine.AvailableOrder)
