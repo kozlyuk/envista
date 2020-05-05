@@ -8,16 +8,12 @@ import 'react-toastify/dist/ReactToastify.css';
 export default class App extends React.Component {
 
 
-	render() {
-		return (
-			<div className="App">
-				<header className="main-container">
-					<ToastContainer position={toast.POSITION.TOP_CENTER}/>
-					<Wrapper/>
-				</header>
-			</div>
-		)
-	}
-
-	;
+  render() {
+    return (
+      <div className="App">
+        <ToastContainer position={toast.POSITION.TOP_CENTER}/>
+        <Wrapper/>
+      </div>
+    )
+  };
 }

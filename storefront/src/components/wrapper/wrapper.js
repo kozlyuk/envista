@@ -121,53 +121,55 @@ class Welcome extends React.Component {
     } else if (this.state.isAuthenticate) {
       console.log(this.state.permission.includes('Менеджери'))
       return (
-        <div>
-          <Router>
-            <Fragment>
-              <NavbarMenu brandLogo={this.state.brandLogo} userEmail={this.state.user.email}
-                          permission={this.state.permission}/>
-              <div className="section">
-                <div>
-                  <Switch>
-                    <Route exact path="/basket">
-                      <Basket/>
-                    </Route>
-                    <Route exact path="/cabinet">
-                      <Cabinet userPk={this.state.user.pk}/>
-                    </Route>
-                    <Route exact path="/warehouse/confirm">
-                      {this.state.permission.includes('Менеджери') ?
-                        <WarehouseConfirm/> :
-                        <h3 className="text-center text-muted"> На жаль у Вас не має дозволу
-                          для
-                          перегляду
-                          сторінки</h3>
-                      }
-                    </Route>
+        <header className="main-container">
+          <div>
+            <Router>
+              <Fragment>
+                <NavbarMenu brandLogo={this.state.brandLogo} userEmail={this.state.user.email}
+                            permission={this.state.permission}/>
+                <div className="section">
+                  <div>
+                    <Switch>
+                      <Route exact path="/basket">
+                        <Basket/>
+                      </Route>
+                      <Route exact path="/cabinet">
+                        <Cabinet userPk={this.state.user.pk}/>
+                      </Route>
+                      <Route exact path="/warehouse/confirm">
+                        {this.state.permission.includes('Менеджери') ?
+                          <WarehouseConfirm/> :
+                          <h3 className="text-center text-muted"> На жаль у Вас не має дозволу
+                            для
+                            перегляду
+                            сторінки</h3>
+                        }
+                      </Route>
 
-                    <Route exact path="/warehouse">
-                      {this.state.permission.includes('Менеджери') ?
-                        <Warehouse/> :
-                        < h3 className="text-center text-muted"> На жаль у Вас не має дозволу
-                          для
-                          перегляду
-                          сторінки</h3>
-                      }
-                    </Route>
-                    <Route exact path="/">
-                      <Content getData={this.getDataFromChild}/>
-                    </Route>
-                    <Route exact path="/not_found" render={() => {
-                      window.location.href = "404.html"
-                    }}/>
-                    <Redirect to="/not_found"/>
-                  </Switch>
+                      <Route exact path="/warehouse">
+                        {this.state.permission.includes('Менеджери') ?
+                          <Warehouse/> :
+                          < h3 className="text-center text-muted"> На жаль у Вас не має дозволу
+                            для
+                            перегляду
+                            сторінки</h3>
+                        }
+                      </Route>
+                      <Route exact path="/">
+                        <Content getData={this.getDataFromChild}/>
+                      </Route>
+                      <Route exact path="/not_found" render={() => {
+                        window.location.href = "404.html"
+                      }}/>
+                      <Redirect to="/not_found"/>
+                    </Switch>
+                  </div>
                 </div>
-              </div>
-              <Footer title={this.state.footer}/>
-            </Fragment>
-          </Router>
-        </div>)
+                <Footer title={this.state.footer}/>
+              </Fragment>
+            </Router>
+          </div>
+        </header>)
     } else {
       return (
         <Router>

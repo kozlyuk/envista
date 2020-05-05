@@ -22,8 +22,6 @@ export default class Login extends Component {
   }
 
   handleChange(event) {
-    // this.setState({value: event.target.value.toLowerCase()});
-    //TODO: validations
   }
 
   /*
