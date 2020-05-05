@@ -86,11 +86,18 @@ class Order(models.Model):
 
     def value_total(self):
         """ return total order value"""
+        return self.orderline_set.aggregate(total_value=Sum(F('quantity')*F('unit_price'),
+                                                            output_field=FloatField())) \
+                                            ['total_value'] or 0
+    value_total.short_description = _('Total order value')
+
+    def available_total(self):
+        """ return total available value"""
         return self.orderline_set.filter(order_type=OrderLine.AvailableOrder) \
                                  .aggregate(total_value=Sum(F('quantity')*F('unit_price'),
                                                             output_field=FloatField())) \
                                             ['total_value'] or 0
-    value_total.short_description = _('Total order value')
+    available_total.short_description = _('Total available value')
 
     def preorder_total(self):
         """ return total preorder value"""
@@ -152,7 +159,8 @@ class OrderLine(models.Model):
     order_type = models.CharField(_('Order type'), max_length=2, choices=ORDER_CHOICES, default=AvailableOrder)
 
     def save(self, *args, **kwargs):
-        self.last_quantity = self.quantity
+        if self.order_type == self.AvailableOrder:
+            self.last_quantity = self.quantity
         super().save(*args, **kwargs) # Call the real save() method
 
     def value_total(self):
