@@ -60,7 +60,7 @@ class GetCart(views.APIView):
             order_line = [index, line.product.product.title, line.diopter.value, line.cylinder.value,
                           line.quantity, line.unit_price, line.product.pk, line.product.quantity_in_hand]
             json_data[0]["availableorders"].append({"line": order_line})
-        json_data.append({"orders_total": order.value_total()})
+        json_data.append({"orders_total": order.available_total()})
 
         # add JSON-coded list of orderlines in preorder
         json_data.append({"preorders": []})
@@ -208,6 +208,7 @@ class ConfirmOrder(views.APIView):
             invoice_number = order.invoice_number_generate()
             preorder = Order.objects.create(customer=self.request.user,
                                             status=Order.PreOrder,
+                                            old_status=Order.PreOrder,
                                             created_by=self.request.user,
                                             date_created=datetime.now()
                                             )

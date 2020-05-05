@@ -31,8 +31,6 @@ export default class Registration extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      checkedPolicy: false,
-      modal: false,
       password: '',
       errors: {
         first_name: null,
@@ -52,8 +50,6 @@ export default class Registration extends React.Component {
     }
     this.user = new Auth();
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handlePolicyChange = this.handlePolicyChange.bind(this)
-    this.toggleModal = this.toggleModal.bind(this)
   }
 
   handleChange = (event) => {
@@ -144,18 +140,6 @@ export default class Registration extends React.Component {
     })
   }
 
-  toggleModal() {
-    this.setState({
-      modal: !this.state.modal
-    })
-  }
-
-  handlePolicyChange() {
-    this.setState({
-      checkedPolicy: !this.state.checkedPolicy
-    })
-  }
-
   render() {
     return (
       <Container className="auth-container sm-container">
@@ -240,46 +224,13 @@ export default class Registration extends React.Component {
               <span className="bar"/>
               <label style={{top: "-20px"}}>Підтвердження паролю</label>
             </div>
-            <div className="checkbox-group sm-group">
-
-              <div className="checkbox-wrapper">
-                <input style={{float: "left", width: "40px", height: "18px"}} id="policy" name="policy"
-                       className="inputMaterial"
-                       checked={this.state.checkedPolicy}
-                       onChange={this.handlePolicyChange}
-                       type="checkbox" required/>
-                <div className="m-0" style={{top: "-20px", fontSize: "11px"}}>
-                  Я погоджуюся на <a
-                  onClick={this.toggleModal}
-                  style={{color: "blue", cursor: "pointer"}}
-                > обробку
-                  персональних даних.</a>
-                </div>
-
-              </div>
-            </div>
-            {this.state.checkedPolicy ?
-              <button type="submit" id="buttonlogintoregister">Зареєструватися</button>
-              :
-              <button type="button" style={{backgroundColor: "grey"}}
-                      id="buttonlogintoregister">Потрібно підтвердження на обробку данних</button>
-            }
+            <button type="submit" id="buttonlogintoregister">Зареєструватися</button>
             <Link to="/" style={{textDecoration: 'none'}}>
               <button className="bg-info" type="button">Повернутися до сторінки входу</button>
             </Link>
           </form>
         </div>
-        <Modal isOpen={this.state.modal} toggle={this.toggleModal} className="modal-xl">
-          <ModalHeader toggle={this.toggleModal}>Згода на обробку персональних даних</ModalHeader>
-          <ModalBody>
-            <ContentPolicy/>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={this.toggleModal}>Закрити</Button>
-          </ModalFooter>
-        </Modal>
       </Container>
     )
   }
 }
-
