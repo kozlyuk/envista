@@ -13,3 +13,6 @@ django-celery-results==1.1.2
 django-summernote==0.8.11.6
 pyTelegramBotAPi==3.6.7
 admin-totals==1.0.1
+
+# Debuging tools
+django_silk==4.0.0               # https://github.com/jazzband/django-silk

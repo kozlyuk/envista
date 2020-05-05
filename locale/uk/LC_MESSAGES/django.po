@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-05 11:09+0300\n"
+"POT-Creation-Date: 2020-05-05 11:49+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,14 +22,10 @@ msgstr ""
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: accounts/api.py:63
-#, fuzzy
-#| msgid "Cart does not exist"
 msgid "Order does not exist"
-msgstr "Корзина не існує"
+msgstr "Замовлення не існує"
 
 #: accounts/api.py:67
-#, fuzzy
-#| msgid "Order canceled"
 msgid "Order cancelled."
 msgstr "Замовлення скасовано."
 
@@ -38,18 +34,16 @@ msgid "Activate your Envista account."
 msgstr "Активуйте Ваш Envista аккаунт."
 
 #: accounts/api.py:91
-#, fuzzy
-#| msgid "Order returned"
 msgid "User registered"
-msgstr "Замовлення повернуто"
+msgstr "Користувача зареєстровано"
 
 #: accounts/api.py:114
 msgid ""
 "Thank you for your email confirmation. You will be able to log in to your "
 "account after being activated by administrator."
 msgstr ""
-"Дякуємо за підтвердження електронної адреси."
-"Ви можете авторизуватись після підтвердження облікового запису адміністратором."
+"Дякуємо за підтвердження електронної адреси.Ви можете авторизуватись після "
+"підтвердження облікового запису адміністратором."
 
 #: accounts/api.py:119
 msgid "Activation link is invalid!"
@@ -95,10 +89,8 @@ msgid "Comment"
 msgstr "Коментар"
 
 #: accounts/models.py:23
-#, fuzzy
-#| msgid "Order confirmed"
 msgid "Email confirmed"
-msgstr "Замовлення підтверджено"
+msgstr "Електронну пошту підтверджено"
 
 #: product/models.py:10
 msgid "Product title"
@@ -193,10 +185,8 @@ msgid "New orders status can be changed to Confirmed or Canceled"
 msgstr "Статус замовлення може бути змінений на Підтверджено або Скасовано"
 
 #: purchase/admin.py:176
-#, fuzzy
-#| msgid "New orders status can be changed to Confirmed or Canceled"
 msgid "Confirmed orders status can be changed only to Returned"
-msgstr "Статус замовлення може бути змінений на Підтверджено або Скасовано"
+msgstr "Підтверджене замовлення може бути змінене тільки на Скасовано"
 
 #: purchase/admin.py:180
 msgid "Cancelled orders can't be changed"
@@ -207,10 +197,8 @@ msgid "Returned orders can't be changed"
 msgstr "Повернені замовлення не можуть бути змінені"
 
 #: purchase/admin.py:189
-#, fuzzy
-#| msgid "New orders status can be changed to Confirmed or Canceled"
-msgid "New orders status can be changed to NewOrder, Confirmed or Canceled"
-msgstr "Статус замовлення може бути змінений на Підтверджено або Скасовано"
+msgid "Preorders status can be changed to NewOrder, Confirmed or Canceled"
+msgstr "Статус замовлення може бути змінений на Новий, Підтверджено або Скасовано"
 
 #: purchase/api.py:52 purchase/api.py:99 purchase/api.py:151
 #: purchase/api.py:192
@@ -231,16 +219,12 @@ msgid "Product added to the cart"
 msgstr "Продукт додано до кошика"
 
 #: purchase/api.py:125
-#, fuzzy
-#| msgid "Product added to the cart"
 msgid "Preorder added to the cart"
-msgstr "Продукт додано до кошика"
+msgstr "Попереднє замовлення додано до кошика"
 
 #: purchase/api.py:163
-#, fuzzy
-#| msgid "Cart does not exist"
 msgid "Order type does not exist"
-msgstr "Корзина не існує"
+msgstr "Тип замовлення не існує"
 
 #: purchase/api.py:167
 msgid "Product is out of stock"
@@ -255,10 +239,8 @@ msgid "Product not in cart"
 msgstr "Продукт відсутній в кошику"
 
 #: purchase/api.py:227
-#, fuzzy
-#| msgid "Purchase accepted."
 msgid "Pre-order accepted!"
-msgstr "Закупівлю збережено"
+msgstr "Попереднє замовлення прийнято"
 
 #: purchase/api.py:251
 msgid "Order accepted. Wait for call from manager please!"
@@ -344,8 +326,6 @@ msgid "Order confirmed"
 msgstr "Замовлення підтверджено"
 
 #: purchase/models.py:61 purchase/models.py:150
-#, fuzzy
-#| msgid "New order"
 msgid "Pre-order"
 msgstr "Попереднє замовлення"
 
@@ -409,8 +389,8 @@ msgstr "Розрахунок вартості позиції"
 
 #: templates/admin/index.html:12
 #, python-format
-#msgid "Models in the %(name)s application"
-#msgstr "Модель в %(name) застосунку"
+msgid "Models in the %(name)s application"
+msgstr ""
 
 #: templates/admin/index.html:37 templates/admin/index.html:58
 msgid "New"
@@ -432,6 +412,9 @@ msgstr "Змінити"
 #: templates/admin/index.html:86
 msgid "You don't have permission to view or edit anything."
 msgstr "Ви не маєте доступу до перегляду або редагування будь чого"
+
+msgid "{something}"
+msgstr ""
 
 #~ msgid "Download Invoice"
 #~ msgstr "Завантажити рахунок"

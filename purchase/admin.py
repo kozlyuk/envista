@@ -186,7 +186,7 @@ class OrderForm(ModelForm):
 
         if self.instance.status == Order.PreOrder and \
             status not in [Order.PreOrder, Order.NewOrder, Order.Confirmed, Order.Cancelled]:
-            msg = _("New orders status can be changed to NewOrder, Confirmed or Canceled")
+            msg = _("Preorders status can be changed to NewOrder, Confirmed or Canceled")
             self._errors["status"] = self.error_class([msg])
 
 
