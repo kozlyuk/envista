@@ -10,6 +10,8 @@ import axios from 'axios';
 import Auth from "./auth";
 import {toast} from "react-toastify";
 import FieldError from "../errorContainers/fieldError";
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import ContentPolicy from "./contentPolicy";
 
 /**
  * Ugly regular expression for validate length of phone number
