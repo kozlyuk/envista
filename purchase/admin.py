@@ -172,6 +172,11 @@ class OrderForm(ModelForm):
                 msg = _("New orders status can be changed to Confirmed or Canceled")
                 self._errors["status"] = self.error_class([msg])
 
+            if self.instance.status == Order.Confirmed and \
+                status not in [Order.Confirmed, Order.Returned]:
+                msg = _("Confirmed orders status can be changed only to Returned")
+                self._errors["status"] = self.error_class([msg])
+
             if self.instance.status == Order.Cancelled and status != Order.Cancelled:
                 msg = _("Cancelled orders can't be changed")
                 self._errors["status"] = self.error_class([msg])
@@ -180,9 +185,10 @@ class OrderForm(ModelForm):
                 msg = _("Returned orders can't be changed")
                 self._errors["status"] = self.error_class([msg])
 
-        if self.instance.status in [Order.Cancelled, Order.Returned, Order.PreOrder] and  \
-            status in [Order.NewOrder, Order.Confirmed]:
-                self.instance.__reduce_status__ = True
+            if self.instance.status == Order.PreOrder and \
+                status not in [Order.PreOrder, Order.NewOrder, Order.Confirmed, Order.Cancelled]:
+                msg = _("New orders status can be changed to NewOrder, Confirmed or Canceled")
+                self._errors["status"] = self.error_class([msg])
 
 
 class OrderLineInlineFormSet(BaseInlineFormSet):
@@ -333,6 +339,11 @@ class OrderAdmin(ModelAdminTotals):
         if form.instance.old_status in [Order.Cancelled, Order.Returned, Order.PreOrder] and  \
             form.instance.status in [Order.NewOrder, Order.Confirmed]:
             for line in form.instance.orderline_set.all():
+                #change order_type to AvailableOrder
+                if line.order_type == OrderLine.PreOrder:
+                    line.order_type = OrderLine.AvailableOrder
+                    line.save()
+                #reduce stocks or product
                 product = ProductInstance.objects.get(pk=line.product.pk)
                 if product.quantity_in_hand >= line.quantity:
                     product.quantity_in_hand -= line.quantity
