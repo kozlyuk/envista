@@ -355,8 +355,9 @@ class OrderAdmin(ModelAdminTotals):
                 form.instance.status in [Order.Cancelled, Order.Confirmed]) or \
                 (form.instance.old_status == Order.PreOrder and \
                 form.instance.status in [Order.NewOrder, Order.Confirmed, Order.Cancelled]):
-            send_status_change_email(form.instance.pk) # TODO add delay
+            send_status_change_email.delay(form.instance.pk)
 
+        #save status as old_status
         form.instance.old_status = form.instance.status
         form.instance.save()
 
