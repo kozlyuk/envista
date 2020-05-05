@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_summernote',
     'admin_totals',
+    'silk'
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'envista.urls'
@@ -91,7 +93,14 @@ CORS_ALLOW_HEADERS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DATE_FORMAT': "%d.%m.%Y",
+    'DATETIME_FORMAT': "%d.%m.%Y",
+
 }
 
 AUTH_PASSWORD_VALIDATORS = [

@@ -17,8 +17,6 @@ logger = get_task_logger(__name__)
 @app.task
 def send_email(mail_subject, message, to):
     """ sends email to emails list """
-
-    # filter active apartments
     try:
         send_mail(mail_subject, message, settings.DEFAULT_FROM_EMAIL, to)
         logger.info("Email %s sent to %s", mail_subject, to[0])

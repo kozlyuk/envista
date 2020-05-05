@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>auth/registration.jsx - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports_module.exports.html">exports</a></li><li></li></ul><h3>Global</h3><ul><li><a href="global.html#handleSubmit">handleSubmit</a></li><li><a href="global.html#submitData">submitData</a></li><li><a href="global.html#validEmailRegex">validEmailRegex</a></li><li><a href="global.html#validPhoneRegex">validPhoneRegex</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">auth/registration.jsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author    Andrey Perestyuk (Arrathilar) a.perestyuk@itel.rv.ua
+ * @copyright 2020 ITEL-Service
+ */
+
+import React from "react";
+import {Container} from "react-bootstrap";
+import {Link} from "react-router-dom";
+import axios from 'axios';
+import Auth from "./auth";
+import {toast} from "react-toastify";
+import FieldError from "../errorContainers/fieldError";
+
+/**
+ * Ugly regular expression for validate length of phone number
+ *
+ * @type {RegExp}
+ */
+const validPhoneRegex = RegExp(/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/);
+
+/**
+ * Ugly regular expression for validate email
+ *
+ * @type {RegExp}
+ */
+const validEmailRegex = RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+
+export default class Registration extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      password: '',
+      errors: {
+        first_name: null,
+        last_name: null,
+        email: null,
+        mobile_number: null,
+        password: null,
+        password2: null
+      },
+      fieldError: {
+        first_name: null,
+        last_name: null,
+        email: null,
+        mobile_number: null,
+        password: null
+      }
+    }
+    this.user = new Auth();
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleChange = (event) => {
+    event.preventDefault();
+    const {name, value} = event.target;
+    let errors = this.state.errors;
+
+    if (name === "password") {
+      this.setState({
+        password: value
+      })
+    }
+
+    switch (name) {
+      case 'mobile_number':
+        errors.mobile_number =
+          validPhoneRegex.test(value)
+            ? ''
+            : 'Номер телефону має не вірний формат!';
+        break;
+      case 'email':
+        errors.email =
+          validEmailRegex.test(value)
+            ? ''
+            : 'Email має невірний формат!';
+        break;
+      case 'first_name':
+        errors.first_name =
+          value.length > 0
+            ? ''
+            : 'Це поле обов\'язкове!';
+        break;
+      case 'last_name':
+        errors.last_name =
+          value.length > 0
+            ? ''
+            : 'Це поле обов\'язкове!';
+        break;
+      case 'password':
+        errors.password =
+          value.length &lt; 6
+            ? 'Пароль повинен бути не менше 6 символів!'
+            : '';
+        break;
+      case 'password2':
+        errors.password2 =
+          value !== this.state.password
+            ? 'Паролі повинні співпадати!'
+            : '';
+        break;
+      default:
+        break;
+    }
+
+    this.setState({errors, [name]: value});
+  };
+
+  /**
+   *
+   * @param event
+   * @return {FormData}
+   */
+  submitData(event) {
+    const form = document.forms.registration
+    const userFormData = new FormData(form);
+    const userEmail = form.email.value.toLowerCase();
+    userFormData.delete('password2')
+    userFormData.set('email', userEmail);
+    return userFormData;
+  }
+
+  /**
+   *
+   * @param event
+   */
+  handleSubmit(event) {
+    event.preventDefault();
+    axios({
+      method: "post",
+      url: process.env.REACT_APP_REGISTRATION,
+      data: this.submitData(event)
+    }).then((data) => {
+      toast.success(data.data, {onClose: this.props.history.push('/')})
+    }).catch((error) => {
+      this.setState({
+        fieldError: error.response.data
+      })
+    })
+  }
+
+  render() {
+    return (
+      &lt;Container className="auth-container">
+        &lt;div style={{height: "100%"}} className="box">
+          &lt;form id="registration" onSubmit={this.handleSubmit}>
+            &lt;h1>Реєстрація&lt;/h1>
+            &lt;div className="group">
+              &lt;input onChange={this.handleChange} id="first_name" name="first_name" className="inputMaterial"
+                     type="text" required/>
+              {this.state.fieldError.first_name &amp;&amp;
+              &lt;FieldError error={this.state.fieldError.first_name}/>
+              }
+              {this.state.errors.first_name &amp;&amp;
+              &lt;FieldError error={this.state.errors.first_name}/>
+              }
+              &lt;span className="highlight"/>
+              &lt;span className="bar"/>
+              &lt;label style={{top: "-20px"}}>Ім'я&lt;/label>
+            &lt;/div>
+            &lt;div className="group">
+              &lt;input onChange={this.handleChange} id="last_name" name="last_name" className="inputMaterial" type="text"
+                     required/>
+              {this.state.fieldError.last_name &amp;&amp;
+              &lt;FieldError error={this.state.fieldError.last_name}/>
+              }
+              {this.state.errors.last_name &amp;&amp;
+              &lt;FieldError error={this.state.errors.last_name}/>
+              }
+              &lt;span className="highlight"/>
+              &lt;span className="bar"/>
+              &lt;label style={{top: "-20px"}}>Прізвище&lt;/label>
+            &lt;/div>
+            &lt;div className="group">
+              &lt;input onChange={this.handleChange} id="email" name="email" className="inputMaterial" type="email"
+                     required/>
+              {this.state.fieldError.email &amp;&amp;
+              &lt;FieldError error={this.state.fieldError.email}/>
+              }
+              {this.state.errors.email &amp;&amp;
+              &lt;FieldError error={this.state.errors.email}/>
+              }
+              &lt;span className="highlight"/>
+              &lt;span className="bar"/>
+              &lt;label style={{top: "-20px"}}>Пошта&lt;/label>
+            &lt;/div>
+            &lt;div className="group">
+              &lt;input onChange={this.handleChange} id="mobile_number" name="mobile_number" className="inputMaterial"
+                     type="phone" required/>
+              {this.state.fieldError.mobile_number &amp;&amp;
+              &lt;FieldError error={this.state.fieldError.mobile_number}/>
+              }
+              {this.state.errors.mobile_number &amp;&amp;
+              &lt;FieldError error={this.state.errors.mobile_number}/>
+              }
+              &lt;span className="highlight"/>
+              &lt;span className="bar"/>
+              &lt;label style={{top: "-20px"}}>Номер телефону&lt;/label>
+            &lt;/div>
+            &lt;div className="group">
+              &lt;input onChange={this.handleChange} id="password" name="password" className="inputMaterial"
+                     type="password" required/>
+              {this.state.fieldError.password &amp;&amp;
+              &lt;FieldError error={this.state.fieldError.password}/>
+              }
+              {this.state.errors.password &amp;&amp;
+              &lt;FieldError error={this.state.errors.password}/>
+              }
+              &lt;span className="highlight"/>
+              &lt;span className="bar"/>
+              &lt;label style={{top: "-20px"}}>Пароль&lt;/label>
+            &lt;/div>
+            &lt;div className="group">
+              &lt;input onChange={this.handleChange} id="password2" name="password2" className="inputMaterial"
+                     type="password" required/>
+              {this.state.fieldError.password2 &amp;&amp;
+              &lt;FieldError error={this.state.fieldError.password2}/>
+              }
+              {this.state.errors.password2 &amp;&amp;
+              &lt;FieldError error={this.state.errors.password2}/>
+              }
+              &lt;span className="highlight"/>
+              &lt;span className="bar"/>
+              &lt;label style={{top: "-20px"}}>Підтвердження паролю&lt;/label>
+            &lt;/div>
+            &lt;button type="submit" id="buttonlogintoregister">Зареєструватися&lt;/button>
+            &lt;Link to="/" style={{textDecoration: 'none'}}>
+              &lt;button className="bg-info" type="button">Повернутися до сторінки входу&lt;/button>
+            &lt;/Link>
+          &lt;/form>
+        &lt;/div>
+      &lt;/Container>
+    )
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Wed Apr 29 2020 12:50:15 GMT+0300 (Eastern European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

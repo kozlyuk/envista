@@ -1,50 +1,46 @@
 from rest_framework import serializers
 
-from . import models
+from purchase.models import Order, OrderLine
 
-
-class PurchaseLineSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.PurchaseLine
-        fields = [
-            "quantity",
-            "unit_price",
-        ]
 
 class OrderLineSerializer(serializers.ModelSerializer):
+    product = serializers.SerializerMethodField()
 
     class Meta:
-        model = models.OrderLine
+        model = OrderLine
         fields = [
-            "unit_price",
+            "product",
             "quantity",
+            "unit_price",
         ]
+
+    def get_product(self, obj):
+        return f"ENVISTA® TORIC {obj.diopter}-{obj.cylinder}"
+
 
 class OrderSerializer(serializers.ModelSerializer):
+    order_lines = OrderLineSerializer(source='orderline_set', many=True)
+    status_display = serializers.CharField(source='get_status_display')
 
     class Meta:
-        model = models.Order
+        model = Order
         fields = [
-            "invoice_date",
-            "date_created",
-            "date_updated",
-            "invoice_file",
-            "comment",
-            "pay_status",
-            "value",
+            "pk",
             "invoice_number",
             "status",
-        ]
-
-class PurchaseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Purchase
-        fields = [
-            "comment",
-            "invoice_number",
-            "invoice_date",
+            "status_display",
+            "value",
+            "lenses_sum",
             "date_created",
             "date_updated",
+            "comment",
+            "order_lines"
         ]
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        """ optimizing "to-many" relationships with prefetch_related """
+        queryset = queryset.prefetch_related(
+            'orderline_set__diopter',
+            'orderline_set__cylinder')
+        return queryset

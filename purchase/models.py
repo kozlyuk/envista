@@ -45,21 +45,20 @@ class Purchase(models.Model):
     invoice_number_generate.short_description = _('Generate invoice number')
 
 
-
 class Order(models.Model):
     """ Model contains Sales, Carts """
     InCart = 'IC'
     NewOrder = 'NO'
     Cancelled = 'CN'
     Confirmed = 'CF'
-    # PreOrder = 'PO'
+    PreOrder = 'PO'
     Returned = 'RT'
     STATUS_CHOICES = (
         (InCart, _('Products in cart')),
         (NewOrder, _('New order')),
         (Cancelled, _('Order canceled')),
         (Confirmed, _('Order confirmed')),
-        # (PreOrder, _('Pre-order')),
+        (PreOrder, _('Pre-order')),
         (Returned, _('Order returned')),
     )
     products = models.ManyToManyField(ProductInstance, through='OrderLine', related_name='orders',
@@ -70,7 +69,6 @@ class Order(models.Model):
     status = models.CharField(_('Order status'), max_length=2, choices=STATUS_CHOICES, default=InCart)
     old_status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=NewOrder)
     value = models.DecimalField(_('Price'), max_digits=8, decimal_places=2, default=0)
-    invoice_file = models.FileField(_('Download Invoice'), upload_to=docs_directory_path, blank=True, null=True)
     lenses_sum = models.PositiveSmallIntegerField(_('Sum'), blank=True, null=True)
     # Creator and Date information
     created_by = models.ForeignKey(User, verbose_name=_('Created by'), related_name='creator_orders',
@@ -87,11 +85,27 @@ class Order(models.Model):
         return self.invoice_number
 
     def value_total(self):
-        """ return calculated from invoice_lines purchase value"""
+        """ return total order value"""
         return self.orderline_set.aggregate(total_value=Sum(F('quantity')*F('unit_price'),
                                                             output_field=FloatField())) \
                                             ['total_value'] or 0
-    value_total.short_description = _('Calculated invoice value')
+    value_total.short_description = _('Total order value')
+
+    def available_total(self):
+        """ return total available value"""
+        return self.orderline_set.filter(order_type=OrderLine.AvailableOrder) \
+                                 .aggregate(total_value=Sum(F('quantity')*F('unit_price'),
+                                                            output_field=FloatField())) \
+                                            ['total_value'] or 0
+    available_total.short_description = _('Total available value')
+
+    def preorder_total(self):
+        """ return total preorder value"""
+        return self.orderline_set.filter(order_type=OrderLine.PreOrder) \
+                                 .aggregate(total_value=Sum(F('quantity')*F('unit_price'),
+                                                            output_field=FloatField())) \
+                                            ['total_value'] or 0
+    preorder_total.short_description = _('Total preorder value')
 
     def lenses_count(self):
         """ return total count of lences in order """
@@ -105,8 +119,8 @@ class Order(models.Model):
         today_str = date.today().strftime('%Y%m%d')
         today_orders_count = cls.objects.filter(date_created__contains=date.today()) \
                                         .exclude(status=Order.InCart) \
-                                        .count()
-        return today_str + '-' + str(today_orders_count + 1)
+                                        .count() + 1
+        return f"{today_str}-{today_orders_count}"
     invoice_number_generate.short_description = _('Generate invoice number')
 
 
@@ -129,6 +143,12 @@ class PurchaseLine(models.Model):
 
 class OrderLine(models.Model):
     """ Model contains InvoiceLines for Purchases model """
+    AvailableOrder = 'AO'
+    PreOrder = 'PO'
+    ORDER_CHOICES = (
+        (AvailableOrder, _('Order')),
+        (PreOrder, _('Pre-order')),
+    )
     order = models.ForeignKey(Order, verbose_name=_('Order'), on_delete=models.CASCADE)
     product = models.ForeignKey(ProductInstance, verbose_name=_('Goods'), on_delete=models.PROTECT)
     diopter = models.ForeignKey(DiopterPower, on_delete=models.PROTECT)
@@ -136,12 +156,11 @@ class OrderLine(models.Model):
     quantity = models.PositiveSmallIntegerField(_('Quantity'), default=0)
     last_quantity = models.PositiveSmallIntegerField(default=0)
     unit_price = models.DecimalField(_('Unit price'), max_digits=8, decimal_places=2, default=0)
-
-    class Meta:
-        unique_together = ['order', 'product']
+    order_type = models.CharField(_('Order type'), max_length=2, choices=ORDER_CHOICES, default=AvailableOrder)
 
     def save(self, *args, **kwargs):
-        self.last_quantity = self.quantity
+        if self.order_type == self.AvailableOrder:
+            self.last_quantity = self.quantity
         super().save(*args, **kwargs) # Call the real save() method
 
     def value_total(self):
