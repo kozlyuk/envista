@@ -248,4 +248,5 @@ input[type='text'] {
 
 .checkbox-wrapper > label {
   display: inline-block;
+  margin-left: 40px;
 }
