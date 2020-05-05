@@ -220,6 +220,13 @@ class ConfirmOrder(views.APIView):
             preorder.lenses_sum = preorder.lenses_count()
             preorder.save()
 
+            # send preorder confirmation email
+            if not self.request.user.groups.filter(name='Менеджери').exists():
+                send_confirmation_email.delay(preorder.pk)
+            send_new_order_email.delay(order.pk)
+            return Response(_('Pre-order accepted!'),
+                            status=status.HTTP_201_CREATED)
+
         # Create NewOrder from alailable Orderlines
         available_lines = orderlines.filter(order_type=OrderLine.AvailableOrder)
         # check if order not empty
@@ -237,11 +244,10 @@ class ConfirmOrder(views.APIView):
             order.date_created = datetime.now()
             order.save()
 
-        # send confirmation email
-        if available_lines.exists() or preorder_lines.exists():
+            # send order confirmation email
             if not self.request.user.groups.filter(name='Менеджери').exists():
                 send_confirmation_email.delay(order.pk)
-            send_new_order_email(order.pk) # TODO add delay on production
+            send_new_order_email.delay(order.pk)
             return Response(_('Order accepted. Wait for call from manager please!'),
                             status=status.HTTP_201_CREATED)
 
