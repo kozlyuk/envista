@@ -164,31 +164,30 @@ class OrderForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         status = cleaned_data.get("status")
+        self.instance.__status__ = status
 
-        if not self.current_user.is_superuser:
+        if self.instance.status == Order.NewOrder and \
+            status not in [Order.NewOrder, Order.Confirmed, Order.Cancelled]:
+            msg = _("New orders status can be changed to Confirmed or Canceled")
+            self._errors["status"] = self.error_class([msg])
 
-            if self.instance.status == Order.NewOrder and \
-                status not in [Order.NewOrder, Order.Confirmed, Order.Cancelled]:
-                msg = _("New orders status can be changed to Confirmed or Canceled")
-                self._errors["status"] = self.error_class([msg])
+        if self.instance.status == Order.Confirmed and \
+            status not in [Order.Confirmed, Order.Returned]:
+            msg = _("Confirmed orders status can be changed only to Returned")
+            self._errors["status"] = self.error_class([msg])
 
-            if self.instance.status == Order.Confirmed and \
-                status not in [Order.Confirmed, Order.Returned]:
-                msg = _("Confirmed orders status can be changed only to Returned")
-                self._errors["status"] = self.error_class([msg])
+        if self.instance.status == Order.Cancelled and status != Order.Cancelled:
+            msg = _("Cancelled orders can't be changed")
+            self._errors["status"] = self.error_class([msg])
 
-            if self.instance.status == Order.Cancelled and status != Order.Cancelled:
-                msg = _("Cancelled orders can't be changed")
-                self._errors["status"] = self.error_class([msg])
+        if self.instance.status == Order.Returned and status != Order.Returned:
+            msg = _("Returned orders can't be changed")
+            self._errors["status"] = self.error_class([msg])
 
-            if self.instance.status == Order.Returned and status != Order.Returned:
-                msg = _("Returned orders can't be changed")
-                self._errors["status"] = self.error_class([msg])
-
-            if self.instance.status == Order.PreOrder and \
-                status not in [Order.PreOrder, Order.NewOrder, Order.Confirmed, Order.Cancelled]:
-                msg = _("New orders status can be changed to NewOrder, Confirmed or Canceled")
-                self._errors["status"] = self.error_class([msg])
+        if self.instance.status == Order.PreOrder and \
+            status not in [Order.PreOrder, Order.NewOrder, Order.Confirmed, Order.Cancelled]:
+            msg = _("New orders status can be changed to NewOrder, Confirmed or Canceled")
+            self._errors["status"] = self.error_class([msg])
 
 
 class OrderLineInlineFormSet(BaseInlineFormSet):
@@ -215,7 +214,8 @@ class OrderLineInlineFormSet(BaseInlineFormSet):
                 form._errors["quantity"] = self.error_class([msg])
 
             # validation error if not enough in stock
-            if form.instance.quantity > quantity_in_hand:
+            if form.instance.quantity > quantity_in_hand and \
+                self.instance.__status__ in [Order.NewOrder, Order.Confirmed]:
                 msg = _('Product is not enough in stock. Available - {}').format(quantity_in_hand)
                 form._errors["quantity"] = self.error_class([msg])
 
