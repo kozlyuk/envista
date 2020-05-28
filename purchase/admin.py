@@ -92,7 +92,8 @@ class PurchaseAdmin(admin.ModelAdmin):
         "created_by",
     ]
     fieldsets = [
-        (None, {'fields': [('invoice_number', 'date_created'),
+        (None, {'fields': ['invoice_number',
+                           'date_created',
                            'comment',
                            ]})
     ]
@@ -158,6 +159,10 @@ class OrderForm(ModelForm):
     class Meta:
         model = Order
         fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['comment'].help_text = self.instance.customer.comment
 
     status = ChoiceField(
         choices=Order.STATUS_CHOICES[1:]
@@ -236,10 +241,10 @@ class OrderLineInline(admin.TabularInline):
 class OrderAdmin(ModelAdminTotals):
     """ Admin settings for Order table """
 
-    def get_form(self, request, *args, **kwargs):
-        form = super().get_form(request, *args, **kwargs)
-        form.current_user = request.user
-        return form
+    # def get_form(self, request, *args, **kwargs):
+    #     form = super().get_form(request, *args, **kwargs)
+    #     form.current_user = request.user
+    #     return form
 
     def status_mark(self, obj):
         if obj.status == Order.NewOrder:
@@ -266,9 +271,12 @@ class OrderAdmin(ModelAdminTotals):
     ]
     list_totals = [('value', Sum), ('lenses_sum', Sum)]
     fieldsets = [
-        (None, {'fields': [('customer', 'status'),
-                           ('date_created', 'invoice_number'),
-                           ('comment', 'value'),
+        (None, {'fields': ['customer',
+                           'status',
+                           'date_created',
+                           'invoice_number',
+                           'comment',
+                           'value',
                            ]})
     ]
     readonly_fields = [
