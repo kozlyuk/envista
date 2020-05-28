@@ -6,11 +6,13 @@ from django.utils.html import format_html
 from django.forms import ModelForm, ChoiceField
 from django.forms.models import BaseInlineFormSet
 from django.db.models import Sum
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from admin_totals.admin import ModelAdminTotals
 
-from messaging.tasks import send_status_change_email
+from messaging.tasks import send_status_change_email, send_new_order_email
 from purchase.models import Order, OrderLine, Purchase, PurchaseLine
 from product.models import ProductInstance
 
@@ -290,8 +292,11 @@ class OrderAdmin(ModelAdminTotals):
             # Only set created_by during the first save.
             obj.created_by = request.user
             obj.invoice_number = obj.invoice_number_generate()
-
-        super().save_model(request, obj, form, change)
+            # send new order email
+            obj.save()
+            send_new_order_email.delay(obj.pk)
+        else:
+            super().save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
