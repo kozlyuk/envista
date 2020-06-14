@@ -155,15 +155,16 @@ class PurchaseAdmin(admin.ModelAdmin):
 
 
 class OrderForm(ModelForm):
-    """ Exclude Order.InCart from STATUS_CHOICES field """
     class Meta:
         model = Order
         fields = "__all__"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['comment'].help_text = self.instance.customer.comment
+        if self.instance.pk:
+            self.fields['comment'].help_text = self.instance.customer.comment
 
+    # Exclude Order.InCart from STATUS_CHOICES field
     status = ChoiceField(
         choices=Order.STATUS_CHOICES[1:]
     )
