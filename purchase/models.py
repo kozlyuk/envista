@@ -15,7 +15,7 @@ def docs_directory_path(filename):
 
 
 class Purchase(models.Model):
-    """ Abstract Model contains Purchases """
+    """ Model contains Purchases """
     products = models.ManyToManyField(ProductInstance, through='PurchaseLine', related_name='purchases',
                                       verbose_name=_('Goods'), blank=True)
     invoice_number = models.CharField(_('Invoice number'), max_length=45)

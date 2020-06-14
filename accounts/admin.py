@@ -49,7 +49,7 @@ class CustomUserAdmin(UserAdmin):
 
 
 
-admin.site.site_url = settings.SITE_URL
+admin.site.site_url = settings.ADMIN_SITE_URL
 admin.AdminSite.site_header = settings.SITE_HEADER
 admin.AdminSite.site_title = settings.SITE_TITLE
 admin.AdminSite.index_title = settings.INDEX_TITLE
