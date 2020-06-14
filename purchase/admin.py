@@ -107,6 +107,10 @@ class PurchaseAdmin(admin.ModelAdmin):
     ordering = ('-date_created',)
     inlines = [PurchaseLineInline]
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.exclude(invoice_number="InProcess")
+
     def save_model(self, request, obj, form, change):
         if not obj.pk:
             # Only set added_by during the first save.
@@ -241,11 +245,6 @@ class OrderLineInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(ModelAdminTotals):
     """ Admin settings for Order table """
-
-    # def get_form(self, request, *args, **kwargs):
-    #     form = super().get_form(request, *args, **kwargs)
-    #     form.current_user = request.user
-    #     return form
 
     def status_mark(self, obj):
         if obj.status == Order.NewOrder:
