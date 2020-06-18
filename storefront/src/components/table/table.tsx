@@ -165,8 +165,8 @@ export class Table extends React.PureComponent<{}, TableProps> {
         result => {
           this.setState({
             isLoaded: true,
-            rows: result.data[1].rows,
-            columnsName: result.data[0].columns
+            rows: result.data.rows,
+            columnsName: result.data.columns
           });
         },
         error => {

@@ -26,13 +26,16 @@ class GetStocks(views.APIView):
             order.products.clear()
 
         # Sending JSON list of stocks for product instances.
-        json_data = []
-        json_data.append({"columns": Cylinder.objects.values_list('value', flat=True)})
-        json_data.append({"rows": []})
-        for row in DiopterPower.objects.order_by('pk').values_list('value', flat=True):
-            quantity_list = ProductInstance.objects.filter(diopter__value=row).order_by('pk') \
-                                                   .values_list('quantity_in_hand', flat=True)
-            json_data[1]["rows"].append({"row": row, "quantities": quantity_list})
+        json_data = {}
+        cylinders = Cylinder.objects.order_by('pk').values_list('value', flat=True)
+        diopters = DiopterPower.objects.order_by('pk').values_list('value', flat=True)
+        lenses = ProductInstance.objects.order_by('pk').values_list('quantity_in_hand', flat=True)
+        lenses_matrix = zip(*zip(*[iter(lenses)]*len(diopters)))
+        json_data["columns"] = cylinders
+        json_data["rows"] = []
+
+        for idx, quantities in enumerate(lenses_matrix):
+            json_data["rows"].append({"row": diopters[idx], "quantities": quantities})
         return Response(json_data, status=status.HTTP_200_OK)
 
 
