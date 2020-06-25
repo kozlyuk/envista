@@ -227,8 +227,6 @@ class ConfirmOrder(views.APIView):
             if not self.request.user.groups.filter(name='Менеджери').exists():
                 send_confirmation_email.delay(preorder.pk)
             send_new_order_email.delay(order.pk)
-            return Response(_('Pre-order accepted!'),
-                            status=status.HTTP_201_CREATED)
 
         # Create NewOrder from alailable Orderlines
         available_lines = orderlines.filter(order_type=OrderLine.AvailableOrder)
@@ -251,6 +249,9 @@ class ConfirmOrder(views.APIView):
             if not self.request.user.groups.filter(name='Менеджери').exists():
                 send_confirmation_email.delay(order.pk)
             send_new_order_email.delay(order.pk)
+
+        # return responce - order accepted
+        if preorder_lines.exists() or available_lines.exists():
             return Response(_('Order accepted. Wait for call from manager please!'),
                             status=status.HTTP_201_CREATED)
 
