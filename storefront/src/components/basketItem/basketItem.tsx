@@ -126,7 +126,7 @@ export default class BasketItem extends React.Component<{}, BasketItemState> {
           array: []  // if error status 412 clear data
         })
       }
-      toast.error(error.response);
+      toast.error(error.response.data);
     })
   }
 
