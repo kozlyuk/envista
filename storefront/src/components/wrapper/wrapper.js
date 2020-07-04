@@ -3,10 +3,8 @@
  * @copyright 2020 ITEL-Service
  */
 
-import React, {Fragment} from "react";
-import NavbarMenu from "../navbar/navbarMenu";
+import React from "react";
 import Content from "../content/content";
-import Footer from "../footer/footer";
 
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Basket from "../basket/basket";
@@ -21,8 +19,12 @@ import Loader from "react-loader-spinner";
 import Login from "../auth/login";
 import Registration from "../auth/registration";
 import Activation from "../auth/Activation";
+import LayoutRoute from "../../layouts/LayoutRoute";
+import StorefrontLayout from "../../layouts/StorefrontLayout";
+import {GlobalContext} from "../../context/GlobalContext";
+import DashboardApp from "../../DashboardEntryPoint";
 
-class Welcome extends React.Component {
+class Wrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -74,7 +76,6 @@ class Welcome extends React.Component {
             this.setState({
               isAuthenticate: false,
             })
-
           } else if (response.status < 400) {
             this.setState({
               isAuthenticate: true,
@@ -119,55 +120,60 @@ class Welcome extends React.Component {
           <h3 className="text-center text-muted">Завантаження...</h3>
         </div>);
     } else if (this.state.isAuthenticate) {
-      console.log(this.state.permission.includes('Менеджери'))
       return (
         <header className="main-container">
           <div>
-            <Router>
-              <Fragment>
-                <NavbarMenu brandLogo={this.state.brandLogo} userEmail={this.state.user.email}
-                            permission={this.state.permission}/>
-                <div className="section">
-                  <div>
-                    <Switch>
-                      <Route exact path="/basket">
-                        <Basket/>
-                      </Route>
-                      <Route exact path="/cabinet">
-                        <Cabinet userPk={this.state.user.pk}/>
-                      </Route>
-                      <Route exact path="/warehouse/confirm">
-                        {this.state.permission.includes('Менеджери') ?
-                          <WarehouseConfirm/> :
-                          <h3 className="text-center text-muted"> На жаль у Вас не має дозволу
-                            для
-                            перегляду
-                            сторінки</h3>
-                        }
-                      </Route>
-
-                      <Route exact path="/warehouse">
-                        {this.state.permission.includes('Менеджери') ?
-                          <Warehouse/> :
-                          < h3 className="text-center text-muted"> На жаль у Вас не має дозволу
-                            для
-                            перегляду
-                            сторінки</h3>
-                        }
-                      </Route>
-                      <Route exact path="/">
-                        <Content getData={this.getDataFromChild}/>
-                      </Route>
-                      <Route exact path="/not_found" render={() => {
-                        window.location.href = "404.html"
-                      }}/>
-                      <Redirect to="/not_found"/>
-                    </Switch>
-                  </div>
-                </div>
-                <Footer title={this.state.footer}/>
-              </Fragment>
-            </Router>
+            <GlobalContext.Provider
+              value={{
+                user: this.state.user,
+                brandLogo: this.state.brandLogo,
+                permission: this.state.permission,
+                footer: this.state.footer
+              }}>
+              <Router>
+                <Switch>
+                  <LayoutRoute
+                    exact path="/basket" layout={StorefrontLayout}
+                    component={(props) => (<Basket/>)}
+                  />
+                  <LayoutRoute
+                    exact path="/cabinet" layout={StorefrontLayout}
+                    component={(props) => (<Cabinet userPk={this.state.user.pk}/>)}
+                  />
+                  <Route exact path="/dashboard" component={DashboardApp}/>
+                  <LayoutRoute
+                    exact path="/warehouse/confirm" layout={StorefrontLayout}
+                    component={(props) => (
+                      this.state.permission.includes('Менеджери') ?
+                        <WarehouseConfirm/> :
+                        <h3 className="text-center text-muted"> На жаль у Вас не має дозволу
+                          для
+                          перегляду
+                          сторінки</h3>
+                    )}
+                  />
+                  <LayoutRoute
+                    exact path="/warehouse" layout={StorefrontLayout}
+                    component={(props) => (
+                      this.state.permission.includes('Менеджери') ?
+                        <Warehouse/> :
+                        < h3 className="text-center text-muted"> На жаль у Вас не має дозволу
+                          для
+                          перегляду
+                          сторінки</h3>
+                    )}
+                  />
+                  <LayoutRoute
+                    exact path="/" layout={StorefrontLayout}
+                    component={(props) => (<Content getData={() => this.getDataFromChild}/>)}
+                  />
+                  <Route exact path="/not_found" render={() => {
+                    window.location.href = "404.html"
+                  }}/>
+                  <Redirect to="/not_found"/>
+                </Switch>
+              </Router>
+            </GlobalContext.Provider>
           </div>
         </header>)
     } else {
@@ -196,5 +202,4 @@ class Welcome extends React.Component {
   }
 }
 
-
-export default Welcome;
+export default Wrapper;

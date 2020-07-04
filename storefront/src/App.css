@@ -583,12 +583,6 @@ input[type="reset"] {
   background-color: #ffdede
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold
-}
-
 .w-input,
 .w-select {
   display: block;
@@ -2402,7 +2396,7 @@ textarea.w-select {
   grid-template-rows: auto auto;
 }
 
-.nav-link {
+.nav-link-storefront {
   border: 1px solid #159ba7;
   border-radius: 5px;
   font-family: Roboto, sans-serif;
