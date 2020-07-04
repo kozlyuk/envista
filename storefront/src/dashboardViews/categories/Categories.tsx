@@ -8,55 +8,55 @@
 
 import React, {Component} from 'react';
 import Aux from "../../hoc/_Aux";
-import {Card, Col, Row, Table} from "react-bootstrap";
+import {Button, Card, CardBody, CardColumns, CardText, CardTitle} from "reactstrap";
+import catalogueMock from "../../__mocks__/catalogue";
+import Loader from '../../App/layout/Loader'
 
-export default class Categories extends Component<any, any> {
+interface CategoriesInterface {
+  data: Category[] | null,
+  isLoaded: boolean
+}
+
+type Category = {
+  name: string,
+  description: string
+}
+
+export default class Categories extends Component<any, CategoriesInterface> {
+
+  state = {
+    data: null,
+    isLoaded: false
+  }
+
+  componentDidMount() {
+    this.setState({
+      data: catalogueMock,
+      isLoaded: true,
+    })
+  }
+
   render() {
-    return (
-      <Aux>
-        <Row>
-          <Col>
-            <Card>
-              <Card.Header>
-                <Card.Title as="h5">Список категорій</Card.Title>
-                {/*<span className="d-block m-t-5">use props <code>hover</code> with <code>Table</code> component</span>*/}
-              </Card.Header>
-              <Card.Body>
-                <Table responsive hover>
-                  <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Aux>
-    )
+    const data: any = this.state.data;
+    if (this.state.isLoaded) {
+      return (
+        <Aux>
+          <CardColumns>
+            {data?.map((item: Category) => (
+              <Card>
+                <CardBody>
+                  <CardTitle>{item.name}</CardTitle>
+                  {/*<CardSubtitle>Card subtitle</CardSubtitle>*/}
+                  <CardText>{item.description}</CardText>
+                  <Button size="sm" block color="info">Редагувати</Button>
+                </CardBody>
+              </Card>
+            ))}
+          </CardColumns>
+        </Aux>
+      )
+    } else {
+      return <Loader/>
+    }
   }
 }

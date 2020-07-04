@@ -27,6 +27,13 @@ export default {
           type: 'item',
           url: '/categories',
           icon: 'feather icon-list',
+        },
+        {
+          id: 'products',
+          title: 'Продукти',
+          type: 'item',
+          url: '/products',
+          icon: 'feather icon-grid',
         }
       ]
     }
