@@ -8,9 +8,10 @@
 
 import React, {Component} from 'react';
 import Aux from "../../hoc/_Aux";
-import {Button, Card, CardBody, CardColumns, CardText, CardTitle} from "reactstrap";
+import {Card, CardBody, CardColumns, CardImg, CardText, CardTitle} from "reactstrap";
 import catalogueMock from "../../__mocks__/catalogue";
 import Loader from '../../App/layout/Loader'
+import {Link} from "react-router-dom";
 
 interface CategoriesInterface {
   data: Category[] | null,
@@ -18,8 +19,10 @@ interface CategoriesInterface {
 }
 
 type Category = {
+  pk: number,
   name: string,
-  description: string
+  description: string,
+  image: string
 }
 
 export default class Categories extends Component<any, CategoriesInterface> {
@@ -44,13 +47,15 @@ export default class Categories extends Component<any, CategoriesInterface> {
           <CardColumns>
             {data?.map((item: Category) => (
               <Card>
-                <CardBody>
-                  <CardTitle>{item.name}</CardTitle>
-                  {/*<CardSubtitle>Card subtitle</CardSubtitle>*/}
-                  <CardText>{item.description}</CardText>
-                  <Button size="sm" block color="info">Редагувати</Button>
-                </CardBody>
+                <Link to={`/categories/${item.pk}/edit`}>
+                  <CardImg top width="100%" src={item.image} alt="Card image cap"/>
+                  <CardBody>
+                    <CardTitle className="text-secondary">{item.name}</CardTitle>
+                    <CardText className="text-secondary">{item.description}</CardText>
+                  </CardBody>
+                </Link>
               </Card>
+
             ))}
           </CardColumns>
         </Aux>

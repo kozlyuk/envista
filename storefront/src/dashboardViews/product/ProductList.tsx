@@ -8,8 +8,9 @@
 
 import React, {Component} from "react";
 import {Card, Col, Row, Table} from "react-bootstrap";
-import productMock from "../../__mocks__/products";
 import Loader from '../../App/layout/Loader'
+import axios from 'axios';
+import Auth from "../../components/auth/auth";
 
 interface ProductListInterface {
   data: Product | null,
@@ -28,18 +29,43 @@ type Product = {
 }
 
 export default class ProductList extends Component<any, ProductListInterface> {
+  private user: Auth;
+  private authToken: string | boolean;
+
+  constructor(props: any) {
+    super(props);
+    this.user = new Auth();
+    this.authToken = this.user.getAuthToken();
+  }
+
+
   public state = {
     data: null,
     isLoaded: false
   }
 
   public componentDidMount(): void {
-    // @ts-ignore
-    const productData: Product = productMock;
-    this.setState({
-      data: productData,
-      isLoaded: true
+    const {REACT_APP_PRODUCTS}: any = process.env;
+    axios(REACT_APP_PRODUCTS, {
+      headers: {
+        "Authorization": "Token " + this.authToken
+      }
     })
+      .then(
+        result => {
+          console.log(result)
+          this.setState({
+            isLoaded: true,
+          });
+        },
+        error => {
+          console.error(error)
+          this.setState({
+            isLoaded: true,
+          });
+        }
+      );
+    return void 0;
   }
 
   public render(): JSX.Element {
@@ -63,13 +89,13 @@ export default class ProductList extends Component<any, ProductListInterface> {
                   </tr>
                   </thead>
                   <tbody>
-                  {data.map((item: Product) => (
-                    <tr>
-                      <th scope="row">{item.title}</th>
-                      <td>{item.short_description}</td>
-                      <td>{item.brand_name}</td>
-                    </tr>
-                  ))}
+                  {/*{data.map((item: Product) => (*/}
+                  {/*  <tr>*/}
+                  {/*    <th scope="row">{item.title}</th>*/}
+                  {/*    <td>{item.short_description}</td>*/}
+                  {/*    <td>{item.brand_name}</td>*/}
+                  {/*  </tr>*/}
+                  {/*))}*/}
                   </tbody>
                 </Table>
               </Card.Body>
