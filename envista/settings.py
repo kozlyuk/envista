@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'envista.middleware.ExceptionHandler',
 ]
 
 ROOT_URLCONF = 'envista.urls'
@@ -206,15 +207,10 @@ LOGGING = {
             'filename': '/var/log/envista/envista.log',
             'formatter': 'verbose'
         },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
-        }
     },
     'loggers': {
         'envista': {
-            'handlers': ['file', 'mail_admins'],
+            'handlers': ['file'],
             'level': 'WARNING',
             'propagate': True,
         },
