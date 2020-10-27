@@ -189,30 +189,3 @@ SUMMERNOTE_CONFIG = {
 if DEBUG:
     INSTALLED_APPS += ['silk']
     MIDDLEWARE += ['silk.middleware.SilkyMiddleware']
-
-# Logging settings
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/envista/envista.log',
-            'formatter': 'verbose'
-        },
-    },
-    'loggers': {
-        'envista': {
-            'handlers': ['file'],
-            'level': 'WARNING',
-            'propagate': True,
-        },
-    },
-}
