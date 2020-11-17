@@ -1,4 +1,4 @@
-Django==2.2.13
+Django==2.2.17
 psycopg2==2.8.4
 djangorestframework==3.11.0
 markdown==3.1.1
@@ -16,3 +16,4 @@ admin-totals==1.0.1
 
 # Debuging tools
 django_silk==4.0.0               # https://github.com/jazzband/django-silk
+sentry-sdk                       # https://docs.sentry.io/platforms/python/
