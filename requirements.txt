@@ -7,7 +7,7 @@ Pillow==7.1.0
 django-rest-auth==0.9.5
 django-cors-headers==3.2.1
 django-admin-list-filter-dropdown==1.0.3
-celery==4.4.0
+celery==5.2.2
 redis==3.3.11
 django-celery-results==1.1.2
 django-summernote==0.8.11.6
